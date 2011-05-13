@@ -139,7 +139,7 @@ namespace Monocle
     bool Platform::keys[KEY_MAX];
     bool Platform::mouseButtons[3];
     Vector2 Platform::mousePosition;
-    int Platform::mouseScroll = 0;
+    int Platform::mouseWheel = 0;
 
     Platform::Platform()
     {
@@ -152,7 +152,17 @@ namespace Monocle
             keys[i] = false;
             localKeymap[i] = KEY_UNDEFINED;
         }
-        
+    }
+
+    void Platform::BindLocalKey(int local, int global) {
+        //Needed to avoid key redefinition
+        if (localKeymap[local] == KEY_UNDEFINED) {
+            localKeymap[local] = global;
+        }
+    }
+
+    void Platform::Init()
+    {
         BindLocalKey(KeySymParts::Get(XK_Up).low, KEY_UP);
         BindLocalKey(KeySymParts::Get(XK_Down).low, KEY_DOWN);
         BindLocalKey(KeySymParts::Get(XK_Left).low, KEY_LEFT);
@@ -167,7 +177,7 @@ namespace Monocle
 
         BindLocalKey(XK_space, KEY_SPACE);
         BindLocalKey(XK_quotedbl, KEY_QUOTE);
-		BindLocalKey(XK_apostrophe, KEY_APOSTROPHE);
+        BindLocalKey(XK_apostrophe, KEY_APOSTROPHE);
         BindLocalKey(XK_comma, KEY_COMMA);
         BindLocalKey(XK_minus, KEY_MINUS);
         BindLocalKey(XK_period, KEY_PERIOD);
@@ -264,24 +274,18 @@ namespace Monocle
         BindLocalKey(KeySymParts::Get(XK_F2).low, KEY_F2);
         BindLocalKey(KeySymParts::Get(XK_F3).low, KEY_F3);
         BindLocalKey(KeySymParts::Get(XK_F4).low, KEY_F4);
-		BindLocalKey(KeySymParts::Get(XK_F5).low, KEY_F5);
-		BindLocalKey(KeySymParts::Get(XK_F6).low, KEY_F6);
-		BindLocalKey(KeySymParts::Get(XK_F7).low, KEY_F7);
-		BindLocalKey(KeySymParts::Get(XK_F8).low, KEY_F8);
-		BindLocalKey(KeySymParts::Get(XK_F9).low, KEY_F9);
-		BindLocalKey(KeySymParts::Get(XK_F10).low, KEY_F10);
-		BindLocalKey(KeySymParts::Get(XK_F11).low, KEY_F11);
-		BindLocalKey(KeySymParts::Get(XK_F12).low, KEY_F12);
-		BindLocalKey(KeySymParts::Get(XK_F13).low, KEY_F13);
-		BindLocalKey(KeySymParts::Get(XK_F14).low, KEY_F14);
-		BindLocalKey(KeySymParts::Get(XK_F15).low, KEY_F15);
-    }
-
-    void Platform::BindLocalKey(int local, int global) {
-        //Needed to avoid key redefinition
-        if (localKeymap[local] == KEY_UNDEFINED) {
-            localKeymap[local] = global;
-        }
+        BindLocalKey(KeySymParts::Get(XK_F5).low, KEY_F5);
+        BindLocalKey(KeySymParts::Get(XK_F6).low, KEY_F6);
+        BindLocalKey(KeySymParts::Get(XK_F7).low, KEY_F7);
+        BindLocalKey(KeySymParts::Get(XK_F8).low, KEY_F8);
+        BindLocalKey(KeySymParts::Get(XK_F9).low, KEY_F9);
+        BindLocalKey(KeySymParts::Get(XK_F10).low, KEY_F10);
+        BindLocalKey(KeySymParts::Get(XK_F11).low, KEY_F11);
+        BindLocalKey(KeySymParts::Get(XK_F12).low, KEY_F12);
+        BindLocalKey(KeySymParts::Get(XK_F13).low, KEY_F13);
+        BindLocalKey(KeySymParts::Get(XK_F14).low, KEY_F14);
+        BindLocalKey(KeySymParts::Get(XK_F15).low, KEY_F15);
+        Init("Monocle Powered", 800, 600, 24, false);
     }
 
     void Platform::Init(const std::string &name, int w, int h, int bits, bool fullscreen)
@@ -293,13 +297,11 @@ namespace Monocle
 
     void Platform::Update()
     {
-        mouseScroll = 0; //reset mouse wheel state
+        mouseWheel = 0; //reset mouse wheel state
         XEvent event;
 
         while (XPending(LinuxPlatform::instance->hDisplay)) { XNextEvent(LinuxPlatform::instance->hDisplay, &event);
-            bool mScrolled = false;
-		
-			switch(event.type) {
+            switch(event.type) {
             case Expose: {
                     XExposeEvent &expose = event.xexpose;
                     glViewport(0, 0, expose.width, expose.height);
@@ -322,16 +324,15 @@ namespace Monocle
                         button = MOUSE_BUTTON_MIDDLE; break;
                     case Button3: // right click
                         button = MOUSE_BUTTON_RIGHT; break;
-                    // TODO check if 120 is the right amount and generalize code
+                    // TODO check if 120 is the right amount and generalise code
                     case Button4:
-                        mouseScroll += 120; mScrolled = true; break;
+                        mouseWheel += 120; break;
                     case Button5:
-                        mouseScroll -= 120; mScrolled = true; break;
+                        mouseWheel -= 120; break;
                     }
 
-					if(!mScrolled)
-						Platform::SetMouseButton(button,
-                                                 event.type == ButtonPress);
+                    Platform::SetMouseButton(button,
+                                             event.type == ButtonPress);
                     Platform::mousePosition = Vector2(event.xbutton.x,
                                                       event.xbutton.y);
                 } break;
