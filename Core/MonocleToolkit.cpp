@@ -57,8 +57,6 @@ namespace Monocle
         char buffer[FILENAME_MAX];
         getcwd(buffer, sizeof(buffer));
 		return std::string(buffer) + "\\";
-#else
-		return "";
 #endif
 	}
 
