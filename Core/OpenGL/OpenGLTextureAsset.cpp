@@ -138,10 +138,55 @@ namespace Monocle
 	    glTexSubImage2D(GL_TEXTURE_2D, 0, position.x, position.y, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
 
+	void TextureAsset::CopyRect(Monocle::Vector2 srcPos, Monocle::Vector2 dstPos, Monocle::Vector2 copysize)
+	{
+	    unsigned char *cpyrect = ReadRect(srcPos, copysize);
+        UpdateRect(cpyrect, dstPos, copysize);
+        delete cpyrect;
+	}
+
+	unsigned char *TextureAsset::ReadRect(Monocle::Vector2 srcPos, Monocle::Vector2 size)
+	{
+	    glBindTexture(GL_TEXTURE_2D, texID);
+
+	    //get the image data back out of gl
+	    unsigned char *data = new unsigned char[width * height * 4];
+
+	    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+	    unsigned char *buffer = new unsigned char [(int)size.y * (int)size.x * 4];
+        unsigned char *buffPos = buffer;
+        for(int y = srcPos.y; y - srcPos.y < size.y; y++)
+        {
+            //copy a line of pixels the width of the to-be-copied area from the image.
+            unsigned char *begin = data + (width * y * 4) + (int)srcPos.x * 4;
+
+            std::copy(begin, begin + (int)size.x * 4, buffPos);
+
+            //increment the buffer position to accept the next row
+            buffPos += ((int)size.x * 4);
+        }
+
+        delete data;
+        data = NULL;
+        buffPos = NULL;
+
+	    Monocle::Debug::Log("Done reading rect");
+	    Monocle::Debug::Log((int)buffer[0]);
+        return buffer;
+    }
+
 	void TextureAsset::Reload()
 	{
-		Unload();
-		Load(filename, filter, repeatX, repeatY);
+	    if(filename.length() != 0)
+	    {
+            Unload();
+            Load(filename, filter, repeatX, repeatY);
+	    }
+	    else
+	    {
+	        //loaded from pointer.
+        }
 	}
 
 	void TextureAsset::Unload()
