@@ -147,6 +147,25 @@ namespace Monocle
 
 	unsigned char *TextureAsset::ReadRect(Monocle::Vector2 srcPos, Monocle::Vector2 size)
 	{
+		if(srcPos.x < 0)
+		{
+			size.x += srcPos.x; //srcPos.x is negative
+			srcPos.x = 0;
+		}
+		if(srcPos.y < 0)
+		{
+			size.y += srcPos.y; //srcPos.y is negative
+			srcPos.y = 0;
+		}
+
+		if(srcPos.x + size.x > width) size.x = width - srcPos.x;
+		if(srcPos.y + size.y > height) size.y = height - srcPos.y;
+
+		if(	size.x	<= 0
+		||	size.y	<= 0
+		||	srcPos.x + size.x < 0
+		||	srcPos.y + size.y < 0 ) return NULL;
+
 	    glBindTexture(GL_TEXTURE_2D, texID);
 
 	    //get the image data back out of gl
