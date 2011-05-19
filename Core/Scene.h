@@ -5,7 +5,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Entity.h"
 #include "Camera.h"
 
 ///TODO: Replace with xml wrapper
@@ -52,6 +51,15 @@ namespace Monocle
 
 		//! Called by the main game loop every time the scene should render
 		virtual void Render();
+
+		//! create a new entity of type T and add it to the scene
+		template<class T>
+		T* Create()
+		{
+			T *t = new T();
+			Add(t);
+			return t;
+		}
 
 		//! Add an entity to the scene
 		void Add(Entity* entity);

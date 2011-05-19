@@ -70,9 +70,9 @@ namespace Monocle
 		return Scene::GetCamera()->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
 	}
 
-	int Input::getMouseWheelScroll()
+	int Input::GetMouseScroll()
 	{
-	    return Platform::mouseWheel;
+		return Platform::mouseScroll;
 	}
 
 	bool Input::IsMouseButtonHeld(MouseButton mouseButton)

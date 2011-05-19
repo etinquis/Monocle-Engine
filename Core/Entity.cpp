@@ -46,6 +46,12 @@ namespace Monocle
 	{
 	}
 
+	Entity *Entity::Clone()
+	{
+		Debug::Log("Entity::Clone()");
+		return new Entity(*this);
+	}
+
 	void Entity::Added()
 	{
 	}
@@ -561,9 +567,19 @@ namespace Monocle
 		fileNode->Read("followCamera", followCamera);
 	}
 
+	//void Entity::SetParent(Entity *parent)
+	//{
+	//	this->parent = parent;
+	//}
+
 	Entity *Entity::GetParent()
 	{
 		return parent;
+	}
+
+	Scene* Entity::GetScene()
+	{
+		return scene;
 	}
 
 	/// TODO: make recursive

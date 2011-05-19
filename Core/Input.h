@@ -23,11 +23,14 @@ namespace Monocle
 		void Init();
 
 		//Mouse API
-		// get mouse position relative to virtual screen
+		//! get mouse position relative to virtual screen
 		static Vector2 GetMousePosition();
-		// take camera into account
+		//! take camera into account
 		static Vector2 GetWorldMousePosition();
-		static int getMouseWheelScroll();
+
+		//! get the scroll wheel
+		static int GetMouseScroll();
+
 		static bool IsMouseButtonHeld(MouseButton mouseButton);
 		static bool IsMouseButtonReleased(MouseButton mouseButton);
 		static bool IsMouseButtonPressed(MouseButton mouseButton);
