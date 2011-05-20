@@ -66,17 +66,6 @@ namespace Monocle
 
 		//! Remove from Scene or Entity parent. May cause our deletion.
 		void RemoveSelf();
-
-		//! create a new entity of type T, add it to the scene and as a child
-		template<class T>
-		T* Create()
-		{
-			T *t = new T();
-			if (scene)
-				scene->Add(t);
-			Add(t);
-			return t;
-		}
 	
 		//! Called by the scene when the entity should update its game logic
 		virtual void Update();
@@ -121,14 +110,13 @@ namespace Monocle
 		void SetCollider(Collider *collider);
 		void SetGraphic(Graphic *graphic);
 
-		//! add an Entity as a child
-		void Add(Entity *entity);
-		//! remove an Entity from our list of children
-		void Remove(Entity *entity);
-		//! return our parent Entity, if we have one
+		////! add an Entity as a child
+		//void Add(Entity *entity);
+		////! remove an Entity from our list of children
+		//void Remove(Entity *entity);
 
 		//! set parent entity
-		//void SetParent(Entity *parent);
+		void SetParent(Entity *parent);
 		//! return pointer to parent entity
 		Entity *GetParent();
 		//! return pointer to the Scene we are currently in
@@ -136,60 +124,50 @@ namespace Monocle
 
 		// used by editors
 		bool IsPositionInGraphic(const Vector2 &position);
-		Entity* GetChildEntityAtPosition(const Vector2 &position);
+		
 		Vector2 GetWorldPosition(const Vector2 &position=Vector2::zero);
 		Vector2 GetWorldScale(const Vector2 &scale);
 		Vector2 GetLocalPosition(const Vector2 &worldPosition);
 
-		// enqueue destruction of this entity
-		//void Die();
-
-		template <class T>
-		inline T *GetFirstChildOfType()
-		{
-			T *t = NULL;
-			for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-			{
-				t = dynamic_cast<T*>(*i);
-				if (t)
-				{
-					return t;
-				}
-			}
-			return NULL;
-		}
 
 		void Invoke(void (*functionPointer)(void*), float delay);
-
-		const std::list<Entity*>* GetChildren();
 
 		float depth;
 		bool isVisible;
 		Vector2 followCamera;
 
-		Color color; // <- may move this later (material system?)
+		Color color;
+
+		
 
 	protected:
-		void DestroyChildren();
+		//void DestroyChildren();
 
 		friend class Scene;
 
 		//! The scene that contains the entity
 		Scene* scene;
 
-		Entity *GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity, float &smallestSqrMag);
+		//Entity *GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity, float &smallestSqrMag);
+		
 		// notes are very simple "messages"
 		void SendNoteToScene(const std::string &note);
 		// send a note to all entites with tag "tag"
 		void SendNote(const std::string &tag, const std::string &note);
 		virtual void ReceiveNote(const std::string &tag, const std::string &note);
 		
-		std::list<Entity*> children;
+		//std::list<Entity*> children;
 
 		bool isEnabled;
 
+		void ApplyMatrix();
+		void MatrixChain();
+
 	private:
+		int id;
+
 		Entity *parent;
+
 		// only for use by Collision class
 		friend class Collision;
 		Collider* GetCollider();
@@ -208,5 +186,25 @@ namespace Monocle
 
 		std::list<InvokeData*> invokes;
 		std::list<InvokeData*> removeInvokes;
+
+
+	public:
+		//Entity* GetChildEntityAtPosition(const Vector2 &position);
+		//template <class T>
+		//inline T *GetFirstChildOfType()
+		//{
+		//	T *t = NULL;
+		//	for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		//	{
+		//		t = dynamic_cast<T*>(*i);
+		//		if (t)
+		//		{
+		//			return t;
+		//		}
+		//	}
+		//	return NULL;
+		//}
+
+		//const std::list<Entity*>* GetChildren();
 	};
 }

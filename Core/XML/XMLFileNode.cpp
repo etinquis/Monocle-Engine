@@ -7,16 +7,63 @@
 namespace Monocle
 {
 	XMLFileNode::XMLFileNode()
-		: element(NULL)
+		: element(NULL), iterator(NULL)
 	{
 
 	}
 
 	XMLFileNode::XMLFileNode(TiXmlElement *element)
-		: element(element)
+		: element(element), iterator(NULL)
 	{
 
 	}
+
+	XMLFileNode::~XMLFileNode()
+	{
+		if (iterator)
+		{
+			delete iterator;
+			iterator = NULL;
+		}
+	}
+	
+	FileNode* XMLFileNode::FirstChildNode(const std::string &name)
+	{
+		if (!iterator)
+			iterator = new XMLFileNode(element->FirstChildElement(name));
+		else
+			iterator->element = element->FirstChildElement(name);
+
+		if (iterator != NULL && iterator->element == NULL)
+		{
+			delete iterator;
+			iterator = NULL;
+		}
+
+		return iterator;
+	}
+	
+	FileNode* XMLFileNode::NextChildNode(const std::string &name)
+	{
+		if (iterator)
+			iterator->element = iterator->element->NextSiblingElement(name);
+
+		if (iterator->element == NULL)
+		{
+			delete iterator;
+			iterator = NULL;
+		}
+
+		return iterator;
+	}
+
+	/*
+	FileNode* XMLFileNode::InsertEndChildNode(FileNode *fileNode)
+	{
+		XMLFileNode *xmlFileNode = (XMLFileNode*)fileNode;
+		xmlFileNode->element->InsertEndChild(xmlFileNode->element);
+	}
+	*/
 
 	/// WRITE
 	void XMLFileNode::Write(const std::string &name, const int &value)

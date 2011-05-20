@@ -74,7 +74,7 @@ namespace Monocle
 			graphic = NULL;
 		}
 
-		DestroyChildren();
+		//DestroyChildren();
 
 		// clean up invokes
 		for (std::list<InvokeData*>::iterator i = invokes.begin(); i != invokes.end(); ++i)
@@ -84,24 +84,24 @@ namespace Monocle
 		invokes.clear();
 	}
 
-	void Entity::DestroyChildren()
-	{
-		// clean up children
-		for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-		{
-			(*i)->Destroyed();
-			delete (*i);
-		}
+	//void Entity::DestroyChildren()
+	//{
+	//	// clean up children
+	//	for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+	//	{
+	//		(*i)->Destroyed();
+	//		delete (*i);
+	//	}
 
-		children.clear();
-	}
+	//	children.clear();
+	//}
 
 	void Entity::Update()
 	{
-		for(std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-		{
-			(*i)->Update();
-		}
+		//for(std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		//{
+		//	(*i)->Update();
+		//}
 
 		// clean up invokes
 		for(std::list<InvokeData*>::iterator i = invokes.begin(); i != invokes.end(); ++i)
@@ -123,9 +123,7 @@ namespace Monocle
 
 	void Entity::RemoveSelf()
 	{
-		if (parent)
-			parent->Remove(this);
-		else if (scene)
+		if (scene)
 			scene->Remove(this);
 	}
 
@@ -144,13 +142,8 @@ namespace Monocle
 		return isEnabled;
 	}
 
-	void Entity::Render()
+	void Entity::ApplyMatrix()
 	{
-        const int MIN_LAYER = -100;
-        const int MAX_LAYER = 100;
-        
-        Graphics::PushMatrix();
-        
 		if (followCamera == Vector2::zero || (Debug::render && Debug::selectedEntity != this && IsDebugLayer()))
 			Graphics::Translate(position.x, position.y, depth);
 		else
@@ -160,17 +153,28 @@ namespace Monocle
 			Graphics::Rotate(rotation, 0, 0, 1);
         
 		Graphics::Scale(scale);
+
+	}
+
+	void Entity::Render()
+	{
+        const int MIN_LAYER = -100;
+        const int MAX_LAYER = 100;
         
-        for (int layer = MAX_LAYER; layer > 0; layer--)
-		{
-			for(std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-			{
-				if ((*i)->IsLayer(layer) && (*i)->isVisible)
-				{
-					(*i)->Render();
-				}
-			}
-		}
+        Graphics::PushMatrix();
+
+		MatrixChain();
+                
+		//for (int layer = MAX_LAYER; layer > 0; layer--)
+		//{
+		//	for(std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		//	{
+		//		if ((*i)->IsLayer(layer) && (*i)->isVisible)
+		//		{
+		//			(*i)->Render();
+		//		}
+		//	}
+		//}
 
 		if (graphic != NULL)
 		{
@@ -178,16 +182,16 @@ namespace Monocle
 			graphic->Render(this);
 		}
 
-		for (int layer = 0; layer >= MIN_LAYER; layer--)
-		{
-			for(std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-			{
-				if ((*i)->IsLayer(layer) && (*i)->isVisible)
-				{
-					(*i)->Render();
-				}
-			}
-		}
+		//for (int layer = 0; layer >= MIN_LAYER; layer--)
+		//{
+		//	for(std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		//	{
+		//		if ((*i)->IsLayer(layer) && (*i)->isVisible)
+		//		{
+		//			(*i)->Render();
+		//		}
+		//	}
+		//}
         
         Graphics::PopMatrix();
 		
@@ -200,11 +204,15 @@ namespace Monocle
 			Graphics::BindTexture(NULL);
             
 			Graphics::PushMatrix();
+
+			MatrixChain();
 			
+			/*
 			if (followCamera == Vector2::zero || Debug::render)
 				Graphics::Translate(position.x, position.y, depth);
 			else
 				Graphics::Translate(scene->GetCamera()->position * followCamera + position * (Vector2::one - followCamera));
+			*/
             
 			if (Debug::selectedEntity == this)
 				Graphics::SetColor(Color::orange);
@@ -312,20 +320,20 @@ namespace Monocle
 		return layer > Debug::layerMin && layer < Debug::layerMax;
 	}
 
-	///TODO: enqueue for safety
-	// add an entity as a child
-	void Entity::Add(Entity *entity)
-	{
-		entity->parent = this;
-		children.push_back(entity);
-	}
+	/////TODO: enqueue for safety
+	//// add an entity as a child
+	//void Entity::Add(Entity *entity)
+	//{
+	//	entity->parent = this;
+	//	children.push_back(entity);
+	//}
 
-	///TODO: enqueue for safety
-	void Entity::Remove(Entity *entity)
-	{
-		entity->parent = NULL;
-		children.remove(entity);
-	}
+	/////TODO: enqueue for safety
+	//void Entity::Remove(Entity *entity)
+	//{
+	//	entity->parent = NULL;
+	//	children.remove(entity);
+	//}
 
 	void Entity::SetCollider(Collider *collider)
 	{
@@ -444,10 +452,23 @@ namespace Monocle
 	Vector2 Entity::GetWorldPosition(const Vector2 &position)
 	{
 		Vector2 returnPos;
+
 		Graphics::PushMatrix();
 		Graphics::IdentityMatrix();
-        //Graphics::ResolutionMatrix();
 
+		MatrixChain();
+
+		Graphics::Translate(position);
+
+		returnPos = Graphics::GetMatrixPosition();
+
+		Graphics::PopMatrix();
+
+		return returnPos;
+	}
+
+	void Entity::MatrixChain()
+	{
 		std::list<Entity*> entityChain;
 		
 		Entity *current = this;
@@ -459,18 +480,11 @@ namespace Monocle
 
 		for (std::list<Entity*>::reverse_iterator i = entityChain.rbegin(); i != entityChain.rend(); ++i)
 		{
-			Graphics::Translate(scene->GetCamera()->position * (*i)->followCamera + (*i)->position * (Vector2::one - (*i)->followCamera));
-			Graphics::Rotate((*i)->rotation, 0, 0, 1);
-			Graphics::Scale((*i)->scale);
+			(*i)->ApplyMatrix();
+			//Graphics::Translate(scene->GetCamera()->position * (*i)->followCamera + (*i)->position * (Vector2::one - (*i)->followCamera));
+			//Graphics::Rotate((*i)->rotation, 0, 0, 1);
+			//Graphics::Scale((*i)->scale);
 		}
-
-		Graphics::Translate(position);
-
-		returnPos = Graphics::GetMatrixPosition();
-
-		Graphics::PopMatrix();
-
-		return returnPos;
 	}
 
 	/// TODO: write our own matrix functions to replace this stuff
@@ -498,8 +512,6 @@ namespace Monocle
 			Graphics::Translate(-(*i)->position);
 		}
 
-		
-
 		returnPos = Graphics::GetMatrixPosition();
 
 		Graphics::PopMatrix();
@@ -508,20 +520,20 @@ namespace Monocle
 	}
 
 
-	Entity* Entity::GetChildEntityAtPosition(const Vector2 &position)
-	{
-		for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-		{
-			Entity *entity = (*i)->GetChildEntityAtPosition(position);
-			if (entity)
-				return entity;
-		}
-		
-		if (IsPositionInGraphic(position))
-			return this;
+	//Entity* Entity::GetChildEntityAtPosition(const Vector2 &position)
+	//{
+	//	for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+	//	{
+	//		Entity *entity = (*i)->GetChildEntityAtPosition(position);
+	//		if (entity)
+	//			return entity;
+	//	}
+	//	
+	//	if (IsPositionInGraphic(position))
+	//		return this;
 
-		return NULL;
-	}
+	//	return NULL;
+	//}
 
 	void Entity::Save(FileNode *fileNode)
 	{
@@ -567,10 +579,10 @@ namespace Monocle
 		fileNode->Read("followCamera", followCamera);
 	}
 
-	//void Entity::SetParent(Entity *parent)
-	//{
-	//	this->parent = parent;
-	//}
+	void Entity::SetParent(Entity *parent)
+	{
+		this->parent = parent;
+	}
 
 	Entity *Entity::GetParent()
 	{
@@ -582,44 +594,44 @@ namespace Monocle
 		return scene;
 	}
 
-	/// TODO: make recursive
-	Entity *Entity::GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity, float &smallestSqrMag)
-	{
-		Entity *nearestChild = NULL;
+	///// TODO: make recursive
+	//Entity *Entity::GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity, float &smallestSqrMag)
+	//{
+	//	Entity *nearestChild = NULL;
 
-		for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-		{
-			if ((*i) != ignoreEntity)
-			{
-				Vector2 wp = (*i)->GetWorldPosition();
-				Vector2 diff = wp - position;
-				//printf("wp: %f, %f\n", wp.x, wp.y);
-				//printf("diff: %f, %f\n", diff.x, diff.y);
-				if (diff.IsInRange(ENTITY_CONTROLPOINT_SIZE))
-				{
-					float sqrMag = diff.GetSquaredMagnitude();
-					if (smallestSqrMag == -1 || sqrMag < smallestSqrMag)
-					{
-						smallestSqrMag = sqrMag;
-						nearestChild = (*i);
-					}
-				}
-			}
+	//	for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+	//	{
+	//		if ((*i) != ignoreEntity)
+	//		{
+	//			Vector2 wp = (*i)->GetWorldPosition();
+	//			Vector2 diff = wp - position;
+	//			//printf("wp: %f, %f\n", wp.x, wp.y);
+	//			//printf("diff: %f, %f\n", diff.x, diff.y);
+	//			if (diff.IsInRange(ENTITY_CONTROLPOINT_SIZE))
+	//			{
+	//				float sqrMag = diff.GetSquaredMagnitude();
+	//				if (smallestSqrMag == -1 || sqrMag < smallestSqrMag)
+	//				{
+	//					smallestSqrMag = sqrMag;
+	//					nearestChild = (*i);
+	//				}
+	//			}
+	//		}
 
-			Entity *newNearestChild = (*i)->GetNearestEntityByControlPoint(position, tag, ignoreEntity, smallestSqrMag);
-			if (newNearestChild)
-			{
-				nearestChild = newNearestChild;
-			}
-		}
+	//		Entity *newNearestChild = (*i)->GetNearestEntityByControlPoint(position, tag, ignoreEntity, smallestSqrMag);
+	//		if (newNearestChild)
+	//		{
+	//			nearestChild = newNearestChild;
+	//		}
+	//	}
 
-		return nearestChild;
-	}
+	//	return nearestChild;
+	//}
 
-	const std::list<Entity*>* Entity::GetChildren()
-	{
-		return &children;
-	}
+	//const std::list<Entity*>* Entity::GetChildren()
+	//{
+	//	return &children;
+	//}
 
 	
 	void Entity::Invoke(void (*functionPointer)(void*), float delay)

@@ -31,6 +31,14 @@ namespace Monocle
 		SetCollider(pathCollider = new PathCollider(startNode, radius));
 	}
 
+	//void PathMesh::Adopted(Entity *entity)
+	//{
+	//	if (!startNode)
+	//	{
+	//		startNode = dynamic_cast<Node*>(entity);
+	//	}
+	//}
+
 	void PathMesh::SetStartNode(Node *node)
 	{
 		nodes.clear();
@@ -95,6 +103,18 @@ namespace Monocle
 			fileNode->Write("flipX", flipX);
 		if (flipY)
 			fileNode->Write("flipY", flipY);
+
+		/*
+		FileNode *curFileNode = NULL;
+		Node *curNode = startNode;
+		while (curNode)
+		{
+			curFileNode = fileNode->NewNode("Node");
+			curNode->Save(curFileNode);
+			fileNode->InsertEndChildNode(curFileNode);
+			curNode = curNode->GetNext();
+		}
+		*/
 	}
 
 	void PathMesh::Load(FileNode *fileNode)
@@ -125,20 +145,41 @@ namespace Monocle
 		startNode = NULL;
 		//startNode = GetFirstChildOfType<Node>();
 		Node *lastNode = NULL;
-		for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		Node *firstNode = NULL;
+
+		FileNode *curNode = fileNode->FirstChildNode("Node");
+		while (curNode)
 		{
-			Node *node = dynamic_cast<Node*>(*i);
-			if (node)
-			{
-				if (!startNode)
-					startNode = node;
-				if (lastNode)
-				{
-					lastNode->SetNext(node);
-				}
-				lastNode = node;
-			}
+			Node *newNode = scene->Create<Node>();
+			newNode->Load(curNode);
+			
+			if (firstNode == NULL)
+				firstNode = newNode;
+			if (lastNode)
+				lastNode->SetNext(newNode);
+			lastNode = newNode;
+
+			newNode->SetParent(this);
+
+			curNode = fileNode->NextChildNode("Node");
 		}
+
+		startNode = firstNode;
+
+		//for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		//{
+		//	Node *node = dynamic_cast<Node*>(*i);
+		//	if (node)
+		//	{
+		//		if (!startNode)
+		//			startNode = node;
+		//		if (lastNode)
+		//		{
+		//			lastNode->SetNext(node);
+		//		}
+		//		lastNode = node;
+		//	}
+		//}
 
 		MakeCollision(radius);
 	}

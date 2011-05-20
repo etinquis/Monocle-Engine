@@ -16,11 +16,11 @@ namespace Monocle
 	class Entity;
 	
 
-	enum SearchType
-	{
-		SEARCH_TOP = 0,
-		SEARCH_RECURSIVE
-	};
+	//enum SearchType
+	//{
+	//	SEARCH_TOP = 0,
+	//	SEARCH_RECURSIVE
+	//};
 
 
 	//! Base class that describes a scene in a Game.
@@ -54,10 +54,12 @@ namespace Monocle
 
 		//! create a new entity of type T and add it to the scene
 		template<class T>
-		T* Create()
+		T* Create(Entity *parent=NULL)
 		{
 			T *t = new T();
 			Add(t);
+			if (parent)
+				t->SetParent(parent);
 			return t;
 		}
 
@@ -87,7 +89,7 @@ namespace Monocle
 		//Entity* GetNearestEntityContaining(const Vector2 &position, Entity *ignoreEntity=NULL);
 		Entity* GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity=NULL);
 
-		Entity* GetEntityAtPosition(const Vector2 &position, SearchType searchType=SEARCH_TOP);
+		Entity* GetEntityAtPosition(const Vector2 &position);
 
 		Entity* GetFirstEntityWithTag(const std::string &tag);
 
