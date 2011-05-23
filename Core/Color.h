@@ -17,6 +17,7 @@ namespace Monocle
 		float& operator[] (unsigned int i);
 		bool operator==(const Color& rhs);
 		bool operator!=(const Color& rhs);
+		bool operator==(const Color& rhs);
 
 		//! Red, green, blue, alpha (translucency)
 		float r, g, b, a;
@@ -32,7 +33,7 @@ namespace Monocle
 		static Color purple;
 	};
 
-	Color operator+(const Color& lhs, const Color& rhs);	
+	Color operator+(const Color& lhs, const Color& rhs);
 	Color operator-(const Color& lhs, const Color& rhs);
 	Color operator*(float lhs, const Color& rhs);		// left scalar multiplication
 	Color operator*(const Color& lhs, float rhs);		// right scalar multiplication

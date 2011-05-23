@@ -29,16 +29,17 @@ namespace Monocle
 	{
 
 	}
-	
-	bool Color::operator==(const Color& rhs)
-	{
-		return ((r == rhs.r) && (g == rhs.g) && (b == rhs.b) && (a == rhs.a));
-	}
 
 	bool Color::operator!=(const Color& rhs)
 	{
 		return ((r != rhs.r) || (g != rhs.g) || (b != rhs.b) || (a != rhs.a));
 	}
+
+    bool Color::operator==(const Color& rhs)
+	{
+		return ((r == rhs.r) && (g == rhs.g) && (b == rhs.b) && (a == rhs.a));
+	}
+
 
 	void Color::Clamp()
 	{
@@ -58,7 +59,8 @@ namespace Monocle
 		case 0: return r;
 		case 1: return g;
 		case 2: return b;
-		default: return a;
+		case 3: return a;
+		default: return r; // TODO: Handle this scenario with an assertion?
 		}
 	}
 
@@ -66,7 +68,7 @@ namespace Monocle
 	{
 		return Color(lhs.r + rhs.r, lhs.g + rhs.g, lhs.b + rhs.b, lhs.a + rhs.a);
 	}
-	
+
 	Color operator-(const Color& lhs, const Color& rhs)
 	{
 		return Color(lhs.r - rhs.r, lhs.g - rhs.g, lhs.b - rhs.b, lhs.a - rhs.a);
@@ -76,14 +78,9 @@ namespace Monocle
 	{
 		return Color(lhs * rhs.r, lhs * rhs.g, lhs * rhs.b, lhs * rhs.a);
 	}
-	
+
 	Color operator*(const Color& lhs, float rhs)		// right scalar multiplication
 	{
 		return Color(lhs.r * rhs, lhs.g * rhs, lhs.b * rhs, lhs.a * rhs);
-	}
-
-	Color operator/(const Color& lhs, float rhs)
-	{
-		return Color(lhs.r / rhs, lhs.g / rhs, lhs.b / rhs, lhs.a / rhs);
 	}
 }
