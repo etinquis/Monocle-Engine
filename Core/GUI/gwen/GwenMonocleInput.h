@@ -45,7 +45,7 @@ namespace Monocle
 
                 bool shift = Monocle::Input::IsKeyHeld(Monocle::KEY_LSHIFT);
 
-                if(Monocle::Input::IsKeyPressed(Monocle::KEY_A)) { m_Canvas->InputCharacter( (shift ? L'A' : L'a') );}
+                if(Monocle::Input::IsKeyPressed(Monocle::KEY_A)) { m_Canvas->InputCharacter( shift ? L'A' : L'a');}
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_B)) { m_Canvas->InputCharacter( shift ? L'B' : L'b');}
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_C)) { m_Canvas->InputCharacter( shift ? L'C' : L'c');}
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_D)) { m_Canvas->InputCharacter( shift ? L'D' : L'd');}
@@ -101,11 +101,25 @@ namespace Monocle
                 Monocle::Vector2 mpos = Monocle::Input::GetMousePosition();
                 m_Canvas->InputMouseMoved( mpos.x, mpos.y, mpos.x - lastMPos.x, mpos.y - lastMPos.y );
 
-                m_Canvas->InputMouseButton( 0, Monocle::Input::IsMouseButtonPressed(Monocle::MOUSE_BUTTON_LEFT) );
-                m_Canvas->InputMouseButton( 1, Monocle::Input::IsMouseButtonPressed(Monocle::MOUSE_BUTTON_RIGHT) );
-                m_Canvas->InputMouseButton( 2, Monocle::Input::IsMouseButtonPressed(Monocle::MOUSE_BUTTON_MIDDLE) );
+                static bool lastMouseLeftState = Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_LEFT),
+                            lastMouseRightState = Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_RIGHT),
+                            lastMouseMiddleState = Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_MIDDLE);
 
-                m_Canvas->InputMouseWheel( Monocle::Input::GetMouseScroll() - lastMScroll );
+                if(lastMouseLeftState != Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_LEFT))
+                {
+                    m_Canvas->InputMouseButton( 0, Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_LEFT) );
+                    lastMouseLeftState = Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_LEFT);
+                }
+                if(lastMouseRightState != Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_RIGHT))
+                {
+                    m_Canvas->InputMouseButton( 1, Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_RIGHT) );
+                    lastMouseRightState = Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_RIGHT);
+                }
+                if(lastMouseMiddleState != Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_MIDDLE))
+                {
+                    m_Canvas->InputMouseButton( 2, Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_MIDDLE) );
+                    lastMouseMiddleState = Monocle::Input::IsMouseButtonHeld(Monocle::MOUSE_BUTTON_MIDDLE);
+                }
 
                 lastMScroll = Monocle::Input::GetMouseScroll();
                 lastMPos = Monocle::Input::GetMousePosition();
