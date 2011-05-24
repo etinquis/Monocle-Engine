@@ -2,8 +2,21 @@
 #include <Gwen/Skins/Simple.h>
 #include <GUI/gwen/Gwen.h>
 #include <Gwen/Controls/Button.h>
+#include <Gwen/Controls/HSVColorPicker.h>
+#include <Gwen/Controls/TextBox.h>
+#include <GUI/gwen/GwenMonocleInput.h>
 
 #include <Monocle.h>
+
+class Skin : public Gwen::Skin::Simple
+{
+public:
+    Skin() : Gwen::Skin::Simple()
+    {
+        m_DefaultFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
+        m_DefaultFont.size = 24;
+    }
+};
 
 class GUIScene : public Monocle::Scene
 {
@@ -11,15 +24,33 @@ public:
     void Begin()
     {
         pRenderer = new Monocle::GUI::GwenRenderer();
-        Gwen::Skin::Simple skin;
+        skin = Skin();
         skin.SetRender( pRenderer );
 
         panel = new Monocle::GUI::GwenPanel(&skin);
-        panel->SetSize(1024,512);
+        panel->SetSize(800,600);
+
+        input = Monocle::GUI::GwenInput();
+        input.Initialize(panel);
 
         pButton = new Gwen::Controls::Button( panel );
-        pButton->SetBounds( 10, 10, 200, 100 );
+        pButton->SetBounds(10,10,200,100);
         pButton->SetText( "My First Button" );
+
+        pColor = new Gwen::Controls::HSVColorPicker( panel );
+        pColor->SetBounds(10,250,200,100);
+
+        pText = new Gwen::Controls::TextBox( panel );
+        pText->SetBounds(250,10,200,100);
+
+        Add(panel);
+    }
+
+    void Update()
+    {
+        Monocle::Scene::Update();
+
+        input.ProcessInput();
     }
 
     void End()
@@ -37,6 +68,11 @@ private:
     Monocle::GUI::GwenRenderer *pRenderer;
     Monocle::GUI::GwenPanel *panel;
     Gwen::Controls::Button *pButton;
+    Gwen::Controls::HSVColorPicker *pColor;
+    Gwen::Controls::TextBox *pText;
+    Monocle::GUI::GwenInput input;
+
+    Skin skin;
 };
 
 int main()

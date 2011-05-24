@@ -72,6 +72,7 @@ namespace Monocle
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_Y)) { m_Canvas->InputCharacter( shift ? L'Y' : L'y');}
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_Z)) { m_Canvas->InputCharacter( shift ? L'Z' : L'z');}
 
+                if(Monocle::Input::IsKeyPressed(Monocle::KEY_SPACE)) {m_Canvas->InputCharacter( L' ');}
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_EQUALS)) {m_Canvas->InputCharacter( shift ? L'+' : L'=');}
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_SLASH)) { m_Canvas->InputCharacter( shift ? L'?' : L'/');}
                 if(Monocle::Input::IsKeyPressed(Monocle::KEY_BACKSLASH)) { m_Canvas->InputCharacter( shift ? L'|' : L'\\');}
