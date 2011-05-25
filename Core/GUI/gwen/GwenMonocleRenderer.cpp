@@ -38,6 +38,7 @@ namespace Monocle
 
         void GwenRenderer::LoadTexture( Gwen::Texture *pTexture )
         {
+            std::cout << "[GwenRenderer] LoadTexture" << std::endl;
             Monocle::TextureAsset *tex = Monocle::Assets::RequestTexture( pTexture->name.Get() );
 
             if(tex)
@@ -118,9 +119,10 @@ namespace Monocle
 
         void GwenRenderer::DrawTexturedRect(Gwen::Texture *tex, Gwen::Rect rect, float u1, float v1, float u2, float v2)
         {
+            TextureAsset *data = (TextureAsset*)tex->data;
             Translate(rect);
-            Monocle::Graphics::BindTexture( (TextureAsset*)tex->data );
-            Monocle::Graphics::RenderQuad( rect.w, rect.h, Monocle::Vector2( u1, v1 ), Monocle::Vector2::one, Monocle::Vector2( rect.w / 2, rect.h / 2) );
+            Monocle::Graphics::BindTexture( data );
+            Monocle::Graphics::RenderQuad( rect.w, rect.h, Monocle::Vector2( u1, v1 ), Monocle::Vector2( u2 - u1, v2 - v1 ), Monocle::Vector2( rect.x + (rect.w / 2), rect.y + (rect.h / 2)) );
         }
 
         void GwenRenderer::RenderText( Gwen::Font *font, Gwen::Point pos, const Gwen::UnicodeString& text )
