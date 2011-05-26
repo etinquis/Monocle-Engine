@@ -4,6 +4,7 @@
 #include <Gwen/Controls/Button.h>
 #include <Gwen/Controls/HSVColorPicker.h>
 #include <Gwen/Controls/TextBox.h>
+#include <Gwen/Controls/WindowControl.h>
 #include <GUI/gwen/GwenMonocleInput.h>
 
 #include <Monocle.h>
@@ -43,6 +44,9 @@ public:
         pText = new Gwen::Controls::TextBox( panel );
         pText->SetBounds(250,10,200,100);
 
+        pWindow = new Gwen::Controls::WindowControl( panel );
+        pWindow->SetBounds(50,50,200,100);
+
         Add(panel);
     }
 
@@ -63,6 +67,9 @@ public:
 
         delete pRenderer;
         pRenderer = NULL;
+
+        delete pWindow;
+        pWindow = NULL;
     }
 private:
     Monocle::GUI::GwenRenderer *pRenderer;
@@ -70,6 +77,7 @@ private:
     Gwen::Controls::Button *pButton;
     Gwen::Controls::HSVColorPicker *pColor;
     Gwen::Controls::TextBox *pText;
+    Gwen::Controls::WindowControl *pWindow;
     Monocle::GUI::GwenInput input;
 
     Skin skin;
