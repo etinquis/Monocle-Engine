@@ -1,5 +1,6 @@
 #include <GUI/gwen/GwenMonocleRenderer.h>
 #include <Gwen/Skins/Simple.h>
+#include <Gwen/Skins/TexturedBase.h>
 #include <GUI/gwen/Gwen.h>
 #include <Gwen/Controls/Button.h>
 #include <Gwen/Controls/HSVColorPicker.h>
@@ -19,14 +20,31 @@ public:
     }
 };
 
+class TexSkin : public Gwen::Skin::TexturedBase
+{
+public:
+    TexSkin() : Gwen::Skin::TexturedBase()
+    {
+
+    }
+
+    void Init( Gwen::TextObject texture )
+    {
+        Gwen::Skin::TexturedBase::Init(texture);
+        m_DefaultFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
+        m_DefaultFont.size = 24;
+    }
+};
+
 class GUIScene : public Monocle::Scene
 {
 public:
     void Begin()
     {
         pRenderer = new Monocle::GUI::GwenRenderer();
-        skin = Skin();
+        skin = TexSkin();
         skin.SetRender( pRenderer );
+        skin.Init("GUITest/DefaultSkin.png");
 
         panel = new Monocle::GUI::GwenPanel(&skin);
         panel->SetSize(800,600);
@@ -80,7 +98,7 @@ private:
     Gwen::Controls::WindowControl *pWindow;
     Monocle::GUI::GwenInput input;
 
-    Skin skin;
+    TexSkin skin;
 };
 
 int main()
