@@ -215,34 +215,49 @@ namespace Monocle
 	{
 		//Entity *newEntity = (Entity*)(new typeid(T));
 		Entity *newEntity = entity->Clone();
-		newEntity->position = position;
-		//if (entity->GetParent())
-		//	entity->GetParent()->Add(newEntity);
-		//else
 		scene->Add(newEntity);
+
+		if (entity->GetParent())
+		{
+			newEntity->position = position - entity->GetParent()->GetWorldPosition();
+		}
+		else
+		{
+			newEntity->position = position;
+		}
+
+		// special case code
+		Node *node = dynamic_cast<Node*>(newEntity);
+		if (node && selectedNode)
+		{
+			selectedNode->InsertNext(node);
+		}
+
+		newEntity->SetParent(entity->GetParent());
+
 		Select(newEntity);
 	}
 
-	// cloning a node is a special case for now
-	void LevelEditor::CloneNode()
-	{
-		if (selectedEntity && selectedNode)
-		{
-			Node *newNode = new Node(Input::GetWorldMousePosition());
-			newNode->Copy(selectedNode);
-			//if (selectedNode->GetParent())
-			//{
-			//	///HACK: replace with "GetLocalPosition" function
-			//	newNode->position = Input::GetWorldMousePosition() - selectedNode->GetParent()->position;
-			//	selectedNode->GetParent()->Add(newNode);
-			//}
-			//else
-			//	scene->Add(newNode);
-			scene->Add(newNode);
-			selectedNode->InsertNext(newNode);
-			Select(newNode);
-		}
-	}
+	//// cloning a node is a special case for now
+	//void LevelEditor::CloneNode()
+	//{
+	//	if (selectedEntity && selectedNode)
+	//	{
+	//		Node *newNode = new Node(Input::GetWorldMousePosition());
+	//		newNode->Copy(selectedNode);
+	//		//if (selectedNode->GetParent())
+	//		//{
+	//		//	///HACK: replace with "GetLocalPosition" function
+	//		//	newNode->position = Input::GetWorldMousePosition() - selectedNode->GetParent()->position;
+	//		//	selectedNode->GetParent()->Add(newNode);
+	//		//}
+	//		//else
+	//		//	scene->Add(newNode);
+	//		scene->Add(newNode);
+	//		selectedNode->InsertNext(newNode);
+	//		Select(newNode);
+	//	}
+	//}
 
 	void LevelEditor::Select(Entity *entity)
 	{
@@ -322,7 +337,7 @@ namespace Monocle
 		if (Input::IsKeyPressed(keyFocus))
 		{
 			//Graphics::MoveCameraPosition(selectedEntity->position, 0.125f, EASE_OUTSIN);
-			scene->GetCamera()->position = selectedEntity->position;
+			scene->GetMainCamera()->position = selectedEntity->position;
 		}
 
 		if (Input::IsKeyHeld(keyFlip))
@@ -339,10 +354,12 @@ namespace Monocle
 
 		if (selectedNode)
 		{
+			/*
 			if (Input::IsKeyPressed(keyClone))
 			{
 				CloneNode();
 			}
+			*/
 			if (Input::IsKeyPressed(keyDelete))
 			{
 				Node *lastSelectedNode = selectedNode;
