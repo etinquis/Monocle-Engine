@@ -615,6 +615,22 @@ namespace Monocle
         delete tmpline;
         delete data;
     }
+    
+    void Graphics::BeginScissor(Monocle::Rect scissorRect)
+    {
+        int w = scissorRect.bottomRight.x - scissorRect.topLeft.x,
+            h = scissorRect.bottomRight.y - scissorRect.topLeft.y;
+        
+        Vector2 bl = Vector2 ( scissorRect.topLeft.x, Platform::GetHeight() - (scissorRect.topLeft.y + h ));
+        
+        glScissor(bl.x, bl.y, w, h);
+        glEnable(GL_SCISSOR_TEST);
+    }
+    
+    void Graphics::EndScissor()
+    {
+        glDisable(GL_SCISSOR_TEST);
+    }
 }
 
 #endif
