@@ -13,6 +13,7 @@ namespace Monocle
 	class Entity;
     class TextureAsset;
     class FontAsset;
+    class Rect;
     
 	enum BlendType
 	{
@@ -111,6 +112,9 @@ namespace Monocle
 		static void BeginLineStrip();
 		static void Vertex(Vector2 vertex);
 		static void EndLine();
+		
+		static void BeginScissor(Monocle::Rect scissorRect);
+		static void EndScissor();
 
 		static void RenderPathMesh(const std::vector<Node*> &nodes, int cells, float size, bool flipX=false, bool flipY=false);
 		
