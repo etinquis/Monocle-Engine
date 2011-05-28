@@ -8,6 +8,8 @@
 #include <Gwen/Controls/WindowControl.h>
 #include <GUI/gwen/GwenMonocleInput.h>
 
+#include <Gwen/UnitTest/UnitTest.h>
+
 #include <Monocle.h>
 
 class Skin : public Gwen::Skin::Simple
@@ -16,7 +18,10 @@ public:
     Skin() : Gwen::Skin::Simple()
     {
         m_DefaultFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
-        m_DefaultFont.size = 24;
+        m_DefaultFont.size = 12;
+        
+        m_MarlettFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
+        m_MarlettFont.size = 12;
     }
 };
 
@@ -32,7 +37,10 @@ public:
     {
         Gwen::Skin::TexturedBase::Init(texture);
         m_DefaultFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
-        m_DefaultFont.size = 24;
+        m_DefaultFont.size = 12;
+        
+        m_MarlettFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
+        m_MarlettFont.size = 12;
     }
 };
 
@@ -49,21 +57,9 @@ public:
         panel = new Monocle::GUI::GwenPanel(&skin);
         panel->SetSize(800,600);
 
-        input = Monocle::GUI::GwenInput();
-        input.Initialize(panel);
-
-        pButton = new Gwen::Controls::Button( panel );
-        pButton->SetBounds(10,10,200,100);
-        pButton->SetText( "My First Button" );
-
-        pColor = new Gwen::Controls::HSVColorPicker( panel );
-        pColor->SetBounds(10,250,200,100);
-
-        pText = new Gwen::Controls::TextBox( panel );
-        pText->SetBounds(250,10,200,100);
-
-        pWindow = new Gwen::Controls::WindowControl( panel );
-        pWindow->SetBounds(50,50,200,100);
+        UnitTest *pUnit = new UnitTest( panel );
+        
+        input.Initialize( panel );
 
         Add(panel);
     }
@@ -77,27 +73,18 @@ public:
 
     void End()
     {
-        delete pButton;
-        pButton = NULL;
-
         delete panel;
         panel = NULL;
 
         delete pRenderer;
         pRenderer = NULL;
 
-        delete pWindow;
-        pWindow = NULL;
     }
 private:
     Monocle::GUI::GwenRenderer *pRenderer;
     Monocle::GUI::GwenPanel *panel;
-    Gwen::Controls::Button *pButton;
-    Gwen::Controls::HSVColorPicker *pColor;
-    Gwen::Controls::TextBox *pText;
-    Gwen::Controls::WindowControl *pWindow;
     Monocle::GUI::GwenInput input;
-
+    
     TexSkin skin;
 };
 
