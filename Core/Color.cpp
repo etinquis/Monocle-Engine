@@ -40,6 +40,12 @@ namespace Monocle
 		return ((r != rhs.r) || (g != rhs.g) || (b != rhs.b) || (a != rhs.a));
 	}
 
+    bool Color::operator==(const Color& rhs)
+	{
+		return ((r == rhs.r) && (g == rhs.g) && (b == rhs.b) && (a == rhs.a));
+	}
+
+
 	void Color::Clamp()
 	{
 		for (unsigned int i = 0; i < 4; i++)
@@ -66,7 +72,7 @@ namespace Monocle
 	{
 		return Color(lhs.r + rhs.r, lhs.g + rhs.g, lhs.b + rhs.b, lhs.a + rhs.a);
 	}
-	
+
 	Color operator-(const Color& lhs, const Color& rhs)
 	{
 		return Color(lhs.r - rhs.r, lhs.g - rhs.g, lhs.b - rhs.b, lhs.a - rhs.a);
@@ -76,7 +82,7 @@ namespace Monocle
 	{
 		return Color(lhs * rhs.r, lhs * rhs.g, lhs * rhs.b, lhs * rhs.a);
 	}
-	
+
 	Color operator*(const Color& lhs, float rhs)		// right scalar multiplication
 	{
 		return Color(lhs.r * rhs, lhs.g * rhs, lhs.b * rhs, lhs.a * rhs);
