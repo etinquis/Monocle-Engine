@@ -53,8 +53,7 @@ namespace Monocle
 		case 0: return r;
 		case 1: return g;
 		case 2: return b;
-		case 3: return a;
-		default: return r; // TODO: Handle this scenario with an assertion?
+		default: return a;
 		}
 	}
 
@@ -76,5 +75,10 @@ namespace Monocle
 	Color operator*(const Color& lhs, float rhs)		// right scalar multiplication
 	{
 		return Color(lhs.r * rhs, lhs.g * rhs, lhs.b * rhs, lhs.a * rhs);
+	}
+
+	Color operator/(const Color& lhs, float rhs)
+	{
+		return Color(lhs.r / rhs, lhs.g / rhs, lhs.b / rhs, lhs.a / rhs);
 	}
 }

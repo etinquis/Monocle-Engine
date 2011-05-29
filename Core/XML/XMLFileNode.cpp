@@ -3,6 +3,7 @@
 #include "../Vector2.h"
 #include "../Color.h"
 #include <TinyXML/tinyxml.h>
+#include "../Entity.h"
 
 namespace Monocle
 {
@@ -45,25 +46,39 @@ namespace Monocle
 	
 	FileNode* XMLFileNode::NextChildNode(const std::string &name)
 	{
+		// if we have an iterator
 		if (iterator)
-			iterator->element = iterator->element->NextSiblingElement(name);
-
-		if (iterator->element == NULL)
 		{
-			delete iterator;
-			iterator = NULL;
+			// if we have an element
+			if (iterator->element)
+			{
+				// get the next element
+				iterator->element = iterator->element->NextSiblingElement(name);
+			}
+			
+			// if it's element is NULL
+			if (iterator->element == NULL)
+			{
+				// delete it
+				delete iterator;
+				iterator = NULL;
+			}
 		}
-
+			
 		return iterator;
 	}
 
-	/*
-	FileNode* XMLFileNode::InsertEndChildNode(FileNode *fileNode)
-	{
-		XMLFileNode *xmlFileNode = (XMLFileNode*)fileNode;
-		xmlFileNode->element->InsertEndChild(xmlFileNode->element);
-	}
-	*/
+	//FileNode* NewNode(const std::string &name)
+	//{
+	//	XMLFileNode *xmlFileNode = new XMLFileNode();
+	//	xmlFileNode->managed = new TiXmlElement(name);
+	//}
+
+	//FileNode* XMLFileNode::InsertEndChildNode(FileNode *fileNode)
+	//{
+	//	XMLFileNode *xmlFileNode = (XMLFileNode*)fileNode;
+	//	xmlFileNode->element->InsertEndChild(*xmlFileNode->element);
+	//}
 
 	/// WRITE
 	void XMLFileNode::Write(const std::string &name, const int &value)
@@ -165,5 +180,14 @@ namespace Monocle
 			std::istringstream read(string);
 			read >> value;
 		}
+	}
+
+
+	void XMLFileNode::SaveChildNode(const std::string &name, Entity *entity)
+	{
+		TiXmlElement newElement(name);
+		XMLFileNode xmlFileNode(&newElement);
+		entity->Save(&xmlFileNode);
+		element->InsertEndChild(newElement);
 	}
 }

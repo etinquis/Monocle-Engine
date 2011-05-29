@@ -18,4 +18,14 @@ namespace Monocle
 	{
 		return start + (rand() % (end-start));
 	}
+
+	float Random::Percent()
+	{
+		return ((float) rand()) / (float) RAND_MAX;
+	}
+
+	float Random::RangeFloat(float start, float end)
+	{
+		return ((((float) rand()) / (float) RAND_MAX) * (end-start)) + start;
+	}
 }
