@@ -83,6 +83,8 @@ namespace Monocle
 		//static void RenderQuad(float size);
 		static void RenderQuad(float width, float height, const Vector2 &textureOffset=Vector2::zero, const Vector2 &textureScale=Vector2::one, const Vector2 &position=Vector2::zero);
 		static void RenderQuadCustom(const Vector2 &ul, const Vector2 &ur, const Vector2 &lr, const Vector2 &ll, const Vector2 &textureOffset, const Vector2 &textureScale);
+		static void RenderQuad(Rect quad, const Vector2 &textureOffset=Vector2::zero, const Vector2 &textureScale=Vector2::one);
+		static void RenderQuad(Rect quad, Rect texCoords);
         static void RenderText(const FontAsset& font, const std::string& text, float x, float y);
 		static void RenderLineRect(float x, float y, float w, float h);
 		static void PushMatrix();

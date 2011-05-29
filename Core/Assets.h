@@ -20,7 +20,7 @@ namespace Monocle
 	//!
 	class Assets
 	{
-	public:
+	public:	
 		//! \brief Requests a texture asset
 		//! Returns a pointer to the requested Texture Asset, NULL on failure.  Calling this function multiple times with the same filename will return
 		//! a pointer to the same Texture.  Pointers returned from this function should not be deleted by the caller.
@@ -58,12 +58,15 @@ namespace Monocle
         //! \return The current content path.
         //! \sa SetContentPath
 		static const std::string &GetContentPath();
+		
+		static FontAsset *GetDefaultFont();
 
 	protected:
 		friend class Asset;
 		friend class Game;
 		
 		Assets();
+		~Assets();
 		void Init();
 		
 		static void RemoveAsset(Asset *asset);
@@ -72,6 +75,7 @@ namespace Monocle
 		void StoreAsset(Asset *asset);
 		Asset* GetAssetByFilename(const std::string &filename);
 
+		FontAsset *defaultFont;
 
 		static Assets *instance;
 		std::list<Asset*> assets;

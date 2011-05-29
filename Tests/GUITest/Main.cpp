@@ -50,9 +50,9 @@ public:
     void Begin()
     {
         pRenderer = new Monocle::GUI::GwenRenderer();
-        skin = TexSkin();
+        skin = Skin();
         skin.SetRender( pRenderer );
-        skin.Init("GUITest/DefaultSkin.png");
+        //skin.Init("GUITest/DefaultSkin.png");
 
         panel = new Monocle::GUI::GwenPanel(&skin);
         panel->SetSize(800,600);
@@ -85,7 +85,7 @@ private:
     Monocle::GUI::GwenPanel *panel;
     Monocle::GUI::GwenInput input;
     
-    TexSkin skin;
+    Skin skin;
 };
 
 int main()

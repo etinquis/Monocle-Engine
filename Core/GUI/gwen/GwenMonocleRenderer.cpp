@@ -26,6 +26,8 @@ namespace Monocle
 
         void GwenRenderer::DrawLine( int x, int y, int a, int b )
         {
+        	Translate(x,y);
+        	Translate(a,b);
             Monocle::Graphics::RenderLine( Monocle::Vector2(x,y), Monocle::Vector2(a,b) );
         }
 
@@ -33,7 +35,8 @@ namespace Monocle
         {
             Translate(rect);
             Monocle::Graphics::BindTexture(NULL);
-            Monocle::Graphics::RenderQuad( rect.w, rect.h, Monocle::Vector2::zero, Monocle::Vector2::one, Monocle::Vector2( rect.x + (rect.w/2), rect.y + (rect.h / 2) ) );
+            Monocle::Graphics::RenderQuad( Rect(rect.x, rect.y, rect.w, rect.h) );
+            //Monocle::Graphics::RenderQuad( rect.w, rect.h, Monocle::Vector2::zero, Monocle::Vector2::one, Monocle::Vector2( rect.x + (rect.w/2), rect.y + (rect.h / 2) ) );
         }
 
         void GwenRenderer::LoadTexture( Gwen::Texture *pTexture )
@@ -65,11 +68,13 @@ namespace Monocle
         {
             pFont->realsize = pFont->size * Scale();
 
-            #pragma warning NOT SAFE!
+            #warning NOT SAFE!
             std::string filename;
             filename.assign(pFont->facename.begin(), pFont->facename.end());
 
             pFont->data = Monocle::Assets::RequestFont( filename, pFont->realsize );
+            
+            if(!pFont->data) pFont->data = Assets::GetDefaultFont();
         }
 
         void GwenRenderer::FreeFont( Gwen::Font *pFont )
@@ -77,7 +82,7 @@ namespace Monocle
             std::cout << "[GwenRenderer] FreeFont" << std::endl;
             Monocle::FontAsset *font = (Monocle::FontAsset *)pFont->data;
 
-            #pragma warning needs fontAsset->Unload or something
+            #warning needs fontAsset->Unload or something
             delete font;
             font = NULL;
         }
@@ -109,12 +114,15 @@ namespace Monocle
 
         void GwenRenderer::StartClip()
         {
-            //std::cout << "[GwenRenderer] StartClip" << std::endl;
+        	Gwen::Rect clip = ClipRegion();
+        	Rect rect( clip.x, clip.y, clip.w, clip.h );
+        	rect.Scale(Scale());
+            //Monocle::Graphics::BeginScissor( rect );
         }
 
         void GwenRenderer::EndClip()
         {
-            //std::cout << "[GwenRenderer] EndClip" << std::endl;
+        	Monocle::Graphics::EndScissor();
         }
 
         void GwenRenderer::DrawTexturedRect(Gwen::Texture *tex, Gwen::Rect rect, float u1, float v1, float u2, float v2)
@@ -122,7 +130,8 @@ namespace Monocle
             TextureAsset *data = (TextureAsset*)tex->data;
             Translate(rect);
             Monocle::Graphics::BindTexture( data );
-            Monocle::Graphics::RenderQuad( rect.w, rect.h, Monocle::Vector2( u1, v1 ), Monocle::Vector2( u2 - u1, v2 - v1 ), Monocle::Vector2( rect.x + (rect.w / 2), rect.y + (rect.h / 2)) );
+            Monocle::Graphics::RenderQuad( Rect(rect.x, rect.y, rect.w, rect.h), Rect( u1,v1, u2-u1, v2-v1) );
+            //Monocle::Graphics::RenderQuad( rect.w, rect.h, Monocle::Vector2( u1, v1 ), Monocle::Vector2( u2 - u1, v2 - v1 ), Monocle::Vector2( rect.x + (rect.w / 2), rect.y + (rect.h / 2)) );
         }
 
         void GwenRenderer::RenderText( Gwen::Font *font, Gwen::Point pos, const Gwen::UnicodeString& text )
@@ -133,20 +142,20 @@ namespace Monocle
                 LoadFont(font);
             }
 
-            if(font->data)
-            {
-                Translate(pos.x, pos.y);
+			Translate(pos.x, pos.y);
 
-                #pragma warning NOT SAFE!
-                std::string txt;
-                txt.assign(text.begin(), text.end());
+			#warning NOT SAFE!
+			std::string txt;
+			txt.assign(text.begin(), text.end());
 
-                FontAsset *f = (FontAsset *)font->data;
-
-                Monocle::Graphics::SetBlend(Monocle::BLEND_ALPHA);
-                Monocle::Graphics::BindFont((FontAsset*)font->data);
-                Monocle::Graphics::RenderText( *f, txt, (float)pos.x, (float)pos.y + f->GetTextHeight(txt) );
-            }
+			FontAsset *f;
+			if(font->data)
+				f = (FontAsset *)font->data;
+			else
+				f = Assets::GetDefaultFont();
+			Monocle::Graphics::SetBlend(Monocle::BLEND_ALPHA);
+			Monocle::Graphics::BindFont((FontAsset*)font->data);
+			Monocle::Graphics::RenderText( *f, txt, (float)pos.x, (float)pos.y + f->GetTextHeight(txt) );
         }
     }
 }

@@ -19,10 +19,16 @@ namespace Monocle
 	{
 		instance = this;
 	}
+	
+	Assets::~Assets()
+	{
+		delete defaultFont;
+	}
 
 	void Assets::Init()
 	{
         SetContentPath(Platform::GetDefaultContentPath());
+        defaultFont = RequestFont("AudioTest/LiberationSans-Regular.ttf", 12);
 	}
 
 	TextureAsset *Assets::RequestTexture(const std::string &filename, FilterType filter, bool repeatX, bool repeatY)
@@ -168,6 +174,10 @@ namespace Monocle
 		return instance->contentPath;
 	}
 
+	FontAsset *Assets::GetDefaultFont()
+	{
+		return instance->defaultFont;
+	}
 
 	//generic request asset, not sure if we need this yet
 	/*

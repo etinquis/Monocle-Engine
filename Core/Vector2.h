@@ -8,6 +8,8 @@ namespace Monocle
 	class Vector2
 	{
 	public:
+		typedef float CoordType;
+	
 		float x,y;
 
 		static Vector2 zero;
