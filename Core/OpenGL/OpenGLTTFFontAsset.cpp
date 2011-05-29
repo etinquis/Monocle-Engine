@@ -93,7 +93,7 @@ namespace Monocle
 			Rect verts;
 			Rect texCoords;
 			GetGlyphData(text[i], &x, &y, verts, texCoords);
-			width = verts.bottomRight.x;
+			width = verts.GetRight();
 		}
 		return width;
 	}
@@ -109,8 +109,8 @@ namespace Monocle
 			Rect texCoords;
 			GetGlyphData(text[i], &x, &y, verts, texCoords);
 			//height = MAX(height, verts.bottomRight.y - verts.topLeft.y);
-			top = MIN(verts.topLeft.y, top);
-			bottom = MAX(verts.bottomRight.y, bottom);
+			top = MIN(verts.GetTop(), top);
+			bottom = MAX(verts.GetBottom(), bottom);
 		}
 		//return height;
 		return bottom - top;
@@ -121,14 +121,10 @@ namespace Monocle
         stbtt_aligned_quad q;
         stbtt_GetBakedQuad((stbtt_bakedchar *)fontCData, textureWidth, textureHeight, c-32, x, y, &q, 1);//1=opengl,0=old d3d
 
-        verts.topLeft.x = q.x0;
-		verts.topLeft.y = q.y0;
-        verts.bottomRight.x = q.x1;
-		verts.bottomRight.y = q.y1;
+		verts.SetPosition( Vector2(q.x0, q.y0) );
+		verts.SetSize( Vector2(q.x1 - q.x0, q.y1 - q.y0) );
 
-        texCoords.topLeft.x = q.s0;
-		texCoords.topLeft.y = q.t0;
-        texCoords.bottomRight.x = q.s1;
-		texCoords.bottomRight.y = q.t1;
+		texCoords.SetPosition(q.s0, q.t0);
+		texCoords.SetSize(q.s1 - q.s0, q.t1 - q.t0);
     }
 }
