@@ -12,6 +12,9 @@
 #include <cstdlib>
 #include <cstdio>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb/stb_image_write.h>
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 
@@ -48,12 +51,13 @@ namespace Monocle
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClearDepth(1.0f);
 		glDisable(GL_DEPTH_TEST);
-		//glDepthFunc(GL_LEQUAL); 
+		//glDepthFunc(GL_LEQUAL);
 		//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 		//clear screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ShowBuffer();
+
 
 		Set2D(800,600);
 
@@ -389,7 +393,10 @@ namespace Monocle
 	{
         if (instance->bgReset)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-        
+	}
+
+	void Graphics::DefaultMatrix()
+	{
 		glLoadIdentity();
 		glScalef(instance->resolutionScale.x, instance->resolutionScale.y, 0.0f);
 		glTranslatef(instance->screenCenter.x, instance->screenCenter.y, 0.0f);
@@ -500,10 +507,8 @@ namespace Monocle
 		glBegin(GL_QUADS);
 		for (int i = 0; i < nodes.size()-1; i++)
 		{
-			if (nodes[i]->variant != -1)
+			if (nodes[i]->variant != -1 && nodes[i]->variant < cells)
 			{
-				
-
 				Vector2 diff1;
 				Vector2 perp1;
 
@@ -576,6 +581,39 @@ namespace Monocle
     void Graphics::EnableBackgroundReset( bool bgReset )
     {
         instance->bgReset = bgReset;
+    }
+    
+    void Graphics::ScreenToImage(const std::string &filename, ImageType type)
+    {
+        int w = Platform::GetWidth(),
+            h = Platform::GetHeight();
+        char *data = new char[w * h * 3];
+        glReadPixels(0,0, w, h, GL_RGB, GL_UNSIGNED_BYTE, data);
+        
+        char* tmpline = new char[w*3];
+        
+        const int linewidth = w * 3;
+        
+        //flip the image
+        for(int y = 0; y < (h/2); y++)
+        {
+            std::copy(data + y * linewidth, data + y * linewidth + linewidth, tmpline);
+            std::copy(data + (h-y) * linewidth, data + (h-y) * linewidth + linewidth, data + y * linewidth);
+            std::copy(tmpline, tmpline + linewidth, data + (h-y) * linewidth);
+        }
+        
+        switch(type)
+        {
+            case IMAGE_PNG:
+                stbi_write_png( filename.data(), w, h, 3, data, w * 3 ); break;
+            case IMAGE_BMP:
+                stbi_write_bmp( filename.data(), w, h, 3, data); break;
+            case IMAGE_TGA:
+                stbi_write_tga( filename.data(), w, h, 3, data); break;
+        }
+        
+        delete tmpline;
+        delete data;
     }
 }
 

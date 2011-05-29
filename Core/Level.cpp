@@ -181,12 +181,16 @@ namespace Monocle
 					XMLReadColor(eLevel, "backgroundColor", &backgroundColor);
 					Graphics::SetBackgroundColor(backgroundColor);
 
+					XMLFileNode xmlFileNode(eLevel);
+					instance->scene->LoadLevel(&xmlFileNode);
+
 					TiXmlElement *eTilemap = eLevel->FirstChildElement("Tilemap");
 					while (eTilemap)
 					{
-						Entity *entity = new Entity();
+						
 						Tilemap *tilemap = new Tilemap(instance->GetTilesetByName(XMLReadString(eTilemap, "set")), instance->width, instance->height, XMLReadInt(eTilemap, "tileWidth"), XMLReadInt(eTilemap, "tileHeight"));
 						instance->tilemaps.push_back(tilemap);
+						Entity *entity = new Entity();
 						entity->SetGraphic(tilemap);
 						instance->scene->Add(entity);
 
@@ -320,6 +324,9 @@ namespace Monocle
 				TiXmlElement eLevel("Level");
 				eLevel.SetAttribute("width", instance->width);
 				eLevel.SetAttribute("height", instance->height);
+
+
+
 				if (instance->fringeTileset)
 				{
 					eLevel.SetAttribute("fringeTileset", instance->fringeTileset->GetName());
@@ -329,6 +336,9 @@ namespace Monocle
 				{
 					XMLWriteColor(&eLevel, "backgroundColor", backgroundColor);
 				}
+
+				XMLFileNode xmlFileNode(&eLevel);
+				instance->scene->SaveLevel(&xmlFileNode);
 
 				if (!instance->tilemaps.empty())
 				{

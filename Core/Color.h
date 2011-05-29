@@ -10,12 +10,15 @@ namespace Monocle
 		Color();
 		Color(float r, float g, float b, float a);
 
+        //! Clamps the rgba values to between 0 and 1.0, inclusive.
 		void Clamp();
 
+        //! Indirect accessor for rgba values. Color[0] = r, [1] = g, [2] = b, [3] = a, [4+] = undefined
 		float& operator[] (unsigned int i);
 		bool operator!=(const Color& rhs);
+		bool operator==(const Color& rhs);
 
-		//! red, green, blue, alpha (translucency)
+		//! Red, green, blue, alpha (translucency)
 		float r, g, b, a;
 
 		static Color white;
@@ -27,13 +30,12 @@ namespace Monocle
 		static Color yellow;
 		static Color orange;
 		static Color purple;
-
-
 	};
 
-	Color operator+(const Color& lhs, const Color& rhs);	
+	Color operator+(const Color& lhs, const Color& rhs);
 	Color operator-(const Color& lhs, const Color& rhs);
 	Color operator*(float lhs, const Color& rhs);		// left scalar multiplication
 	Color operator*(const Color& lhs, float rhs);		// right scalar multiplication
+	Color operator/(const Color& lhs, float rhs);
 
 }

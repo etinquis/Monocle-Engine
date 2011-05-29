@@ -13,7 +13,6 @@ namespace Monocle
     class TextureAsset;
     class FontAsset;
     
-    
 	Assets *Assets::instance = NULL;
 
 	Assets::Assets()
@@ -40,8 +39,15 @@ namespace Monocle
 		if (!asset)
 		{
 			asset = new TextureAsset();
-			asset->Load(fullFilename, filter, repeatX, repeatY);
-			instance->StoreAsset((Asset*)asset);
+			if(asset->Load(fullFilename, filter, repeatX, repeatY))
+			{
+			    instance->StoreAsset(asset);
+			}
+			else
+			{
+			    delete asset;
+			    asset = NULL;
+			}
 		}
 
 		if (asset)

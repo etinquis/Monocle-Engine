@@ -21,6 +21,13 @@ namespace Monocle
 		BLEND_ADDITIVE,
 		BLEND_MULTIPLY,
 	};
+	
+	enum ImageType
+	{
+	    IMAGE_BMP,
+	    IMAGE_PNG,
+	    IMAGE_TGA
+	};
 
 	class Graphic
 	{
@@ -36,6 +43,8 @@ namespace Monocle
 	public:
 		Graphics();
 		void Init();
+
+		///TODO: move to platform?
 		bool SetResolution(int w, int h, int bits, bool full);
 
 		void BeginFrame();
@@ -94,6 +103,7 @@ namespace Monocle
 
 		static void ResolutionMatrix();
 		static void IdentityMatrix();
+		static void DefaultMatrix();
 
 		static void RenderLine(const Vector2 &pos1, const Vector2 &pos2);
 
@@ -103,6 +113,8 @@ namespace Monocle
 		static void EndLine();
 
 		static void RenderPathMesh(const std::vector<Node*> &nodes, int cells, float size, bool flipX=false, bool flipY=false);
+		
+		static void ScreenToImage(const std::string &filename, ImageType type);
 
 	private:
 		
