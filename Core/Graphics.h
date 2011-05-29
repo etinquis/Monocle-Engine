@@ -117,7 +117,6 @@ namespace Monocle
 
 		static void RenderQuad(Rect quad, const Vector2 &textureOffset=Vector2::zero, const Vector2 &textureScale=Vector2::one);
 		static void RenderQuad(Rect quad, Rect texCoords);
-        static void RenderText(const FontAsset& font, const std::string& text, float x, float y);
 
         //! \brief Renders the given text with the given font at the given position.
 		//! \param font [in] The font to use to render
