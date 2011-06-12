@@ -45,4 +45,3 @@ echo																								>> Android.mk
 echo "include \$(BUILD_STATIC_LIBRARY)"																>> Android.mk
 
 cd ../../../../contrib
-
