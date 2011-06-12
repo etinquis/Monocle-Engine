@@ -7,7 +7,7 @@ pushd ../Build/gen-android-Monocle/jni
 echo "include \$(call all-subdir-makefiles)" 														> Android.mk
 
 echo "APP_PLATFORM			:= android-9"															> Application.mk
-echo "APP_STL				:= stlport_static"															>> Application.mk
+echo "APP_STL				:= stlport_static"														>> Application.mk
 
 pushd Core
 echo "LOCAL_PATH := \$(call my-dir)" 																> Android.mk
