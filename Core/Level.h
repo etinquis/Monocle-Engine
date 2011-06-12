@@ -71,7 +71,11 @@ namespace Monocle
 			for (std::list<Entity*>::const_iterator i = entities->begin(); i != entities->end(); ++i)
 			{
 				Entity *entity = *i;
+				#ifdef MONOCLE_ANDROID
+				T *t = (T*)entity;
+				#else
 				T *t = dynamic_cast<T*>(entity);
+				#endif
 				if (t)
 				{
 					TiXmlElement saveElement(name);
@@ -95,7 +99,11 @@ namespace Monocle
 			while (eEntity)
 			{
 				T *t = new T();
+				#ifdef MONOCLE_ANDROID
 				Entity *entity = dynamic_cast<Entity*>(t);
+				#else
+				Entity *entity = (Entity*)t;
+				#endif
 				//if (intoEntity == NULL)
 				instance->scene->Add(entity);
 				entity->SetParent(intoEntity);

@@ -227,7 +227,11 @@ namespace Monocle
 		}
 
 		// special case code
+		#ifdef MONOCLE_ANDROID
+		Node *node = (Node*)newEntity;
+		#else
 		Node *node = dynamic_cast<Node*>(newEntity);
+		#endif
 		if (node && selectedNode)
 		{
 			selectedNode->InsertNext(node);
@@ -270,8 +274,13 @@ namespace Monocle
 
 		if (entity)
 		{
+			#ifdef MONOCLE_ANDROID
+			selectedFringeTile = (FringeTile*)entity;
+			selectedNode = (Node*)entity;
+			#else
 			selectedFringeTile = dynamic_cast<FringeTile*>(entity);
 			selectedNode = dynamic_cast<Node*>(entity);
+			#endif
 		}
 		else
 		{

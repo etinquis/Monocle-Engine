@@ -176,12 +176,14 @@ namespace Monocle {
             this->pause = true;
     }
     
+    #ifdef MONOCLE_AUDIO_VIS
     bool AudioDeck::IsVisEnabled()
     {
         // jw: Not sure if this is the best way, but it works.
         if (this->vis) return true;
         return false;
     }
+    
     
     void AudioDeck::EnableVis( bool visEnable )
     {
@@ -213,6 +215,134 @@ namespace Monocle {
         }
     }
     
+    void AudioDeck::UpdateVizJunk()
+    {
+        long viznow = this->cs->GetTotalPlayTime();
+        
+        if (!IsVisEnabled()) return;
+        
+        if (this->cleanVis || viznow - vizlast > 2000){
+            vc.Clean();
+            this->cleanVis = false;
+            vizlast=viznow;
+        }
+        
+        if (this->vis && this->vis->bDisabled) return;
+        
+        if (this->pause) {
+            if (this->vis) this->vis->bClear = true;
+            return;
+        }
+        
+        // Fill in 20ms increments
+        if (viznow - vizlast > 20)
+        {
+            if (this->vis)
+            {
+                if (vc.GetLatentData(this->cs->GetTotalPlayTime()))
+                {
+                    vc.GetWaveLeft(this->vis->cWaveformL);
+                    vc.GetWaveRight(this->vis->cWaveformR);
+                    this->vis->AnalyzeNewSound(576);
+                    vc.GetEngineerData(&this->vis->engineerData[0],&this->vis->engineerData[1],&this->vis->engineerData[2],&this->vis->engineerData[3]);
+                }
+                else
+                {
+                    // We've run out of brainpower somewhere.
+//                    this->cleanVis = true;
+                }
+            }
+            
+            vizlast = this->cs->GetTotalPlayTime();
+        }
+    }
+    
+    float AudioDeck::GetVisWaveform( int index, int channel )
+    {
+        if (!IsVisEnabled()) return 0.0;
+        if (channel < 0 || channel > 1) return 0.0;
+        if (index < 0 || index >= 576) return 0.0;
+        return this->vis->fWaveform[channel][index] / 128.0;
+    }
+    
+    float AudioDeck::GetVisSpectrum( int index, int channel )
+    {
+        if (!IsVisEnabled()) return 0.0;
+        if (channel < -1 || channel > 1) return 0.0;
+        if (index < 0 || index >= 512) return 0.0;
+        
+        if (channel == -1)
+            return MAX(this->vis->fSpectrum[0][index]/10.0,this->vis->fSpectrum[1][index]/10.0);
+        else
+            return this->vis->fSpectrum[channel][index]/10.0;
+    }
+    
+    int AudioDeck::GetVisLoudestSpectrumIndex( float *loudestValue, int channel, int startIndex, int endIndex)
+    {
+        int loudestIndex=0;
+        float loudestIndexValue=-1;
+        int ind;
+        
+        if (!IsVisEnabled()) return 0;
+        if (startIndex < 0 || startIndex >= 512) return 0;
+        if (endIndex < 0 || endIndex >= 512) return 0;
+        if (endIndex < startIndex) return 0;
+        
+        for (ind=startIndex;ind<=endIndex;ind++)
+        {
+            float val = GetVisSpectrum(ind,channel);
+            if (val > loudestIndexValue) { 
+                loudestIndex = ind; 
+                loudestIndexValue = val; 
+            }
+        }
+        
+        if (loudestValue) loudestValue[0] = loudestIndexValue;
+        
+        return loudestIndex;
+    }
+    
+    float AudioDeck::GetVisBandAverage( int band, VisBandLength length, int channel)
+    {
+        if (!IsVisEnabled()) return 0.0;
+        if (band < 0 || band >= 16) return 0.0;
+        if (channel < -1 || channel > 1) return 0.0;
+        
+        if (channel >= 0){
+            switch (length)
+            {
+                case VIS_BAND_LONG:
+                    return this->vis->long_avg[channel][band];
+                case VIS_BAND_SHORT:
+                    return this->vis->imm[channel][band];
+                case VIS_BAND_MEDIUM:
+                    return this->vis->med_avg[channel][band];
+            }
+        }else{
+            switch (length)
+            {
+                case VIS_BAND_LONG:
+                    return MAX(this->vis->long_avg[0][band],this->vis->long_avg[1][band]);
+                case VIS_BAND_SHORT:
+                    return MAX(this->vis->imm[0][band], this->vis->imm[1][band]);
+                case VIS_BAND_MEDIUM:
+                    return MAX(this->vis->med_avg[0][band],this->vis->med_avg[1][band]);
+            }
+        }
+        
+        return 0.0;
+    }
+    
+    #else
+    bool AudioDeck::IsVisEnabled(){return false;}
+    void AudioDeck::EnableVis( bool visEnable ){}
+    void AudioDeck::UpdateVizJunk(){}
+    float AudioDeck::GetVisWaveform( int index, int channel ){return 0;}
+    float AudioDeck::GetVisSpectrum( int index, int channel ){return 0;}
+    int AudioDeck::GetVisLoudestSpectrumIndex( float *loudestValue, int channel, int startIndex, int endIndex){return 0;}
+    float AudioDeck::GetVisBandAverage( int band, VisBandLength length, int channel){return 0.0;}
+    #endif
+    
     void AudioDeck::Init()
     {
         this->freeDeckOnFinish = false;
@@ -222,9 +352,7 @@ namespace Monocle {
             Debug::Log("AUDIO: No Decoder Data given to AudioDeck, crash imminent");
         }
         
-        this->cleanVis = false;
         
-        this->vis = NULL;
         
         this->pitchBend = 1.0;
         this->volume = 1.0;
@@ -233,6 +361,9 @@ namespace Monocle {
         this->lastSeekPos = 0;
         this->fades.Reset();
         
+        #ifdef MONOCLE_AUDIO_VIS
+        this->cleanVis = false;
+        this->vis = NULL;
         // This, because we set vis = NULL, should never happen.
         // Eventually maybe we'll enable vis before a deck opens.
         if (IsVisEnabled()){
@@ -243,6 +374,7 @@ namespace Monocle {
             this->vis = new AudioVis();
         }
         this->vizlast = 0;
+        #endif
         
         /** these are replaced by resetdeck(), but just in case? **/
         this->sampsize = 2;
@@ -288,78 +420,16 @@ namespace Monocle {
         
         if (this->decoder && freeDecoder) delete this->decoder;
         
+        #ifdef MONOCLE_AUDIO_VIS
         if (this->vis)
             delete this->vis;
+        #endif
         
         this->prevDeckPointerToHere[0] = this->nextDeck;
         
         if (this->nextDeck)
             this->nextDeck->prevDeckPointerToHere = this->prevDeckPointerToHere;
     }
-    
-    void AudioDeck::UpdateVizJunk()
-    {
-        long viznow = this->cs->GetTotalPlayTime();
-        
-        if (!IsVisEnabled()) return;
-        
-        if (this->cleanVis || viznow - vizlast > 2000){
-            vc.Clean();
-            this->cleanVis = false;
-            vizlast=viznow;
-        }
-        
-        if (this->vis && this->vis->bDisabled) return;
-        
-        if (this->pause) {
-            if (this->vis) this->vis->bClear = true;
-            return;
-        }
-        
-        // Fill in 20ms increments
-        if (viznow - vizlast > 20)
-        {
-            if (this->vis)
-            {
-                if (vc.GetLatentData(this->cs->GetTotalPlayTime()))
-                {
-                    vc.GetWaveLeft(this->vis->cWaveformL);
-                    vc.GetWaveRight(this->vis->cWaveformR);
-                    this->vis->AnalyzeNewSound(576);
-                    vc.GetEngineerData(&this->vis->engineerData[0],&this->vis->engineerData[1],&this->vis->engineerData[2],&this->vis->engineerData[3]);
-                }
-                else
-                {
-                    // We've run out of brainpower somewhere.
-//                    this->cleanVis = true;
-                }
-            }
-            
-            vizlast = this->cs->GetTotalPlayTime();
-        }
-    }
-    
-   /* void AudioDeck::PauseHandler( VisCache2 *vc )
-    {
-        if (od->pause && !od->done && !done[0] && !od->killSwitch){
-            cP->Pause();
-            while (od->pause && !od->done && !od->fades.aFadeOutStart && !done[0] && !od->killSwitch){
-                if (od->vis) od->vis->bClear = true;
-                Sleep(5);
-            }
-            
-            if (od->pause){
-                od->pause = 0;
-                return;
-            }
-            
-            UpdateFades(od,cP,done);
-            
-            cP->Resume();
-            if (od->vis) od->vis->bClear = false;
-            
-        }
-    }*/
     
     /***********************************************************************
      *           C168
@@ -865,82 +935,6 @@ namespace Monocle {
     float AudioDeck::GetPitch()
     {
         return this->pitchBend;
-    }
-    
-    float AudioDeck::GetVisWaveform( int index, int channel )
-    {
-        if (!IsVisEnabled()) return 0.0;
-        if (channel < 0 || channel > 1) return 0.0;
-        if (index < 0 || index >= 576) return 0.0;
-        return this->vis->fWaveform[channel][index] / 128.0;
-    }
-    
-    float AudioDeck::GetVisSpectrum( int index, int channel )
-    {
-        if (!IsVisEnabled()) return 0.0;
-        if (channel < -1 || channel > 1) return 0.0;
-        if (index < 0 || index >= 512) return 0.0;
-        
-        if (channel == -1)
-            return MAX(this->vis->fSpectrum[0][index]/10.0,this->vis->fSpectrum[1][index]/10.0);
-        else
-            return this->vis->fSpectrum[channel][index]/10.0;
-    }
-    
-    int AudioDeck::GetVisLoudestSpectrumIndex( float *loudestValue, int channel, int startIndex, int endIndex)
-    {
-        int loudestIndex=0;
-        float loudestIndexValue=-1;
-        int ind;
-        
-        if (!IsVisEnabled()) return 0;
-        if (startIndex < 0 || startIndex >= 512) return 0;
-        if (endIndex < 0 || endIndex >= 512) return 0;
-        if (endIndex < startIndex) return 0;
-        
-        for (ind=startIndex;ind<=endIndex;ind++)
-        {
-            float val = GetVisSpectrum(ind,channel);
-            if (val > loudestIndexValue) { 
-                loudestIndex = ind; 
-                loudestIndexValue = val; 
-            }
-        }
-        
-        if (loudestValue) loudestValue[0] = loudestIndexValue;
-        
-        return loudestIndex;
-    }
-    
-    float AudioDeck::GetVisBandAverage( int band, VisBandLength length, int channel)
-    {
-        if (!IsVisEnabled()) return 0.0;
-        if (band < 0 || band >= 16) return 0.0;
-        if (channel < -1 || channel > 1) return 0.0;
-        
-        if (channel >= 0){
-            switch (length)
-            {
-                case VIS_BAND_LONG:
-                    return this->vis->long_avg[channel][band];
-                case VIS_BAND_SHORT:
-                    return this->vis->imm[channel][band];
-                case VIS_BAND_MEDIUM:
-                    return this->vis->med_avg[channel][band];
-            }
-        }else{
-            switch (length)
-            {
-                case VIS_BAND_LONG:
-                    return MAX(this->vis->long_avg[0][band],this->vis->long_avg[1][band]);
-                case VIS_BAND_SHORT:
-                    return MAX(this->vis->imm[0][band], this->vis->imm[1][band]);
-                case VIS_BAND_MEDIUM:
-                    return MAX(this->vis->med_avg[0][band],this->vis->med_avg[1][band]);
-            }
-        }
-        
-        return 0.0;
     }
     
     ChannelStream *AudioDeck::GetChannelStream()

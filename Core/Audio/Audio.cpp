@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <vector>
 
+//for tolower
+#include <cctype>
+
 #include "Audio.h"
 
 #include "../Debug.h"
@@ -15,6 +18,11 @@
 
 #ifdef MONOCLE_AUDIO_OGG
 #include "Decoders/OggDecoder.h"
+#else
+namespace Monocle
+{
+	AudioDecoder *makeOggFunc(AudioAsset* asset){ return NULL; }
+}
 #endif
 #include "Decoders/WaveDecoder.h"
 
@@ -62,7 +70,7 @@ namespace Monocle {
             return NULL;
         
         std::string ext = audioAsset->GetExtension();
-        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+        std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
         
         if(decoderMap[0].find(ext) == decoderMap[0].end())
         {

@@ -35,7 +35,11 @@ namespace Monocle
 			if (Debug::selectedEntity)
 			{
 				Graphics::SetColor(Color::orange);
+				#ifdef MONOCLE_ANDROID
+				Part *part = (Part*)Debug::selectedEntity;
+				#else
 				Part *part = dynamic_cast<Part*>(Debug::selectedEntity);
+				#endif
 				if (part)
 				{
 					PartKeyFrames *partKeyFrames = currentAnimation->GetPartKeyFrames(part);
@@ -177,7 +181,11 @@ namespace Monocle
 
 				if (Debug::selectedEntity)
 				{
+					#ifdef MONOCLE_ANDROID
+					Part *part = (Part*)Debug::selectedEntity;
+					#else
 					Part *part = dynamic_cast<Part*>(Debug::selectedEntity);
+					#endif
 
 					float moveSpeed = 10.0f;
 					float rotateSpeed = 15.0f;
@@ -247,7 +255,11 @@ namespace Monocle
 
 				if (anim)
 				{
+					#ifdef MONOCLE_ANDROID
+					Part *part = (Part*)Debug::selectedEntity;
+					#else
 					Part *part = dynamic_cast<Part*>(Debug::selectedEntity);
+					#endif
 
 					if (Input::IsKeyPressed(keyBackwards))
 						anim->AdjustCurrentTime(-TIME_STEP, false);

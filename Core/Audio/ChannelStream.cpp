@@ -6,12 +6,14 @@
 #include "../Debug.h"
 #include "../MonocleToolkit.h"
 
-#ifdef MONOCLE_MAC
-	#include <OpenAL/al.h>
-	#include <OpenAL/alc.h>
-#else
-	#include <AL/al.h>
-	#include <AL/alc.h>
+#ifdef MONOCLE_OPENAL
+	#ifdef MONOCLE_MAC
+		#include <OpenAL/al.h>
+		#include <OpenAL/alc.h>
+	#else
+		#include <AL/al.h>
+		#include <AL/alc.h>
+	#endif
 #endif
 
 #include "../Platform.h"
@@ -20,6 +22,7 @@
 #undef VERBOSE
 #define VERBOSE(x)
 
+#ifdef MONOCLE_OPENAL
 std::string GetALErrorString(ALenum err)
 {
     switch(err)
@@ -52,9 +55,11 @@ std::string GetALErrorString(ALenum err)
             return "??";
     };
 }
+#endif
 
 namespace Monocle
 {
+	#ifdef MONOCLE_OPENAL
     bool ChannelStream::IsPlaying()
     {
         if (!started)
@@ -374,5 +379,32 @@ namespace Monocle
     {
         return started;
     }
-    
+    #else
+    bool ChannelStream::IsPlaying(){ }
+    void ChannelStream::Open( int channels, int bits, int samplerate ){ }    
+    void ChannelStream::Close(){ }
+    int ChannelStream::NeedsUpdate(){ return 0; }
+    void ChannelStream::LockNumberedBuffer( unsigned int size, unsigned int buff ){ }
+    unsigned char *ChannelStream::GetBuffer( unsigned int *size ){ return NULL; }
+    unsigned char *ChannelStream::GetStaticBuffer( unsigned int *size ){ return NULL; }
+    void ChannelStream::LockBuffer( unsigned int size ){ }
+    void ChannelStream::Play(){ }
+    void ChannelStream::Stop(){ }
+    void ChannelStream::Empty(){ }
+    void ChannelStream::Check( std::string erat ){ }
+    ChannelStream::ChannelStream(){ }
+    ChannelStream::~ChannelStream(){ }
+    int ChannelStream::Init(){ return 0; }
+    void ChannelStream::Exit(){ }
+    void ChannelStream::Pause(){ }
+    void ChannelStream::Resume(){ }
+    inline unsigned long XMAX( unsigned long a, unsigned long b ){ return ( a > b ) ? a : b; }
+    unsigned long ChannelStream::GetOutputTime(){ return 0; }
+    unsigned long ChannelStream::GetTotalPlayTime(){ return 0; }
+    void ChannelStream::SetPlayOffset( unsigned long playOffset ){ }
+    void ChannelStream::SetVolume( float vol ){ }
+    void ChannelStream::SetPan( float pan ){ }
+    void ChannelStream::SetPitch( float pitch ){ }
+    bool ChannelStream::IsOpen(){ return false; }
+	#endif
 }

@@ -37,26 +37,26 @@ namespace Monocle
         reader->Read (csID, 4);
         if (std::string (csID) != "WAVE"){
             std::string s (" is not a valid WAVE form-type.");
-            throw s;
+            //throw s;
         }
         
         reader->Read (csID, 4);
         if (std::string (csID) != "fmt "){
             std::string s (" does not have a valid wave-form chunk ID.");
-            throw s;
+            //throw s;
         }
         
         reader->Read ((char*)&wfxsize, 4);
         reader->Read ((char*)wfx, wfxsize);
         if (wfx->wFormatTag != WAVE_FORMAT_PCM){
             std::string s (" is not of type PCM wave format.");
-            throw s;
+            //throw s;
         }
         
         reader->Read (csID, 4);
         if (std::string (csID) != "data"){
             std::string s (" does not have a valid data chunk ID.");
-            throw s;
+            //throw s;
         }
         
         reader->Read ((char*)&datasize, 4);

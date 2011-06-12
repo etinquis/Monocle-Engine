@@ -10,10 +10,12 @@
 #include "AudioDecoder.h"
 #include "AudioVis.h"
 
+#ifndef __INT64_TYPE__
 #if defined(MONOCLE_WINDOWS)
 	#define __INT64_TYPE__ __int64
 #elif defined(MONOCLE_LINUX)
 	#define __INT64_TYPE__ long long
+#endif
 #endif
 
 namespace Monocle {

@@ -1,3 +1,5 @@
+#ifdef MONOCLE_AUDIO_VIS
+
 //
 //  AudioVis.cpp
 //
@@ -272,3 +274,5 @@ namespace Monocle {
         return;
     }
 }
+
+#endif
