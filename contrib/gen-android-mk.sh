@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mkdir ../Build ../Build/gen-android-Monocle ../Build/gen-android-Monocle/jni
 rm -r ../Build/gen-android-Monocle/jni/*
 cp -r ../Core ../Build/gen-android-Monocle/jni/
