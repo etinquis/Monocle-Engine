@@ -1,0 +1,57 @@
+//
+//  Main.cpp
+//  MonocleTests
+//
+//  Created by Josh Whelchel on 5/2/11.
+//
+
+#include <Scene.h>
+#include <GUI/Berkelium/BerkeliumPanel.h>
+
+namespace Monocle
+{
+    class Vector2;
+}
+
+namespace TestSelector
+{
+    class LogoPanel : public Monocle::GUI::BerkeliumPanel
+    {
+    public:
+        LogoPanel();
+        void Update();
+    private:
+        std::string pagePath;
+    };
+
+    class MenuScene : public Monocle::Scene
+    {
+    public:
+        void Begin();
+        void End();
+
+        static void onSelectedTest(double test);
+    private:
+        Monocle::GUI::BerkeliumPanel *selectPanel;
+    };
+
+    class SceneProxy : public Monocle::Scene
+    {
+    public:
+        static SceneProxy *Instance();
+        static void ChangeScene(Scene *scene, std::string assetPath, bool isMenu = false);
+        void Begin();
+        void Update();
+        void Render();
+    private:
+        SceneProxy();
+
+        static void SetScene(Scene *scene);
+        static Scene *currentScene;
+        static SceneProxy *instance;
+
+        static LogoPanel *logo;
+    };
+};
+
+
