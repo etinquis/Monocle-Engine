@@ -6,6 +6,7 @@
 #include <GUI/Panel.h>
 #include <berkelium/WindowDelegate.hpp>
 #include <GUI/Berkelium/JSBinding/JSFunctionBinding.h>
+#include <map>
 
 namespace Berkelium
 {
@@ -47,13 +48,7 @@ namespace Monocle
             virtual void setUrl(const std::string url) const; //! <\param url The url to navigate to.  Must be preceded by a protocol (e.g. file://, http://, etc).
 
             //! Bind a callback to a javascript function
-            template<typename Function>
-            inline void BindFunction(const std::wstring name, //! < \param name The name of the javascript function to bind to.
-                                    const Function func)      //! < \param func The function to be bound.
-            {
-                //bindDispatch.AddCallback(name, func);
-                win->addBindOnStartLoading(Berkelium::WideString::point_to(name), Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(name), false));
-            }
+			void BindFunction(const JSBinding::JSFunctionCallback& func);      //! < \param func The function to be bound.
 
             virtual void setSize(int x, int y);
             virtual void setSize(Monocle::Vector2 newsize);
@@ -77,6 +72,9 @@ namespace Monocle
             //holds the context for the berkelium window in *win.  Contexts are rendering surfaces, so
             //sharing one means drawing to the same surface.
             Berkelium::Context *cxt;
+            
+            typedef std::multimap<std::wstring, JSBinding::JSFunctionCallback> JSCallbackList;
+            JSCallbackList jsfuncs;
 
             //Checks input to determine if any keys have been pressed and forwards them to berkelium
             void captureInput() const;

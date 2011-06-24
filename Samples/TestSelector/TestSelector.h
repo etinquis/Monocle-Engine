@@ -30,7 +30,7 @@ namespace TestSelector
         void Begin();
         void End();
 
-        static void onSelectedTest(double test);
+        static void onSelectedTest(const std::vector<Berkelium::Script::Variant>& args);
     private:
         Monocle::GUI::BerkeliumPanel *selectPanel;
     };

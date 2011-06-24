@@ -57,6 +57,12 @@ namespace Monocle
             delete tex;
             tex = NULL;
         }
+        
+        void BerkeliumPanel::BindFunction(const JSBinding::JSFunctionCallback& func)
+        {
+        	jsfuncs.insert( std::pair<std::wstring, JSBinding::JSFunctionCallback>(func.name, func) );
+			win->addBindOnStartLoading(Berkelium::WideString::point_to(func.name), Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(func.name), false));
+        }
 
         void BerkeliumPanel::Update()
         {
@@ -173,8 +179,19 @@ namespace Monocle
                                                   Berkelium::WideString funcName,
                                                   Berkelium::Script::Variant *args, size_t numArgs)
         {
-            //std::cout << "onJavascriptCallback" << std::endl;
-
+        	std::pair<JSCallbackList::iterator, JSCallbackList::iterator> funcRange = jsfuncs.equal_range(funcName.data());
+        	JSCallbackList::iterator it = funcRange.first;
+        	
+        	JSBinding::JSFunctionCallback *func;
+        	while( it != funcRange.second && it->second.numArgs <= numArgs )
+        	{
+        		Monocle::Debug::Log("Hello");
+        		func = &it->second;
+        		it++;
+        	}
+        	
+        	if(func)
+				(*func)(std::vector<Berkelium::Script::Variant>(&args[0], &args[numArgs]));
         }
 
         void BerkeliumPanel::setUrl(const std::string url) const

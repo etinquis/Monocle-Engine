@@ -10,6 +10,7 @@
 //#include "GUITest/GUITest.h"
 
 #include <Platform.h>
+#include <GUI/Berkelium/JSBinding/JSFunctionBinding.h>
 
 namespace TestSelector
 {
@@ -18,7 +19,7 @@ namespace TestSelector
         SetLayer(-15);
         win->setTransparent(true);
 
-        BindFunction(L"SelectTest", &MenuScene::onSelectedTest);
+        BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&MenuScene::onSelectedTest, L"SelectTest", 1));
 
         setUrl("file://" + GetWorkingDirectory() + Monocle::Platform::GetDefaultContentPath() + "TestSelector/logooverlay.html");
         win->unfocus();
@@ -36,7 +37,7 @@ namespace TestSelector
     {
         selectPanel = new Monocle::GUI::BerkeliumPanel();
 
-        selectPanel->BindFunction(L"SelectTest", &MenuScene::onSelectedTest);
+        selectPanel->BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&MenuScene::onSelectedTest, L"SelectTest", 1));
 
         selectPanel->setUrl("file://" + GetWorkingDirectory() + Assets::GetContentPath() + "TestSelector/selector.html");
 
@@ -48,11 +49,11 @@ namespace TestSelector
         Scene::End();
     }
 
-    void MenuScene::onSelectedTest(double test)
+    void MenuScene::onSelectedTest(const std::vector<Berkelium::Script::Variant>& args)
     {
-        int selectedScene = (int)test;
+        int selectedScene = (int)args[0].toDouble();
 
-        std::cout   << "Argument is:" << test << std::endl;
+        std::cout   << "Argument is:" << selectedScene << std::endl;
 
         Scene *scene;
         std::string assetPath;
