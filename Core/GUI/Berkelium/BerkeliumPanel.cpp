@@ -173,7 +173,7 @@ namespace Monocle
                                                   Berkelium::WideString funcName,
                                                   Berkelium::Script::Variant *args, size_t numArgs)
         {
-            std::cout << "onJavascriptCallback" << std::endl;
+            //std::cout << "onJavascriptCallback" << std::endl;
 
         }
 

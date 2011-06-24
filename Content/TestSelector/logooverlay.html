@@ -1,0 +1,147 @@
+<html>
+	<head>
+		<style>
+			#gui
+			{
+				position: absolute;
+				bottom: 1%;
+				margin: 0 auto;
+				right: 1%;
+				font-family: "Liberation Sans", Sans;
+				width: 98%;
+			}
+			#guibg
+			{
+				position: relative;
+				z-index: -5;
+				margin-top: -10%;
+				padding-left: 3%;
+			}
+			#guibg img
+			{
+				width: 100%;
+			}
+			#monocleman
+			{
+				display: inline-block;
+				width: 20%;
+			}
+			#monocleman img
+			{
+				width: 100%;
+			}
+			#buttons
+			{
+				display: inline-block;
+				padding-left: 3%;
+				height: 8%;
+				width: 70%;
+			}
+			div.button
+			{
+				text-align: center;
+				width: 10%;
+				display: inline-block;
+				padding-right: 2%;
+			}
+			div.button img
+			{
+				width: 100%;
+			}
+			span.title
+			{
+				display:block;
+				font-size: .1em;
+			}
+
+			a
+			{
+				text-decoration: none;
+				font-weight: bold;
+				color: black;
+			}
+
+			@media screen and (min-height: 100px)
+			{
+				span.title
+				{
+					font-size: .2em;
+				}
+			}
+			@media screen and (min-height: 200px)
+			{
+				span.title
+				{
+					font-size: .5em;
+				}
+			} 
+			@media screen and (min-height: 300px)
+			{
+				span.title
+				{
+					font-size: 1em;
+				}
+			} 
+		</style>
+
+		<script>
+			window.onmousedown = new Function("return false");
+		</script>
+	</head>
+	<body>
+		<div id="gui">
+			<div id="foreground">
+				<div id="monocleman">
+					<img src="../monocleman.svg" />
+				</div>
+				<div id="buttons">
+					<div class="button">
+						<a href="javascript: SelectTest(4);">
+							<img src="../Ogmo/ogmo.svg" />
+							<span class="title">Ogmo</span>
+						</a>
+					</div>
+					<div class="button">
+						<a href="javascript: SelectTest(7);">
+							<img src="../monocleman.svg" />
+							<span class="title">Puppet</span>
+						</a>
+					</div>
+					<div class="button">
+						<a href="javascript: SelectTest(1);">
+							<img src="../AudioTest/audio.svg" />
+							<span class="title">Audio</span>
+						</a>
+					</div>
+					<div class="button">
+						<a href="javascript: SelectTest(3);">
+							<img src="../Jumper/jumper.svg" />
+							<span class="title">Jumper</span>
+						</a>					
+					</div>
+					<div class="button">
+						<a href="javascript: SelectTest(2);">
+							<img src="../monocleman.svg" />
+							<span class="title">Flash</span>
+						</a>					
+					</div>
+					<div class="button">
+						<a href="javascript: SelectTest(6);">
+							<img src="../Pong/pong.svg" />
+							<span class="title">Pong</span>
+						</a>
+					</div>
+					<div class="button">
+						<a href="javascript: SelectTest(5);">
+							<img src="../monocleman.svg" />
+							<span class="title">Editor</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div id="guibg">
+				<img src="guibg.svg" />
+			</div>
+		</div>
+	</body>
+</html>
