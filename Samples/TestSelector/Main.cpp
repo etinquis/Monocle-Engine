@@ -17,8 +17,8 @@
 
 int main(void)
 {
-	pGame = new Game();
-	pGame->SetScene(new TestSelector::GameScene());
+	Monocle::Game *pGame = new Game();
+	pGame->SetScene(TestSelector::SceneProxy::Instance());
 	pGame->Main();
     delete pGame;
     

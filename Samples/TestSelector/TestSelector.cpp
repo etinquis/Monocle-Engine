@@ -13,7 +13,6 @@
 
 namespace TestSelector
 {
-
     LogoPanel::LogoPanel() : Monocle::GUI::BerkeliumPanel()
     {
         SetLayer(-15);
