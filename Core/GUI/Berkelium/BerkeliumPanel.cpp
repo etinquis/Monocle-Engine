@@ -185,7 +185,6 @@ namespace Monocle
         	JSBinding::JSFunctionCallback *func;
         	while( it != funcRange.second && it->second.numArgs <= numArgs )
         	{
-        		Monocle::Debug::Log("Hello");
         		func = &it->second;
         		it++;
         	}

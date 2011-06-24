@@ -20,11 +20,7 @@ namespace Monocle
 
     namespace GUI
     {
-        //! \brief An implementation of the Berkelium Chromium library into Monocle.
-        //!
-        //!
-        //!
-        //!
+        //! \brief An implementation of the Berkelium Chromium library in Monocle.
         class BerkeliumPanel : public Monocle::Panel, public Berkelium::WindowDelegate
         {
         public:
