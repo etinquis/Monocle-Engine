@@ -9,6 +9,8 @@
 	#include <dirent.h>
 #endif
 
+#include <algorithm>
+
 namespace Monocle
 {
 	double deltaTime					= 0.0;
@@ -58,8 +60,6 @@ namespace Monocle
         char buffer[FILENAME_MAX];
         getcwd(buffer, sizeof(buffer));
 		return std::string(buffer) + "\\";
-#else
-		return "";
 #endif
 	}
 
@@ -159,5 +159,13 @@ namespace Monocle
 
 		FindClose(hList);
 #endif
+	}
+
+	void BGRAToRGBA(unsigned char *data, int w, int h)
+	{
+	    for(int i=0; i < w * h; i++)
+	    {
+	        std::swap(data[i*4+0], data[i*4+2]);
+	    }
 	}
 }

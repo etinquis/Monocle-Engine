@@ -7,7 +7,7 @@
 namespace Monocle
 {
 	//! Time in seconds that has passed since the last frame
-	extern double deltaTime;	
+	extern double deltaTime;
 
 	//! Time in seconds since game started
 	extern double timeSinceStart;
@@ -30,7 +30,9 @@ namespace Monocle
 	std::string GetWorkingDirectory();
 	//! call a callback function for each file in the directory with file extension equal to type
 	void ForEachFile(std::string path, std::string type, void callback(const std::string &filename, intptr_t param), intptr_t param);
-	
+
+	void BGRAToRGBA(unsigned char *data, int w, int h);
+
 	template <class T>
 	std::string StringOf(T object)
 	{
