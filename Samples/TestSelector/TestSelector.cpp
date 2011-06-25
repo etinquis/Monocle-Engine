@@ -21,7 +21,7 @@ namespace TestSelector
 
         BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&MenuScene::onSelectedTest, L"SelectTest", 1));
 
-        setUrl("file://" + GetWorkingDirectory() + Monocle::Platform::GetDefaultContentPath() + "TestSelector/logooverlay.html");
+        setUrl("http://google.com"); //"file://" + GetWorkingDirectory() + Monocle::Platform::GetDefaultContentPath() + "TestSelector/logooverlay.html");
         win->unfocus();
     }
 
@@ -39,7 +39,7 @@ namespace TestSelector
 
         selectPanel->BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&MenuScene::onSelectedTest, L"SelectTest", 1));
 
-        selectPanel->setUrl("file://" + GetWorkingDirectory() + Assets::GetContentPath() + "TestSelector/selector.html");
+        selectPanel->setUrl("http://google.com"); //"file://" + GetWorkingDirectory() + Assets::GetContentPath() + "TestSelector/selector.html");
 
         Add(selectPanel);
     }
@@ -112,7 +112,7 @@ namespace TestSelector
         currentScene = scene;
         Monocle::Assets::SetContentPath(Monocle::Platform::GetDefaultContentPath() + assetPath);
         currentScene->Begin();
-        logo->setSize(Monocle::Vector2(Monocle::Graphics::GetVirtualWidth(), Monocle::Graphics::GetVirtualHeight()));
+        logo->SetSize(Monocle::Vector2(Monocle::Graphics::GetVirtualWidth(), Monocle::Graphics::GetVirtualHeight()));
     }
 
     void SceneProxy::Begin()

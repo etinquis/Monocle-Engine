@@ -20,6 +20,7 @@ namespace Monocle
         BerkeliumPanel::BerkeliumPanel() : Panel(Vector2::zero, Vector2(Monocle::Graphics::GetVirtualWidth(), Monocle::Graphics::GetVirtualHeight()))
         {
             initBerkelium();
+			initInputMap();
 
             cxt = Berkelium::Context::create();
             win = Berkelium::Window::create(cxt);
@@ -28,6 +29,8 @@ namespace Monocle
             win->setDelegate(this);
             win->focus();
 
+			Monocle::Input::AddHandler(this);
+
             tex = new TextureAsset();
             tex->Load(NULL, size.x, size.y, Monocle::FILTER_NONE, false, false);
         }
@@ -35,7 +38,8 @@ namespace Monocle
         BerkeliumPanel::BerkeliumPanel(const Vector2 pos, const Vector2 size) : Panel(pos, size)
         {
             initBerkelium();
-
+			initInputMap();
+			
             cxt = Berkelium::Context::create();
             win = Berkelium::Window::create(cxt);
             win->resize(size.x, size.y);
@@ -67,9 +71,6 @@ namespace Monocle
         void BerkeliumPanel::Update()
         {
             Panel::Update();
-
-            if(hasFocus())
-                captureInput();
 
             Monocle::Vector2 localMousePos = Monocle::Input::GetMousePosition() - position;
             win->mouseMoved(localMousePos.x, localMousePos.y);
@@ -149,8 +150,8 @@ namespace Monocle
 
         void BerkeliumPanel::Render() //const
         {
-            Panel::Render();
-
+            //Panel::Render();
+            
             if(tex)
             {
                 Monocle::Graphics::PushMatrix();
@@ -198,77 +199,79 @@ namespace Monocle
             win->navigateTo(url.data(), url.length());
         }
 
-        void BerkeliumPanel::captureInput() const
+		void BerkeliumPanel::OnKeyPress(Monocle::KeyCode key)
+		{
+			bool shift = Monocle::Input::IsKeyHeld(Monocle::KEY_LSHIFT) || Monocle::Input::IsKeyHeld(Monocle::KEY_RSHIFT);
+			
+			if(inputMap[key] - L'a' > -26)
+			{
+				wchar_t ch = inputMap[key] - ((97-65) * shift);
+				win->textEvent( &ch, 1 );
+			}
+			else
+			{
+				switch(key)
+				{
+					case Monocle::KEY_EQUALS:
+						win->textEvent( shift ? L"+" : L"=", 1); break;
+					case Monocle::KEY_SLASH:
+						win->textEvent( shift ? L"?" : L"/", 1); break;
+					case Monocle::KEY_BACKSLASH:
+						win->textEvent( shift ? L"|" : L"\\", 1); break;
+					case Monocle::KEY_BACKQUOTE:
+						win->textEvent( shift ? L"~" : L"`", 1); break;
+					case Monocle::KEY_LEFTBRACKET:
+						win->textEvent( shift ? L"{" : L"[", 1); break;
+					case Monocle::KEY_RIGHTBRACKET:
+						win->textEvent( shift ? L"}" : L"]", 1); break;
+					case Monocle::KEY_SEMICOLON:
+						win->textEvent( shift ? L":" : L";", 1); break;
+					case Monocle::KEY_APOSTROPHE:
+						win->textEvent( shift ? L"\"" : L"\'", 1); break;
+					case Monocle::KEY_PERIOD:
+						win->textEvent( shift ? L">" : L".", 1); break;
+					case Monocle::KEY_COMMA:
+						win->textEvent( shift ? L"<" : L",", 1); break;
+					case Monocle::KEY_1:
+						win->textEvent( shift ? L"!" : L"1", 1); break;
+					case Monocle::KEY_2:
+						win->textEvent( shift ? L"@" : L"2", 1); break;
+					case Monocle::KEY_3:
+						win->textEvent( shift ? L"#" : L"3", 1); break;
+					case Monocle::KEY_4:
+						win->textEvent( shift ? L"$" : L"4", 1); break;
+					case Monocle::KEY_5:
+						win->textEvent( shift ? L"%" : L"5", 1); break;
+					case Monocle::KEY_6:
+						win->textEvent( shift ? L"^" : L"6", 1); break;
+					case Monocle::KEY_7:
+						win->textEvent( shift ? L"&" : L"7", 1); break;
+					case Monocle::KEY_8:
+						win->textEvent( shift ? L"*" : L"8", 1); break;
+					case Monocle::KEY_9:
+						win->textEvent( shift ? L"(" : L"9", 1); break;
+					case Monocle::KEY_0:
+						win->textEvent( shift ? L")" : L"0", 1); break;
+						
+					case Monocle::KEY_SPACE:
+						win->textEvent( L" ", 1 ); break;
+					case Monocle::KEY_BACKSPACE:
+						win->keyEvent(true, 0, '\b', 0); win->textEvent(L"a", 1); break;
+					case Monocle::KEY_RETURN:
+						win->keyEvent(true, 0, '\r', 0); break;
+				}
+			}
+		}
+
+        void BerkeliumPanel::SetSize(int x, int y)
         {
-            bool shift = Monocle::Input::IsKeyHeld(Monocle::KEY_LSHIFT);
-
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_A)) { win->textEvent( shift ? L"A" : L"a", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_B)) { win->textEvent( shift ? L"B" : L"b", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_C)) { win->textEvent( shift ? L"C" : L"c", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_D)) { win->textEvent( shift ? L"D" : L"d", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_E)) { win->textEvent( shift ? L"E" : L"e", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_F)) { win->textEvent( shift ? L"F" : L"f", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_G)) { win->textEvent( shift ? L"G" : L"g", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_H)) { win->textEvent( shift ? L"H" : L"h", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_I)) { win->textEvent( shift ? L"I" : L"i", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_J)) { win->textEvent( shift ? L"J" : L"j", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_K)) { win->textEvent( shift ? L"K" : L"k", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_L)) { win->textEvent( shift ? L"L" : L"l", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_M)) { win->textEvent( shift ? L"M" : L"m", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_N)) { win->textEvent( shift ? L"N" : L"n", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_O)) { win->textEvent( shift ? L"O" : L"o", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_P)) { win->textEvent( shift ? L"P" : L"p", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_Q)) { win->textEvent( shift ? L"Q" : L"q", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_R)) { win->textEvent( shift ? L"R" : L"r", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_S)) { win->textEvent( shift ? L"S" : L"s", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_T)) { win->textEvent( shift ? L"T" : L"t", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_U)) { win->textEvent( shift ? L"U" : L"u", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_V)) { win->textEvent( shift ? L"V" : L"v", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_W)) { win->textEvent( shift ? L"W" : L"w", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_X)) { win->textEvent( shift ? L"X" : L"x", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_Y)) { win->textEvent( shift ? L"Y" : L"y", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_Z)) { win->textEvent( shift ? L"Z" : L"z", 1);}
-
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_EQUALS)) { win->textEvent( shift ? L"+" : L"=", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_SLASH)) { win->textEvent( shift ? L"?" : L"/", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_BACKSLASH)) { win->textEvent( shift ? L"|" : L"\\", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_BACKQUOTE)) { win->textEvent( shift ? L"~" : L"`", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_LEFTBRACKET)) { win->textEvent( shift ? L"{" : L"[", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_RIGHTBRACKET)) { win->textEvent( shift ? L"}" : L"]", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_SEMICOLON)) { win->textEvent( shift ? L":" : L";", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_APOSTROPHE)) { win->textEvent( shift ? L"\"" : L"\'", 1); }
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_PERIOD)) { win->textEvent( shift ? L">" : L".", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_COMMA)) { win->textEvent( shift ? L"<" : L",", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_1)) { win->textEvent( shift ? L"!" : L"1", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_2)) { win->textEvent( shift ? L"@" : L"2", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_3)) { win->textEvent( shift ? L"#" : L"3", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_4)) { win->textEvent( shift ? L"$" : L"4", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_5)) { win->textEvent( shift ? L"%" : L"5", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_6)) { win->textEvent( shift ? L"^" : L"6", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_7)) { win->textEvent( shift ? L"&" : L"7", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_8)) { win->textEvent( shift ? L"*" : L"8", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_9)) { win->textEvent( shift ? L"(" : L"9", 1);}
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_0)) { win->textEvent( shift ? L")" : L"0", 1);}
-
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_SPACE)) {win->textEvent( L" ", 1 );}
-
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_BACKSPACE)) { win->keyEvent(true, 0, '\b', 0); win->textEvent(L"a", 1); }
-
-            if(Monocle::Input::IsKeyPressed(Monocle::KEY_RETURN))
-            {
-                win->keyEvent(true, 0, '\r', 0);
-            }
-        }
-
-        void BerkeliumPanel::setSize(int x, int y)
-        {
-            Panel::setSize(x,y);
+            Panel::SetSize(x,y);
             win->resize(x,y);
         }
 
-        void BerkeliumPanel::setSize(Monocle::Vector2 newsize)
+        void BerkeliumPanel::SetSize(Monocle::Vector2 newsize)
         {
-            Panel::setSize(newsize);
+            Panel::SetSize(newsize);
             win->resize(newsize.x, newsize.y);
         }
 
@@ -282,6 +285,36 @@ namespace Monocle
                 Berkelium::init(Berkelium::FileString::empty());
                 initialised = true;
             }
+        }
+        
+        void BerkeliumPanel::initInputMap()
+        {
+        	inputMap[KEY_A] = L'a';
+        	inputMap[KEY_B] = L'b';
+        	inputMap[KEY_C] = L'c';
+        	inputMap[KEY_D] = L'd';
+        	inputMap[KEY_E] = L'e';
+        	inputMap[KEY_F] = L'f';
+        	inputMap[KEY_G] = L'g';
+        	inputMap[KEY_H] = L'h';
+        	inputMap[KEY_I] = L'i';
+        	inputMap[KEY_J] = L'j';
+        	inputMap[KEY_K] = L'k';
+        	inputMap[KEY_L] = L'l';
+        	inputMap[KEY_M] = L'm';
+        	inputMap[KEY_N] = L'n';
+        	inputMap[KEY_O] = L'o';
+        	inputMap[KEY_P] = L'p';
+        	inputMap[KEY_Q] = L'q';
+        	inputMap[KEY_R] = L'r';
+        	inputMap[KEY_S] = L's';
+        	inputMap[KEY_T] = L't';
+        	inputMap[KEY_U] = L'u';
+        	inputMap[KEY_V] = L'v';
+        	inputMap[KEY_W] = L'w';
+        	inputMap[KEY_X] = L'x';
+        	inputMap[KEY_Y] = L'y';
+        	inputMap[KEY_Z] = L'z';
         }
     }
 }

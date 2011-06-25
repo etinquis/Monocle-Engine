@@ -21,7 +21,7 @@ namespace Monocle
     namespace GUI
     {
         //! \brief An implementation of the Berkelium Chromium library in Monocle.
-        class BerkeliumPanel : public Monocle::Panel, public Berkelium::WindowDelegate
+        class BerkeliumPanel : public Monocle::Panel, public Berkelium::WindowDelegate, public Monocle::Input::EventHandler
         {
         public:
             //! Default constructor.  Panel will be positioned at (0,0) and will fill the window.
@@ -46,9 +46,10 @@ namespace Monocle
             //! Bind a callback to a javascript function
 			void BindFunction(const JSBinding::JSFunctionCallback& func);      //! < \param func The function to be bound.
 
-            virtual void setSize(int x, int y);
-            virtual void setSize(Monocle::Vector2 newsize);
+            virtual void SetSize(int x, int y);
+            virtual void SetSize(Monocle::Vector2 newsize);
 
+			virtual void OnKeyPress(Monocle::KeyCode key);
 
         protected:
             Berkelium::Window *win;
@@ -72,13 +73,11 @@ namespace Monocle
             typedef std::multimap<std::wstring, JSBinding::JSFunctionCallback> JSCallbackList;
             JSCallbackList jsfuncs;
 
-            //Checks input to determine if any keys have been pressed and forwards them to berkelium
-            void captureInput() const;
-
             //whether or not berkelium as a whole has been initialised
             static bool initialised;
             //Initialises berkelium if it hasn't been started yet.
             void initBerkelium();
+			void initInputMap();
         };
     }
 }

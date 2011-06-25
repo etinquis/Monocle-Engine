@@ -11,19 +11,20 @@ namespace Monocle
     {
         position = pos;
         this->followCamera = Vector2::one;
+        SetLayer(Debug::layerMin - 1);
     }
 
-    void Panel::setSize(int x, int y)
+    void Panel::SetSize(int x, int y)
     {
         size = Vector2(x,y);
     }
 
-    void Panel::setSize(Vector2 newsize)
+    void Panel::SetSize(Vector2 newsize)
     {
         size = newsize;
     }
 
-    bool Panel::hasFocus()
+    bool Panel::HasFocus()
     {
         return currentFocus == this;
     }
@@ -65,7 +66,7 @@ namespace Monocle
 //			Graphics::Translate(scene->GetCamera()->position * followCamera + position * (Vector2::one - followCamera));
     }
 
-    void Panel::setFocus(Panel *panel)
+    void Panel::SetFocus(Panel *panel)
     {
         currentFocus = panel;
     }

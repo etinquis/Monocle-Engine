@@ -4,6 +4,7 @@
 #define MONOCLE_GUI_PANEL
 
 #include "Entity.h"
+#include <Input.h>
 
 namespace Monocle
 {
@@ -16,16 +17,18 @@ namespace Monocle
         virtual void Update();
         virtual void Render();
 
-        virtual void setSize(Vector2 size);
-        virtual void setSize(int x, int y);
+        virtual void SetSize(Vector2 size);
+        virtual void SetSize(int x, int y);
 
-        bool hasFocus();
-        static void setFocus(Panel *p);
+        bool HasFocus();
+        static void SetFocus(Panel *p);
     protected:
         void ApplyMatrix();
 
         Vector2 size;
         static Panel *currentFocus;
+        
+        std::map<Monocle::KeyCode, wchar_t> inputMap;
     };
 }
 
