@@ -133,6 +133,11 @@ namespace Monocle
 			}
 		}
 
+		if (graphic)
+		{
+			graphic->Update();
+		}
+
 		for (std::list<InvokeData*>::iterator i = removeInvokes.begin(); i != removeInvokes.end(); ++i)
 		{
 			delete *i;
@@ -375,6 +380,12 @@ namespace Monocle
 		position = atPosition;
 		Collider *collider = Collision::Collide(this, tag, collisionData);
 		position = oldPosition;
+		return collider;
+	}
+
+	Collider* Entity::CollideWith(Collider *pCollider, const std::string &tag, CollisionData *collisionData)
+	{
+		Collider *collider = Collision::Collide(pCollider, tag, collisionData);
 		return collider;
 	}
 
