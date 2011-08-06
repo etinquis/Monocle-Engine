@@ -19,19 +19,10 @@ namespace TestSelector
     public:
         LogoPanel();
         void Update();
-    private:
-        std::string pagePath;
-    };
-
-    class MenuScene : public Monocle::Scene
-    {
-    public:
-        void Begin();
-        void End();
-
+        
         static void onSelectedTest(const std::vector<Berkelium::Script::Variant>& args);
     private:
-        Monocle::GUI::BerkeliumPanel *selectPanel;
+        std::string pagePath;
     };
 
     class SceneProxy : public Monocle::Scene

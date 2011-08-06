@@ -159,6 +159,11 @@ namespace Monocle
                 //this->scene->GetCamera()->ApplyMatrix();
                 //Monocle::Graphics::Translate(position + Monocle::Vector2(size.x / 2, size.y /2));
                 ApplyMatrix();
+                //Camera *camera = scene->GetActiveCamera();
+				//if (!camera)
+				//	camera = scene->GetMainCamera();
+				//if (camera != NULL)
+				//	Graphics::Translate(camera->position);
 
                 Monocle::Graphics::BindTexture(tex);
 

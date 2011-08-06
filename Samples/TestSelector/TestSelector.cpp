@@ -19,9 +19,9 @@ namespace TestSelector
         SetLayer(-15);
         win->setTransparent(true);
 
-        BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&MenuScene::onSelectedTest, L"SelectTest", 1));
+        BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&LogoPanel::onSelectedTest, L"SelectTest", 1));
 
-        setUrl("http://google.com"); //"file://" + GetWorkingDirectory() + Monocle::Platform::GetDefaultContentPath() + "TestSelector/logooverlay.html");
+        setUrl("file://" + GetWorkingDirectory() + Monocle::Platform::GetDefaultContentPath() + "TestSelector/logooverlay.html");
         win->unfocus();
     }
 
@@ -32,26 +32,10 @@ namespace TestSelector
         if(Monocle::Input::IsKeyPressed(KEY_ESCAPE))
             setUrl(pagePath); //return to the logo page
     }
-
-    void MenuScene::Begin()
+    
+    void LogoPanel::onSelectedTest(const std::vector<Berkelium::Script::Variant>& args)
     {
-        selectPanel = new Monocle::GUI::BerkeliumPanel();
-
-        selectPanel->BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&MenuScene::onSelectedTest, L"SelectTest", 1));
-
-        selectPanel->setUrl("http://google.com"); //"file://" + GetWorkingDirectory() + Assets::GetContentPath() + "TestSelector/selector.html");
-
-        Add(selectPanel);
-    }
-
-    void MenuScene::End()
-    {
-        Scene::End();
-    }
-
-    void MenuScene::onSelectedTest(const std::vector<Berkelium::Script::Variant>& args)
-    {
-        int selectedScene = (int)args[0].toDouble();
+		int selectedScene = (int)args[0].toDouble();
 
         std::cout   << "Argument is:" << selectedScene << std::endl;
 

@@ -10,12 +10,10 @@
 
 int main(void)
 {
-	Monocle::Game *pGame = new Game("Monocle Powered", 1024, 800, 24);
+	Monocle::Game *pGame = new Monocle::Game("Monocle Powered", 1024, 800, 24);
 	pGame->SetScene(TestSelector::SceneProxy::Instance());
 	pGame->Main();
     delete pGame;
     
 	return 0;
 }
-
-#endif
