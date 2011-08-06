@@ -1,3 +1,5 @@
+#if MONOCLE_OPENGL || MONOCLE_OPENGLES
+
 #include "../TTFFontAsset.h"
 #include "../Debug.h"
 
@@ -12,8 +14,15 @@
 #include <stb/stb_truetype.h>
 
 // OpenGL Headers
+#ifdef MONOCLE_OPENGLES
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#else
 #define GLEW_STATIC
 #include <GL/glew.h>
+#endif
 
 #include "../Macros.h"
 
@@ -132,3 +141,5 @@ namespace Monocle
 		texCoords.bottomRight.y = q.t1;
     }
 }
+
+#endif

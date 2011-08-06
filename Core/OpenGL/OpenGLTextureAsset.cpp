@@ -53,7 +53,6 @@ namespace Monocle
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glRepeatX);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glRepeatY);
 
-
 		width = (unsigned int)w;
 		height = (unsigned int)h;
  
@@ -135,7 +134,7 @@ namespace Monocle
 			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 #endif
  
-			Debug::Log("Loaded texture: " + filename);
+			//Debug::Log("Loaded texture: " + filename);
 			return true;
 		}
 		else
@@ -228,6 +227,11 @@ namespace Monocle
 	void TextureAsset::Unload()
 	{
 		Debug::Log("Freeing texture memory for: " + filename);
+		if (filename.find("tower-wall-rep") != std::string::npos)
+		{
+			int p;
+			p = 55;
+		}
 		glDeleteTextures(1, &texID);
 	}
 }

@@ -54,13 +54,15 @@ namespace Monocle
 
 		//! create a new entity of type T and add it to the scene
 		template<class T>
-		T* Create(Entity *parent=NULL, const Vector2 &position=Vector2::zero)
+		T* Create(Entity *parent=NULL, const Vector2 &position=Vector2::zero, float rotation=0.0f, const Vector2 &scale=Vector2::one)
 		{
 			T *t = new T();
 			Add(t);
 			if (parent)
 				t->SetParent(parent);
 			t->position = position;
+			t->rotation = rotation;
+			t->scale = scale;
 			return t;
 		}
 

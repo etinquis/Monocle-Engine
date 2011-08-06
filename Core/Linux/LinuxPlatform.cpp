@@ -142,12 +142,16 @@ namespace Monocle
     bool Platform::mouseButtons[3];
     Vector2 Platform::mousePosition;
     int Platform::mouseScroll = 0;
+    Touch Platform::touches[TOUCHES_MAX];
+    int Platform::numTouches=0;
 
     Platform::Platform()
     {
         LinuxPlatform::instance = new LinuxPlatform();
         instance = this;
         LinuxPlatform::instance->platform = this;
+        
+        orientation = PLATFORM_ORIENTATION_NOTSUPPORTED;
 
         for (int i = 0; i < KEY_MAX; i++)
         {
@@ -415,6 +419,22 @@ namespace Monocle
 	{
 		return "../../Content/";
 	}
+    
+    PlatformOrientation Platform::GetOrientation()
+    {
+        return instance->orientation;
+    }
+    
+    void Platform::PlatformOrientationChanged( PlatformOrientation orientation )
+    {
+//        instance->orientation = orientation;
+    }
+    
+    void Platform::ErrorShutdown( std::string msg )
+    {
+        fprintf(stderr,"EXCEPTION: %s\n",msg.c_str());
+        exit(1);
+    }
 }
 
 #endif

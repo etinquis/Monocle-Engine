@@ -149,6 +149,8 @@ namespace Monocle
 	bool Platform::mouseButtons[3];
 	Vector2 Platform::mousePosition;
 	int Platform::mouseScroll=0;
+    Touch Platform::touches[TOUCHES_MAX];
+    int Platform::numTouches=0;
 
 	Platform::Platform()
 	{
@@ -160,6 +162,8 @@ namespace Monocle
             KeyCode kc = (KeyCode) ic;
             localKeymap[kc] = kc;
         }
+        
+        orientation = PLATFORM_ORIENTATION_NOTSUPPORTED;
 	}
 
 //	void Platform::Init()
@@ -251,5 +255,22 @@ namespace Monocle
     std::string Platform::GetDefaultContentPath() {
 //        return CocoaPlatform::instance->bundleResourcesPath;
         return "../../Content/";
+    }
+    
+    PlatformOrientation Platform::GetOrientation()
+    {
+        return instance->orientation;
+    }
+    
+    void Platform::PlatformOrientationChanged( PlatformOrientation orientation )
+    {
+//        instance->orientation = orientation;
+    }
+    
+    void Platform::ErrorShutdown( std::string msg )
+    {
+        NSString *errorMessage = [NSString stringWithCString:msg.c_str() 
+                                                    encoding:[NSString defaultCStringEncoding]];
+        [NSException raise:errorMessage format:@"%s" , errorMessage];
     }
 }

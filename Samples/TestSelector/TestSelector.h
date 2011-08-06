@@ -1,4 +1,3 @@
-//
 //  Main.cpp
 //  MonocleTests
 //
@@ -53,5 +52,3 @@ namespace TestSelector
         static LogoPanel *logo;
     };
 };
-
-

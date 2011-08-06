@@ -57,6 +57,8 @@ namespace Monocle
 		static void Set2D(int virtualWidth, int virtualHeight);
 		//static void Set3D();
 
+		static void Viewport(int x, int y, int width, int height);
+
 		//! Resizes the Graphics' viewport.
 		//! \remark This does not resize the platform window, it only changes
 		//! the graphics' perspective.
@@ -189,6 +191,8 @@ namespace Monocle
 		//! \param filename [in] The filename of the image file to save to.  Relative to the running directory, not ContentPath.
 		//! \param type [in] The type of file to write
 		static void ScreenToImage(const std::string &filename, ImageType type);
+        
+        static void CheckErrors();
 	protected:
 		friend class Game;
 		Graphics();
