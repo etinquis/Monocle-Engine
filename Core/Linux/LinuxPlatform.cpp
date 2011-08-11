@@ -283,20 +283,13 @@ namespace Monocle
 		BindLocalKey(KeySymParts::Get(XK_F15).low, KEY_F15);
     }
 
-    void Platform::BindLocalKey(int local, int global) {
-        //Needed to avoid key redefinition
-        if (localKeymap[local] == KEY_UNDEFINED) {
-            localKeymap[local] = global;
-        }
-    }
-
     void Platform::Init(const std::string &name, int w, int h, int bits, bool fullscreen)
     {
         LinuxPlatform::instance->CreatePlatformWindow(name.c_str(), w, h, bits, fullscreen);
         width = w;
         height = h;
     }
-
+    
     void Platform::Update()
     {
         mouseScroll = 0; //reset mouse wheel state
@@ -346,6 +339,18 @@ namespace Monocle
                                                       event.xmotion.y);
                 } break;
             }
+        }
+    }
+
+	bool Platform::ResizeWindow(int width, int height, bool fullscreen, int bits)
+	{
+		XResizeWindow(LinuxPlatform::instance->hDisplay, LinuxPlatform::instance->hWindow, width, height);
+	}
+
+    void Platform::BindLocalKey(int local, int global) {
+        //Needed to avoid key redefinition
+        if (localKeymap[local] == KEY_UNDEFINED) {
+            localKeymap[local] = global;
         }
     }
 

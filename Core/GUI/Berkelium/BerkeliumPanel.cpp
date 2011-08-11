@@ -17,7 +17,7 @@ namespace Monocle
     {
         bool BerkeliumPanel::initialised = false;
 
-        BerkeliumPanel::BerkeliumPanel() : Panel(Vector2::zero, Vector2(Monocle::Graphics::GetVirtualWidth(), Monocle::Graphics::GetVirtualHeight()))
+        BerkeliumPanel::BerkeliumPanel() : Panel(Vector2::zero, Vector2(Monocle::Platform::GetHeight(), Monocle::Platform::GetWidth()))
         {
             initBerkelium();
 			initInputMap();
@@ -152,13 +152,17 @@ namespace Monocle
         {
             //Panel::Render();
             
+            int w = Graphics::GetVirtualWidth(), h = Graphics::GetVirtualHeight();
+            Graphics::Set2D(size.x, size.y);
+            
             if(tex)
             {
                 Monocle::Graphics::PushMatrix();
 
                 //this->scene->GetCamera()->ApplyMatrix();
                 //Monocle::Graphics::Translate(position + Monocle::Vector2(size.x / 2, size.y /2));
-                ApplyMatrix();
+                //ApplyMatrix();
+                Monocle::Graphics::Translate(size.x * .5, 50, 0);
                 //Camera *camera = scene->GetActiveCamera();
 				//if (!camera)
 				//	camera = scene->GetMainCamera();
@@ -172,6 +176,8 @@ namespace Monocle
 
                 Monocle::Graphics::PopMatrix();
             }
+            
+            Graphics::Set2D(w, h);
         }
 
         void BerkeliumPanel::onConsoleMessage(Berkelium::Window *win, Berkelium::WideString message, Berkelium::WideString sourceID, int line_no) const

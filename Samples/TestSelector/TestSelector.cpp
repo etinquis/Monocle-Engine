@@ -7,6 +7,7 @@
 #include "Ogmo/Ogmo.h"
 #include "Pong/Pong.h"
 #include "PuppetTest/PuppetTest.h"
+#include "ShaderEditor/ShaderEditor.h"
 //#include "GUITest/GUITest.h"
 
 #include <Platform.h>
