@@ -65,6 +65,9 @@ namespace Monocle
         
         currentBlend = BLEND_ALPHA;
         
+        currentColor = Color::white;
+        glColor4f(1.0,1.0,1.0,1.0);
+        
 		glDisable(GL_LIGHTING);
 		glEnable(GL_TEXTURE_2D);
 		glCullFace(GL_BACK);
@@ -79,8 +82,13 @@ namespace Monocle
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ShowBuffer();
         
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glPixelStorei(GL_PACK_ALIGNMENT, 1);
         
 		Set2D(800,600);
+        
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         
 		//cameraPosition = screenCenter;
 		//cameraZoom = Vector2::one;
@@ -126,6 +134,9 @@ namespace Monocle
                     break;
                 case BLEND_MULTIPLY:
                     glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+                    break;
+                case BLEND_ALPHA_PREMULTIPLIED:
+                    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
                     break;
 			}
 			instance->currentBlend = blend;
@@ -285,7 +296,6 @@ namespace Monocle
             halfSize,  -halfSize
         };
         
-        glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(2, GL_FLOAT, 0, vertex_arr);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -330,7 +340,6 @@ namespace Monocle
             pos2.x, pos2.y
         };
         
-        glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(2, GL_FLOAT, 0, vertex_arr);
         glDrawArrays(GL_LINES, 0, 2);
 	}
@@ -351,7 +360,6 @@ namespace Monocle
             x-hw, y-hh
         };
         
-        glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(2, GL_FLOAT, 0, vertex_arr);
         glDrawArrays(GL_LINES, 0, 8);
         
@@ -372,7 +380,10 @@ namespace Monocle
     
 	void Graphics::SetColor(const Color &color)
 	{
-		glColor4f(color.r, color.g, color.b, color.a);
+		if (instance->currentColor != color){
+            glColor4f(color.r, color.g, color.b, color.a);
+            instance->currentColor = color;
+        }
 	}
     
 	int Graphics::GetVirtualWidth()
@@ -426,9 +437,6 @@ namespace Monocle
             textureOffset.x + textureScale.x, textureOffset.y + textureScale.y
         };
         
-        glDisableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glVertexPointer(2, GL_FLOAT, 0, vertex_arr);
         glTexCoordPointer(2, GL_FLOAT, 0, texture_arr);
         
@@ -472,19 +480,27 @@ namespace Monocle
             textureOffset.x + textureScale.x, textureOffset.y + textureScale.y
         };
         
-        glDisableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glVertexPointer(2, GL_FLOAT, 0, vertex_arr);
         glTexCoordPointer(2, GL_FLOAT, 0, texture_arr);
         
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
     
-    void Graphics::RenderText(const FontAsset& font, const std::string& text, float x, float y)
+    void Graphics::RenderText(const FontAsset& font, const std::string& text, float x, float y, TextAlign x_align)
     {
         Rect verts, texCoords;
-//        glBegin(GL_QUADS);
+        float width;
+
+        width = font.GetTextWidth(text);
+        
+        glPushMatrix();
+        
+        if (x_align == TEXTALIGN_RIGHT){
+            glTranslatef( -width, 0.0, 0.0 );
+        }else if (x_align == TEXTALIGN_CENTER){
+            glTranslatef( width/-2.0, 0.0, 0.0 );
+        } 
+        
         for (int i = 0; i < text.size(); i++)
         {
             char c = text[i];
@@ -506,9 +522,6 @@ namespace Monocle
                     texCoords.bottomRight.x, texCoords.bottomRight.y
                 };
                 
-                glDisableClientState(GL_COLOR_ARRAY);
-                glEnableClientState(GL_VERTEX_ARRAY);
-                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                 glVertexPointer(2, GL_FLOAT, 0, vertex_arr);
                 glTexCoordPointer(2, GL_FLOAT, 0, texture_arr);
                 
@@ -527,7 +540,8 @@ namespace Monocle
 				glVertex2f(verts.topLeft.x, verts.bottomRight.y);*/
 			}
         }
-//        glEnd();
+        
+        glPopMatrix();
     }
     
 	void Graphics::BeginFrame()
@@ -676,7 +690,7 @@ namespace Monocle
 //		glEnd();
 	}
     
-	void Graphics::RenderPathMesh(const std::vector<Node*> &nodes, int cells, float size, bool flipX, bool flipY)
+	void Graphics::RenderPathMesh(const std::vector<Node*> &nodes, int cells, float size, bool flipX, bool flipY, Vector2 textureOffset, Vector2 textureScale)
 	{
 //		glBegin(GL_QUADS);
 		for (int i = 0; i < nodes.size()-1; i++)
@@ -720,14 +734,14 @@ namespace Monocle
 				Vector2 pos1 = nodes[i]->position;
 				Vector2 pos2 = nodes[i+1]->position;
                 
-				Vector2 texOffset = Vector2::zero;
-				Vector2 texScale = Vector2::one * 1.0f/(float)cells;
-				texOffset.x = (nodes[i]->variant % (cells)) * texScale.x;
-				texOffset.y = (int)(nodes[i]->variant / (cells)) * texScale.y;
+				Vector2 texOffset = textureOffset;
+				Vector2 texScale = textureScale * 1.0f/(float)cells;
+				texOffset.x += (nodes[i]->variant % (cells)) * texScale.x;
+				texOffset.y += (int)(nodes[i]->variant / (cells)) * texScale.y;
                 
 				if (flipY)
 				{
-					texOffset.y = 1.0f - texOffset.y;
+					texOffset.y = (textureOffset.y+textureScale.y) - texOffset.y;
 					texScale.y = - texScale.y;
 					//printf("%f, %f\n", texOffset.y, texScale.y);
 				}
@@ -760,14 +774,14 @@ namespace Monocle
                     nodes[i+1]->color.r, nodes[i+1]->color.g, nodes[i+1]->color.b, nodes[i+1]->color.a
                 };
                 
-                glEnableClientState(GL_VERTEX_ARRAY);
-                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                 glEnableClientState(GL_COLOR_ARRAY);
                 glVertexPointer(2, GL_FLOAT, 0, vertex_arr);
                 glTexCoordPointer(2, GL_FLOAT, 0, texture_arr);
                 glColorPointer(4, GL_FLOAT, 0, color_arr);
                 
                 glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+                
+                glDisableClientState(GL_COLOR_ARRAY);
                 
                 /*
 				Graphics::SetColor(nodes[i]->color);

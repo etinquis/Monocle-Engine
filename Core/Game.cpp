@@ -136,12 +136,11 @@ namespace Monocle
             if (scene != NULL)
             {
                 scene->End();
-                scene->game = NULL;
+
                 // delete scene?
             }
             
             scene = switchTo;
-            
             switchTo = NULL;
             
             if (scene != NULL)

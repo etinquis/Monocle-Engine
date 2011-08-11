@@ -22,6 +22,7 @@ namespace Monocle
 	class Graphics;
 	class Graphic;
 	class CollisionData;
+    class Camera;
 
 	class InvokeData
 	{
@@ -97,6 +98,9 @@ namespace Monocle
 		virtual void Removed();
 		//! Called when Entity is destroyed
 		virtual void Destroyed();
+        
+        //! Called to determine if the entity should be drawn
+        virtual bool IsOnCamera( Camera *camera );
 
 		//! Check our collider against all entities that have "tag"
 		Collider* Collide(const std::string &tag, CollisionData *collisionData=NULL);
@@ -191,7 +195,8 @@ namespace Monocle
 		std::list<InvokeData*> invokes;
 		std::list<InvokeData*> removeInvokes;
 
-
+        Vector2 cachedWorldPosition;
+        Vector2 lastPositionWhenCached;
 	public:
 		//Entity* GetChildEntityAtPosition(const Vector2 &position);
 		//template <class T>

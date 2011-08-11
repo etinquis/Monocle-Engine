@@ -66,11 +66,10 @@ namespace Monocle
 
         glGenTextures(1, &texID);
         glBindTexture(GL_TEXTURE_2D, texID);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, this->textureWidth, this->textureHeight, 0, GL_ALPHA, GL_UNSIGNED_BYTE, temp_bitmap);
 
         free(temp_bitmap);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         return true;
 	}
@@ -93,10 +92,11 @@ namespace Monocle
 		}
 	}
 
-	float TTFFontAsset::GetTextWidth(const std::string &text)
+	float TTFFontAsset::GetTextWidth(const std::string &text) const 
 	{
 		float width = 0;
 		float x,y;
+        x=y=0.0;
 		for (int i = 0; i < text.size(); i++)
 		{
 			Rect verts;
@@ -107,7 +107,7 @@ namespace Monocle
 		return width;
 	}
 
-	float TTFFontAsset::GetTextHeight(const std::string &text)
+	float TTFFontAsset::GetTextHeight(const std::string &text) const
 	{
 		//float height = 0;
 		float top = 0, bottom = 0;

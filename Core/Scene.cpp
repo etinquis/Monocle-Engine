@@ -6,12 +6,9 @@
 
 namespace Monocle
 {
-	Scene *Scene::instance = NULL;
-
 	Scene::Scene()
 		: isVisible(true), isPaused(false), activeCamera(NULL), mainCamera(NULL)
 	{
-		instance = this;
 		Camera *camera = new Camera();
 		camera->position = Graphics::GetScreenCenter();
 		AddCamera(camera);
@@ -27,7 +24,6 @@ namespace Monocle
 
 	void Scene::Begin()
 	{
-
 	}
 
 	void Scene::End()
@@ -64,6 +60,8 @@ namespace Monocle
 
 	void Scene::Render()
 	{
+        long entitiesDrawn = 0;
+        
 		if (isVisible)
 		{
 			//Render all the entities
@@ -94,7 +92,10 @@ namespace Monocle
 						{
 							if ((*i)->isVisible && (*i)->IsLayer(layer))
 							{
-								(*i)->Render();
+//                                if ((*i)->IsOnCamera(activeCamera)){
+                                    (*i)->Render();
+                                    entitiesDrawn++;
+//                                }
 							}
 						}
 					}
@@ -103,6 +104,8 @@ namespace Monocle
 
 			activeCamera = NULL;
 		}
+        
+        Monocle::entitiesDrawn = entitiesDrawn;
 	}
 
 	void Scene::Add(Entity* entity)
@@ -227,15 +230,15 @@ namespace Monocle
 
 	void Scene::AddCamera(Camera *camera)
 	{
-		instance->cameras.push_back(camera);
+		cameras.push_back(camera);
 	}
 
 	Camera *Scene::GetCamera(int cameraIndex)
 	{
 		int c = 0;
-		for (std::list<Camera*>::iterator i = instance->cameras.begin(); i != instance->cameras.end(); i++)
+		for (std::list<Camera*>::iterator i = cameras.begin(); i != cameras.end(); i++)
 		{
-			if (c == cameraIndex)
+			if (c++ == cameraIndex)
 				return *i;
 		}
 		return NULL;
@@ -243,17 +246,17 @@ namespace Monocle
 
 	Camera *Scene::GetActiveCamera()
 	{
-		return instance->activeCamera;
+		return activeCamera;
 	}
 
 	Camera *Scene::GetMainCamera()
 	{
-		return instance->mainCamera;
+		return mainCamera;
 	}
 	
 	void Scene::SetMainCamera(Camera *camera)
 	{
-		instance->mainCamera = camera;
+		mainCamera = camera;
 	}
 
 	void Scene::DestroyAllCameras()
