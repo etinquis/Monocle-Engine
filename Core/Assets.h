@@ -8,6 +8,7 @@ namespace Monocle
 {
 	class TextureAsset;
     class FontAsset;
+    class ShaderAsset;
     class AudioAsset;
     class AudioDecoder;
 
@@ -28,7 +29,7 @@ namespace Monocle
 		//! \param FilterType The image filter type to use on the generated texture.
 		//! \param repeatX Whether the texture should be repeated horizontally if necessary when rendered.
 		//! \param repeatY Whether the texture should be repeated vertically if necessary when rendered.
-		//! \sa RequestAudio, RequestFont, FilterType
+		//! \sa RequestAudio, RequestFont, RequestShader, FilterType
 		static TextureAsset *RequestTexture(const std::string &filename, FilterType filter = FILTER_LINEAR, bool repeatX = false, bool repeatY = false, bool premultiply = true);
 		//! \brief Requests a font asset
 		//! Returns a pointer to the requested Font Asset, NULL on failure.  Calling this function multiple times with the same filename will return
@@ -37,7 +38,7 @@ namespace Monocle
 		//! \param size The point-size of the font.
 		//! \param textureWidth The width of the texture that is generated for the bitmap character sheet.
 		//! \param textureHeight The height of the texture that is generated for the bitmap character sheet.
-		//! \sa RequestAudio, RequestTexture
+		//! \sa RequestAudio, RequestTexture, RequestShader
         static FontAsset *RequestFont(const std::string &filename, float size, int textureWidth=-1, int textureHeight=-1);
         //! \brief Requests an audio asset
 		//! Returns a pointer to the requested Audio Asset, NULL on failure.  Calling this function multiple times with the same filename will return
@@ -45,8 +46,15 @@ namespace Monocle
 		//! \param filename The path to the requested file, relative to the current content path.
 		//! \param streamFromDisk If true, the audio is not pre-loaded into memory
 		//! \param decodeString The string used to decode the audio if it has been encoded. Optional, defaults to no encoding.
-		//! \sa RequestFont, RequestTexture
+		//! \sa RequestFont, RequestTexture, RequestShader
 		static AudioAsset *RequestAudio(const std::string &filename, bool streamFromDisk=false, std::string decodeString = "");
+		//! \brief Requests a shader asset
+		//! Returns a pointer to the requested shader asset, NULL on failure.  Calling this function multiple times with the same filenames will return
+		//! a pointer to a different shader.  Pointers returned from this function should not be deleted by the caller.
+		//! \param vertexPath The path to the vertex shader file, relative to the current content path
+		//! \param fragmentPath The path to the fragment shader file, relative to the current content path
+		//! \sa RequestTexture, RequestFont, RequestAudio
+		static ShaderAsset *RequestShader(const std::string &vertexPath, const std::string &fragmentPath);
 
         //! Changes the root directory that is searched for requested assets.  All filenames given to the RequestTYPE functions are relative
         //! to this path.

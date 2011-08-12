@@ -1,5 +1,5 @@
 //
-//  Shader.h
+//  ShaderAsset.h
 //  Rokkit
 //
 //  Created by Josh Whelchel on 5/10/11.
@@ -14,14 +14,17 @@
 
 namespace Monocle
 {    
-	class Shader
+	class ShaderAsset : public Asset
 	{
-		public:
-        
-		Shader(const std::string &vertexPath,const std::string &fragmentPath);
-		~Shader();
+	public:
+        ShaderAsset();
+		//ShaderAsset(const std::string &vertexPath,const std::string &fragmentPath);
+		~ShaderAsset();
         
 		void Use();
+		bool Load(const std::string &vertexPath, const std::string &fragmentPath);
+		void Reload();
+		void Unload();
         
 		void SetUniformFloat(const std::string &name, float value );
 		void SetUniformVec2(const std::string &name, Vector2 vec );
@@ -42,5 +45,8 @@ namespace Monocle
 		std::map<std::string,Color> vec4s;
 		std::map<std::string,int> ints;
 		std::map<std::string,unsigned int> textures;
+		
+	private:
+		std::string vertPath, fragPath;
 	};
 }

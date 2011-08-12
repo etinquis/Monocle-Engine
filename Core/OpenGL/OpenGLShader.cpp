@@ -1,5 +1,5 @@
 //
-//  Shader.cpp
+//  ShaderAsset.cpp
 //
 //  Created by Josh Whelchel on 5/10/11.
 //  Copyright 2011 jwmusic.org. All rights reserved.
@@ -65,54 +65,22 @@ namespace Monocle
 			Debug::Log(infoLog);
 	}
  
-	Shader::Shader(const std::string &vertexPath,const std::string &fragmentPath )
+	ShaderAsset::ShaderAsset() : Asset(ASSET_SHADER)
 	{
-		this->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		this->vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		this->shaderProgram = glCreateProgram();
-        
-		if (vertexPath != "")
-		{
-			const char *vShader = file2string(Assets::GetContentPath() + vertexPath);
-            
-			if (vShader){
-				glShaderSource(vertexShader, 1, &vShader, NULL);
-				glCompileShader(vertexShader);
-				printLog(vertexShader);
-                
-				free((void*)vShader);
-                
-				glAttachShader(shaderProgram, vertexShader);
-			}
-		}
-        
-		if (fragmentPath != "")
-		{
-			const char *fShader = file2string(Assets::GetContentPath() + fragmentPath);
-            
-			if (fShader){
-				glShaderSource(fragmentShader, 1, &fShader, NULL);
-				glCompileShader(fragmentShader);
-				printLog(fragmentShader);
-                
-				free((void*)fShader);
-                
-				glAttachShader(shaderProgram, fragmentShader);
-			}
-		}
-        
-		glLinkProgram(shaderProgram);
-		printLog(shaderProgram);
+		
+	}
+ 
+//	ShaderAsset::ShaderAsset(const std::string &vertexPath,const std::string &fragmentPath ) : Asset(ASSET_SHADER)
+//	{
+//		Load(vertexPath, fragmentPath);
+//	}
+    
+	ShaderAsset::~ShaderAsset()
+	{
+		Unload();
 	}
     
-	Shader::~Shader()
-	{
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
-		glDeleteProgram(shaderProgram);
-	}
-    
-	void Shader::Use()
+	void ShaderAsset::Use()
 	{
 		glUseProgram(shaderProgram);
         
@@ -153,38 +121,114 @@ namespace Monocle
         GLint tT = glGetUniformLocation(shaderProgram, "totalTime");
         glUniform1f(tT,Monocle::timeSinceStart);
 	}
+	
+	bool ShaderAsset::Load(const std::string &vertexPath,const std::string &fragmentPath)
+	{
+		vertPath = vertexPath;
+		fragPath = fragmentPath;
+		this->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		this->vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		this->shaderProgram = glCreateProgram();
+        
+        if (vertexPath != "")
+		{
+			const char *vShader = file2string(vertexPath);
+			
+			if (vShader){
+				glShaderSource(vertexShader, 1, &vShader, NULL);
+				glCompileShader(vertexShader);
+				printLog(vertexShader);
+				
+				free((void*)vShader);
+				
+				glAttachShader(shaderProgram, vertexShader);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+		if (fragmentPath != "")
+		{
+			const char *fShader = file2string(fragmentPath);
+						
+			if (fShader){
+				glShaderSource(fragmentShader, 1, &fShader, NULL);
+				glCompileShader(fragmentShader);
+				printLog(fragmentShader);
+								
+				free((void*)fShader);
+								
+				glAttachShader(shaderProgram, fragmentShader);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+		glLinkProgram(shaderProgram);
+		printLog(shaderProgram);
+		
+		return true;
+	}
+	
+	void ShaderAsset::Reload()
+	{
+		Unload();
+		Load(vertPath, fragPath);
+	}
+	
+	void ShaderAsset::Unload()
+	{		
+		glDeleteShader(vertexShader);
+		vertexShader = NULL;
+		glDeleteShader(fragmentShader);
+		fragmentShader = NULL;
+		glDeleteProgram(shaderProgram);
+		shaderProgram = NULL;
+	}
     
-	void Shader::SetUniformFloat(const std::string &name, float value )
+	void ShaderAsset::SetUniformFloat(const std::string &name, float value )
 	{
 		floats[name] = value;
 	}
 
-	void Shader::SetUniformVec2(const std::string &name, Vector2 vec )
+	void ShaderAsset::SetUniformVec2(const std::string &name, Vector2 vec )
 	{
 		vec2s[name] = vec;
 	}
     
-	void Shader::SetUniformVec3(const std::string &name, Vector3 vec )
+	void ShaderAsset::SetUniformVec3(const std::string &name, Vector3 vec )
 	{
 		vec3s[name] = vec;
 	}
     
-	void Shader::SetUniformVec4(const std::string &name, Color vec, bool ignoreAlpha )
+	void ShaderAsset::SetUniformVec4(const std::string &name, Color vec, bool ignoreAlpha )
 	{
 		vec4s[name] = ignoreAlpha ? Color(vec.r,vec.g,vec.b,1.0f) : vec;
 	}
     
-	void Shader::SetUniformInt(const std::string &name, int value )
+	void ShaderAsset::SetUniformInt(const std::string &name, int value )
 	{
 		ints[name] = value;      
 	}
 
-	void Shader::SetUniformSampler2D(const std::string &name)
+	void ShaderAsset::SetUniformSampler2D(const std::string &name)
 	{
 		textures[name] = textures.size()-1;
 	}
     
-	void Shader::UseNone()
+	void ShaderAsset::UseNone()
 	{
 		glUseProgram(0);
 	}

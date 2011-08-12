@@ -4,6 +4,7 @@
 
 #include "Audio/AudioAsset.h"
 #include "TextureAsset.h"
+#include "Shader.h"
 #include "TTFFontAsset.h"
 #include "Debug.h"
 #include "Platform.h"
@@ -125,6 +126,22 @@ namespace Monocle
 		}
         
 		// return what we found
+		return asset;
+	}
+
+	ShaderAsset *Assets::RequestShader(const std::string &vertexPath, const std::string &fragmentPath)
+	{		
+		//add GetAssetByFilename equivalent for shaders?
+		ShaderAsset *asset = new ShaderAsset();
+		if(!asset->Load(GetContentPath() + vertexPath, GetContentPath() + fragmentPath))
+		{
+			delete asset;
+			return NULL;
+		}
+		
+		instance->StoreAsset((Asset*)asset);
+		asset->AddReference();
+		
 		return asset;
 	}
 

@@ -209,7 +209,7 @@ namespace Monocle
 			Graphics::RenderQuad(width, height, textureOffset, textureScale);
 
 		Graphics::PopMatrix();
-		Shader::UseNone();
+		ShaderAsset::UseNone();
 
 		// show bounds, for editor/selection purposes
 		if ((Debug::showBounds || Debug::selectedEntity == entity) && entity->IsDebugLayer())
@@ -253,7 +253,7 @@ namespace Monocle
         *height = (float)this->height;
 	}
 
-	void Sprite::SetShader(Shader *shader)
+	void Sprite::SetShader(ShaderAsset *shader)
 	{
 		if(this->shader == NULL)
 		{
@@ -261,13 +261,13 @@ namespace Monocle
 		}
 		else
 		{
-			Shader::UseNone();
+			ShaderAsset::UseNone();
 			delete this->shader;
 			this->shader = shader;
 		}
 	}
 	
-	Shader* Sprite::GetShader()
+	ShaderAsset* Sprite::GetShader()
 	{
 		return shader;
 	}

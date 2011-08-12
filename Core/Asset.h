@@ -10,6 +10,7 @@ namespace Monocle
 		ASSET_TEXTURE,
 		ASSET_AUDIO,
         ASSET_FONT,
+        ASSET_SHADER,
 		ASSET_MAX,
 	};
 

@@ -14,6 +14,7 @@
 #include "../Ogmo/Ogmo.h"
 #include "../Pong/Pong.h"
 #include "../PuppetTest/PuppetTest.h"
+#include "../Shaders/Shaders.h"
 
 using namespace Monocle;
 
@@ -39,7 +40,8 @@ namespace TestSelector
             "Ogmo",
             "Level Editor",
             "Pong",
-            "Puppet Test"
+            "Puppet Test",
+            "Shaders"
         };
         
         Debug::Log("TestSelector::GameScene::Begin()!");
@@ -112,12 +114,17 @@ namespace TestSelector
             newAssetPath = "PuppetTest/";
             nextScene = new PuppetTest::TestScene();
         }
+        else
+        if (Input::IsKeyPressed(KEY_8) )
+        {
+        	newAssetPath = "Shaders/";
+        	nextScene = new ShaderScene();
+        }
 
         if (nextScene)
         {
             Assets::SetContentPath(Platform::GetDefaultContentPath() + newAssetPath);
             pGame->SetScene(nextScene);
-            
         }
     }
 }

@@ -9,6 +9,7 @@
 #include <FontAsset.h>
 #include <Audio/AudioAsset.h>
 #include <TextureAsset.h>
+#include <Shader.h>
 
 namespace Monocle
 {
@@ -35,6 +36,7 @@ namespace Monocle
                 TEST_ADD(Assets::RequestTexture)
                 TEST_ADD(Assets::RequestFont)
                 TEST_ADD(Assets::RequestAudio)
+                TEST_ADD(Assets::RequestShader)
             }
             
             void Assets::setup()
@@ -115,6 +117,25 @@ namespace Monocle
                 
                 delete tex;
                 tex = NULL;
+            }
+            
+            void Assets::RequestShader()
+            {
+            	Game *g = new Game();
+            	
+            	Monocle::Assets::SetContentPath("../../../Content/");
+            	
+            	ShaderAsset *shader = Monocle::Assets::RequestShader("doesntexist.vert", "Shaders/test.frag");
+            	TEST_ASSERT(shader == NULL);
+            	
+            	shader = Monocle::Assets::RequestShader("Shaders/test.vert", "doesntexist.frag");
+            	TEST_ASSERT(shader == NULL);
+            	
+            	shader = Monocle::Assets::RequestShader("doesntexist.vert", "doesntexist.frag");
+            	TEST_ASSERT(shader == NULL);
+            	
+            	shader = Monocle::Assets::RequestShader("Shaders/test.vert", "Shaders/test.frag");
+            	TEST_ASSERT(shader != NULL);
             }
         }
     }

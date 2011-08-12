@@ -25,8 +25,8 @@ namespace Monocle
 		void Update();
 		void Render(Entity *entity);
 		void GetWidthHeight(float *width, float *height);
-		void SetShader(Shader* shader);
-		Shader* GetShader();
+		void SetShader(ShaderAsset* shader);
+		ShaderAsset* GetShader();
         
         void AdjustForZwopSprite( ZwopSprite *zs );
 
@@ -49,6 +49,6 @@ namespace Monocle
 
 		BlendType blend;
 	private:
-		Shader* shader;
+		ShaderAsset* shader;
 	};
 }

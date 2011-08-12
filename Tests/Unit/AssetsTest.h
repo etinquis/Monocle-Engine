@@ -37,6 +37,7 @@ namespace Monocle
                 void RequestTexture();
                 void RequestFont();
                 void RequestAudio();
+                void RequestShader();
                 void GetContentPath();
                 
                 Monocle::Assets *assets;
