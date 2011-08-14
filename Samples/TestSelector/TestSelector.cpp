@@ -7,7 +7,7 @@
 #include "Ogmo/Ogmo.h"
 #include "Pong/Pong.h"
 #include "PuppetTest/PuppetTest.h"
-#include "ShaderEditor/ShaderEditor.h"
+//#include "ShaderEditor/ShaderEditor.h"
 //#include "GUITest/GUITest.h"
 
 #include <Platform.h>
@@ -97,7 +97,6 @@ namespace TestSelector
         currentScene = scene;
         Monocle::Assets::SetContentPath(Monocle::Platform::GetDefaultContentPath() + assetPath);
         currentScene->Begin();
-        logo->SetSize(Monocle::Vector2(Monocle::Graphics::GetVirtualWidth(), Monocle::Graphics::GetVirtualHeight()));
     }
 
     void SceneProxy::Begin()
@@ -117,6 +116,8 @@ namespace TestSelector
     void SceneProxy::Render()
     {
         Monocle::Graphics::PushMatrix();
+
+		Graphics::IdentityMatrix();
 
         if(currentScene)
         {

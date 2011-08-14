@@ -17,7 +17,7 @@ namespace Monocle
     {
         bool BerkeliumPanel::initialised = false;
 
-        BerkeliumPanel::BerkeliumPanel() : Panel(Vector2::zero, Vector2(Monocle::Platform::GetHeight(), Monocle::Platform::GetWidth()))
+        BerkeliumPanel::BerkeliumPanel() : Panel(Vector2::zero, Vector2(Monocle::Platform::GetWidth(), Monocle::Platform::GetHeight()))
         {
             initBerkelium();
 			initInputMap();
@@ -72,8 +72,11 @@ namespace Monocle
         {
             Panel::Update();
 
-            Monocle::Vector2 localMousePos = Monocle::Input::GetMousePosition() - position;
-            win->mouseMoved(localMousePos.x, localMousePos.y);
+            Vector2 localMousePos = Input::GetMousePosition() - position;
+			Vector2 scale = Vector2( Platform::GetWidth() / (float)Graphics::GetVirtualWidth(), Platform::GetHeight() / (float)Graphics::GetVirtualHeight() );
+			Vector2 scaled = localMousePos * scale;
+
+			win->mouseMoved(scaled.x, scaled.y);
 
             static bool lastState = Monocle::Input::IsMouseButtonHeld(MOUSE_BUTTON_LEFT);
             if(lastState != Monocle::Input::IsMouseButtonHeld(MOUSE_BUTTON_LEFT))
@@ -151,33 +154,24 @@ namespace Monocle
         void BerkeliumPanel::Render() //const
         {
             //Panel::Render();
-            
-            int w = Graphics::GetVirtualWidth(), h = Graphics::GetVirtualHeight();
-            Graphics::Set2D(size.x, size.y);
-            
             if(tex)
             {
                 Monocle::Graphics::PushMatrix();
 
-                //this->scene->GetCamera()->ApplyMatrix();
-                //Monocle::Graphics::Translate(position + Monocle::Vector2(size.x / 2, size.y /2));
-                //ApplyMatrix();
-                Monocle::Graphics::Translate(size.x * .5, 50, 0);
-                //Camera *camera = scene->GetActiveCamera();
-				//if (!camera)
-				//	camera = scene->GetMainCamera();
-				//if (camera != NULL)
-				//	Graphics::Translate(camera->position);
+				int w = Graphics::GetVirtualWidth(), h = Graphics::GetVirtualHeight();
+				Graphics::Set2D(size.x, size.y);
+
+				Monocle::Graphics::SetColor(Color::white);
 
                 Monocle::Graphics::BindTexture(tex);
 
                 Monocle::Graphics::SetBlend(Monocle::BLEND_ALPHA);
-                Monocle::Graphics::RenderQuad(size.x, size.y);
+                Monocle::Graphics::RenderQuad(size.x, size.y, Vector2::zero, Vector2::one, Vector2(size.x/2.0,size.y/2.0));
+
+				Graphics::Set2D(w, h);
 
                 Monocle::Graphics::PopMatrix();
             }
-            
-            Graphics::Set2D(w, h);
         }
 
         void BerkeliumPanel::onConsoleMessage(Berkelium::Window *win, Berkelium::WideString message, Berkelium::WideString sourceID, int line_no) const
