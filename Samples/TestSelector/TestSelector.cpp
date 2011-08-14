@@ -17,13 +17,12 @@ namespace TestSelector
 {
     LogoPanel::LogoPanel() : Monocle::GUI::BerkeliumPanel()
     {
-        SetLayer(-15);
         win->setTransparent(true);
 
         BindFunction(Monocle::GUI::JSBinding::JSFunctionCallback(&LogoPanel::onSelectedTest, L"SelectTest", 1));
 
         setUrl("file://" + GetWorkingDirectory() + Monocle::Platform::GetDefaultContentPath() + "TestSelector/logooverlay.html");
-        win->unfocus();
+        //win->unfocus();
     }
 
     void LogoPanel::Update()
@@ -92,39 +91,37 @@ namespace TestSelector
         {
             currentScene->End();
             delete currentScene;
+			currentScene = NULL;
         }
 
         currentScene = scene;
         Monocle::Assets::SetContentPath(Monocle::Platform::GetDefaultContentPath() + assetPath);
         currentScene->Begin();
+		if(currentScene->GetMainCamera())
+			Instance()->SetMainCamera(currentScene->GetMainCamera());
     }
 
-    void SceneProxy::Begin()
-    {
-        Scene::Begin();
-        if(currentScene)
-            currentScene->Begin();
-    }
+	void SceneProxy::Begin()
+	{
+
+	}
 
     void SceneProxy::Update()
     {
-        Scene::Update();
-        if(currentScene)
+        //Scene::Update();
+		if(currentScene)
             currentScene->Update();
+        logo->Update();
     }
 
     void SceneProxy::Render()
-    {
-        Monocle::Graphics::PushMatrix();
-
-		Graphics::IdentityMatrix();
+	{
+		//Graphics::IdentityMatrix();
 
         if(currentScene)
-        {
             currentScene->Render();
-        }
 
-        Monocle::Graphics::PopMatrix();
-        Scene::Render();
+        logo->Render();
+		//Scene::Render();
     }
 }

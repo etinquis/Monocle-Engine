@@ -30,7 +30,7 @@ namespace TestSelector
     public:
         static SceneProxy *Instance();
         static void ChangeScene(Scene *scene, std::string assetPath, bool isMenu = false);
-        void Begin();
+		void Begin();
         void Update();
         void Render();
     private:
