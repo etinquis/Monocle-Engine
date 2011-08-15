@@ -240,11 +240,11 @@ namespace Ogmo
 
 
 	// T H E   C O I N (entity)
-	Coin::Coin(int x, int y, Sprite *sprite) : Entity(), collected(false), start(x, y), reset(false)
+	Coin::Coin(int x, int y) : Entity(), collected(false), start(x, y), reset(false)
 	{
 		position = Vector2(x, y);
 		SetLayer(-1);
-		SetGraphic(sprite);
+		SetGraphic(new Sprite("coin.png", FILTER_NONE, 8,8));
 
 		AddTag("COIN");
 		SetCollider(new RectangleCollider(8, 8));
@@ -315,12 +315,12 @@ namespace Ogmo
 	}
 
 	// T H E   S P I K E (entity)
-	Spike::Spike(int x, int y, Sprite *sprite) : Entity()
+	Spike::Spike(int x, int y) : Entity()
 	{
 		position = Vector2(x, y);
 
 		SetLayer(-1);
-		SetGraphic(sprite);
+		SetGraphic(new Sprite("spike.png", FILTER_NONE, 8, 8));
 
 		AddTag("SPIKE");
 		SetCollider(new RectangleCollider(8, 8));
@@ -353,9 +353,6 @@ namespace Ogmo
 		Graphics::Set2D(160, 120);
 		//Graphics::SetCameraPosition(Vector2(80, 60));
 		GetCamera()->position = Vector2(80, 60);
-
-		atCoin = new Sprite("coin.png", FILTER_NONE, 8, 8);
-		atSpike = new Sprite("spike.png", FILTER_NONE, 8, 8);
 
 		//controls
 		Input::DefineMaskKey("jump", KEY_UP);
@@ -406,7 +403,7 @@ namespace Ogmo
 		//add a few random coins
 		for(int i = 0; i < 10; i ++)
 		{
-			Coin *c = new Coin(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4, atCoin);
+			Coin *c = new Coin(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
 			coins.push_back(c);
 			Add(c);
 		}
@@ -414,7 +411,7 @@ namespace Ogmo
 		//add spikes
 		for(int i = 0; i < 8; i ++)
 		{
-			Add(new Spike(-1, -1, atSpike));
+			Add(new Spike(-1, -1));
 		}
         
         // Nice start noise
@@ -459,7 +456,7 @@ namespace Ogmo
 	{
 		Scene::End();
 
-		delete player;
-		delete wall;
+		//delete player;
+		//delete wall;
 	}
 }

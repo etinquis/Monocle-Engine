@@ -53,7 +53,7 @@ namespace Ogmo
 	class Coin : public Entity
 	{
 	public:
-		Coin(int x, int y, Sprite *sprite);
+		Coin(int x, int y);
 		void Update();
 		
 		bool collected;
@@ -64,7 +64,7 @@ namespace Ogmo
 	class Spike : public Entity
 	{
 	public:
-		Spike(int x, int y, Sprite *sprite);
+		Spike(int x, int y);
 	};
 
 	class World : public Scene
@@ -79,7 +79,6 @@ namespace Ogmo
 		static Player *player;
 		Wall *wall;
 		Spike *spike;
-		Sprite *atCoin;
 		Sprite *atSpike;
 		std::list<Coin*> coins;
 

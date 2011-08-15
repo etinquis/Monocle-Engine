@@ -62,28 +62,10 @@ namespace Monocle
 		}
 	}
 
-	PuppetEntity::PuppetEntity()
-		: Entity()
-	{
-	}
-
-	void PuppetEntity::Load(const std::string &filename)
-	{
-		puppet.Load(filename, this);
-
-		puppet.Play("idle");
-	}
-
-	void PuppetEntity::Update()
-	{
-		Entity::Update();
-		puppet.Update();
-	}
-
 	/// PUPPET EDITOR
 	PuppetEditor::PuppetEditor() : Editor()
 	{
-		puppetEntity = new PuppetEntity();
+		puppet = new Puppet();
 
 		keyTogglePause = KEY_TAB;
 
@@ -107,7 +89,7 @@ namespace Monocle
 
 	void PuppetEditor::Load(const std::string &filename)
 	{
-		puppetEntity->Load(filename);
+		puppet->Load(filename);
 	}
 
 	void PuppetEditor::Added()
@@ -116,10 +98,11 @@ namespace Monocle
 		//Graphics::SetBackgroundColor(Color::white);
         //Game::GetScene()->GetCamera()->position = Graphics::GetScreenCenter();
 
-		puppetEntity->position = Graphics::GetScreenCenter() + Vector2::down * 100;
-		puppetEntity->scale = Vector2::one * 0.75f;
+		puppet->position = Graphics::GetScreenCenter() + Vector2::down * 100;
+		puppet->scale = Vector2::one * 0.75f;
+		puppet->Play("idle");
 		//Load("puppet.xml");
-		scene->Add(puppetEntity);
+		scene->Add(puppet);
 
 		timeline = new Timeline();
 		scene->Add(timeline);
@@ -143,15 +126,15 @@ namespace Monocle
 		{
 			UpdateCamera();
 
-			timeline->currentAnimation = puppetEntity->puppet.GetCurrentAnimation();
+			timeline->currentAnimation = puppet->GetCurrentAnimation();
 
-			Animation *anim = puppetEntity->puppet.GetCurrentAnimation();
+			Animation *anim = puppet->GetCurrentAnimation();
 
 			if (Input::IsKeyPressed(keyTogglePause))
 			{
-				puppetEntity->puppet.TogglePause();
-				Debug::render = Debug::showBounds = puppetEntity->puppet.IsPaused();
-				if (!puppetEntity->puppet.IsPaused())
+				puppet->TogglePause();
+				Debug::render = Debug::showBounds = puppet->IsPaused();
+				if (!puppet->IsPaused())
 				{
 					Debug::selectedEntity = NULL;
 				}
@@ -164,7 +147,7 @@ namespace Monocle
 				}
 			}
 
-			if (puppetEntity->puppet.IsPaused())
+			if (puppet->IsPaused())
 			{
 				if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 					Debug::selectedEntity = scene->GetNearestEntityByControlPoint(Input::GetWorldMousePosition(), "", Debug::selectedEntity);
@@ -173,7 +156,7 @@ namespace Monocle
 				{
 					if (Input::IsKeyPressed(KEY_S))
 					{
-						puppetEntity->puppet.Save();
+						puppet->Save();
 					}
 				}
 
