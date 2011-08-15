@@ -139,6 +139,7 @@ namespace Jumper
 		Input::DefineMaskKey("left", KEY_LEFT);
 		Input::DefineMaskKey("right", KEY_RIGHT);
 
+		Graphics::Set2D(800,600);
 		Graphics::SetBackgroundColor(Color::blue * 0.1f);
 
 		Add(new Wall(Vector2(400.0f, 500.0), 200.0f, 10.0f));

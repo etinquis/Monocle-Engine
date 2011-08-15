@@ -42,7 +42,8 @@ namespace LevelEditorTest
 		
 		// call the super
 		Scene::Begin();
-		
+
+		Graphics::Set2D(800,600);
 		// set the background color to a dark blue (10% blue + 90% black)
 		Graphics::SetBackgroundColor(Color::blue*0.1f + Color::black*0.9f);
 		
