@@ -13,16 +13,6 @@ namespace Monocle
         Animation *currentAnimation;
         void Render();
     };
-    
-	class PuppetEntity : public Entity
-	{
-	public:
-		PuppetEntity();
-		void Load(const std::string &filename);
-		void Update();
-
-		Puppet puppet;
-	};
 
 	class PuppetEditor : public Editor, public CameraEditor
 	{
@@ -56,7 +46,7 @@ namespace Monocle
 		Timeline *timeline;
 
 	private:
-		PuppetEntity *puppetEntity;
+		Puppet *puppet;
 	};
 
 }

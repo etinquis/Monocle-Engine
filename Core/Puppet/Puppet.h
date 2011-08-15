@@ -121,14 +121,14 @@ namespace Monocle
 
 	class TextureAtlas;
 	
-	class Puppet
+	class Puppet : public Entity
 	{
 	public:
 		Puppet();
 		~Puppet();
 
 		void Save();
-		void Load(const std::string &filename, Entity *entity);
+		void Load(const std::string &filename);
 
 		void Play(const std::string &animationName, bool isLooping=true);
 		void Stop();
@@ -137,6 +137,7 @@ namespace Monocle
 
 		void TogglePause();
 
+		void Added();
 		void Update();
 
 		bool IsPlaying();
@@ -151,8 +152,6 @@ namespace Monocle
 		void AdjustTime(float time);
 		
 	private:
-		Entity *entity;
-
 		Animation *GetAnimationByName(const std::string &animName);
 		bool isPlaying;
 		bool isPaused;
