@@ -251,6 +251,7 @@ namespace Flash
 	{
 		Scene::Begin();
 
+		Graphics::Set2D(800,600);
 		Graphics::SetBackgroundColor(Color::black);
        
         const std::string cp = Assets::GetContentPath();

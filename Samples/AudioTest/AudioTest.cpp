@@ -192,6 +192,8 @@ namespace AudioTest
 		Debug::Log("AudioTest::GameScene::Begin()!");
         
 		Scene::Begin();
+		Graphics::Set2D(800,600);
+		Graphics::SetBackgroundColor(Color::black);
 		
 		FontAsset* font = Assets::RequestFont("AudioTest/LiberationSans-Regular.ttf", 25.0f);
         scText = new Text("Dual-worlds Audio Demo", font);

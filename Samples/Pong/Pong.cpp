@@ -192,6 +192,8 @@ namespace Pong
 		Debug::Log("Pong::GameScene::Begin()!");
 
 		Scene::Begin();
+		Graphics::Set2D(800,600);
+		Graphics::SetBackgroundColor(Color::black);
         
         sfxWall = Assets::RequestAudio("AudioTest/Explosion.wav");
 		
