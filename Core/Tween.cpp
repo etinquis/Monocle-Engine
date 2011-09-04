@@ -11,6 +11,11 @@ namespace Monocle
 	{
 	}
 
+	Tween::~Tween()
+	{
+
+	}
+
 	template <typename T, typename N>
 	void Tween::To(T *value, const T &end, float time, EaseType easeType)
 	{

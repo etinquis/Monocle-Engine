@@ -79,7 +79,7 @@ namespace Monocle
 			Graphics::BindTexture(texture);
 			Graphics::PushMatrix();
 
-			if (followCamera == Vector2::zero || (Debug::render && Debug::selectedEntity != this))
+			if (followCamera == Vector2::zero /*|| (Debug::render && Debug::selectedEntity != this)*/)
 				Graphics::Translate(position.x, position.y, depth);
 			else
 				Graphics::Translate(scene->GetCamera()->position * followCamera + position * (Vector2::one - followCamera));

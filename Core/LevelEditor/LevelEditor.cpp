@@ -69,8 +69,8 @@ namespace Monocle
 	{
 		Editor::Enable();
 
-		Debug::showBounds = true;
-		Debug::render = true;
+		/*Debug::showBounds = true;
+		Debug::render = true;*/
 
 		Game::GetScene()->GetCamera()->rotation = 0;
 	}
@@ -81,8 +81,8 @@ namespace Monocle
 
 		Select(NULL);
 
-		Debug::showBounds = false;
-		Debug::render = false;
+		/*Debug::showBounds = false;
+		Debug::render = false;*/
 	}
 
 	// main level editor update function
@@ -176,28 +176,28 @@ namespace Monocle
 			// toggle rendering extra stuff if we hit escape
 			if (selectedEntity == NULL)
 			{
-				Debug::showBounds = !Debug::showBounds;
-				Debug::render = !Debug::render;
+				/*Debug::showBounds = !Debug::showBounds;
+				Debug::render = !Debug::render;*/
 			}
 		}
 		else
 		{
 			// only update selection if bounds are visible
-			if (Debug::showBounds == true)
-			{
-				// if users presses LMB or the selection key
-				if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || Input::IsKeyPressed(keySelect))
-				{
-					// get the nearest entity by checking for the world mouse position in control points, from scene
-					Entity *entity = scene->GetNearestEntityByControlPoint(Input::GetWorldMousePosition(), "", selectedEntity);
-					if (entity)
-					{
-						Select(entity);
-						if(Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-							waitForLMBRelease = true;
-					}
-				}
-			}
+			//if (Debug::showBounds == true)
+			//{
+			//	// if users presses LMB or the selection key
+			//	if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || Input::IsKeyPressed(keySelect))
+			//	{
+			//		// get the nearest entity by checking for the world mouse position in control points, from scene
+			//		Entity *entity = scene->GetNearestEntityByControlPoint(Input::GetWorldMousePosition(), "", selectedEntity);
+			//		if (entity)
+			//		{
+			//			Select(entity);
+			//			if(Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			//				waitForLMBRelease = true;
+			//		}
+			//	}
+			//}
 		}
 	}
 
@@ -268,7 +268,7 @@ namespace Monocle
 
 		selectedEntity = entity;
 
-		Debug::selectedEntity = selectedEntity;
+		//Debug::selectedEntity = selectedEntity;
 
 		if (entity)
 		{

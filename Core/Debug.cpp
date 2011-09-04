@@ -5,11 +5,11 @@
 
 namespace Monocle
 {
-	bool Debug::render = false;
-	bool Debug::showBounds = false;
-	Entity *Debug::selectedEntity;
-	int Debug::layerMin = -50;
-	int Debug::layerMax = 50;
+	//bool Debug::render = false;
+	//bool Debug::showBounds = false;
+	//Entity *Debug::selectedEntity;
+	//int Debug::layerMin = -50;
+	//int Debug::layerMax = 50;
 	
 	void Debug::Init()
 	{
@@ -63,4 +63,7 @@ namespace Monocle
 	{
 		std::cout << string << std::endl;
 	}
+
+	void Debug::Update() {}
+	void Debug::Unload() {}
 }

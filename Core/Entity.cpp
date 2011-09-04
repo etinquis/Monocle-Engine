@@ -173,7 +173,7 @@ namespace Monocle
 
 	void Entity::ApplyMatrix()
 	{
-		if (followCamera == Vector2::zero || (Debug::render && Debug::selectedEntity != this && IsDebugLayer()))
+		if (followCamera == Vector2::zero /*|| (Debug::render && Debug::selectedEntity != this && IsDebugLayer())*/)
 			Graphics::Translate(position.x, position.y, depth);
 		else
 		{
@@ -205,43 +205,43 @@ namespace Monocle
         
         Graphics::PopMatrix();
 		
-		if (Debug::showBounds && IsDebugLayer())
-		{
-			Vector2 offset;
-			if (parent)
-				offset = Vector2::one * 2;
-            
-			Graphics::BindTexture(NULL);
-            
-			Graphics::PushMatrix();
+		//if (Debug::showBounds && IsDebugLayer())
+		//{
+		//	Vector2 offset;
+		//	if (parent)
+		//		offset = Vector2::one * 2;
+  //          
+		//	Graphics::BindTexture(NULL);
+  //          
+		//	Graphics::PushMatrix();
 
-			MatrixChain();
+		//	MatrixChain();
 
-			Graphics::PopMatrix();
-            
-			if (Debug::selectedEntity == this)
-			{
-				Graphics::SetColor(Color::orange);
-			}
-			else
-			{
-				Graphics::SetColor(Color(0.9f,0.9f,1.0f,0.8f));
-			}
-            
-			// use world position, so we don't have to render with the matrix scale on
-			Vector2 worldPosition = GetWorldPosition();
+		//	Graphics::PopMatrix();
+  //          
+		//	if (Debug::selectedEntity == this)
+		//	{
+		//		Graphics::SetColor(Color::orange);
+		//	}
+		//	else
+		//	{
+		//		Graphics::SetColor(Color(0.9f,0.9f,1.0f,0.8f));
+		//	}
+  //          
+		//	// use world position, so we don't have to render with the matrix scale on
+		//	Vector2 worldPosition = GetWorldPosition();
 
-			//draw the control point
-			Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE, ENTITY_CONTROLPOINT_SIZE);
-            
-			if (Debug::selectedEntity != this)
-				Graphics::SetColor(Color(0.0f,0.0f,0.25f,0.8f));
-            
-			// draw the control point center
-			Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE * 0.75f, ENTITY_CONTROLPOINT_SIZE * 0.75f);
-            
-			Graphics::PopMatrix();
-		}
+		//	//draw the control point
+		//	Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE, ENTITY_CONTROLPOINT_SIZE);
+  //          
+		//	if (Debug::selectedEntity != this)
+		//		Graphics::SetColor(Color(0.0f,0.0f,0.25f,0.8f));
+  //          
+		//	// draw the control point center
+		//	Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE * 0.75f, ENTITY_CONTROLPOINT_SIZE * 0.75f);
+  //          
+		//	Graphics::PopMatrix();
+		//}
 	}
 
 	const std::string& Entity::GetTag(int index)
@@ -328,10 +328,11 @@ namespace Monocle
 
 	bool Entity::IsDebugLayer()
 	{
-		if (parent)
+		/*if (parent)
 			return parent->IsDebugLayer();
 
-		return layer > Debug::layerMin && layer < Debug::layerMax;
+		return layer > Debug::layerMin && layer < Debug::layerMax;*/
+		return false;
 	}
 
 	/////TODO: enqueue for safety

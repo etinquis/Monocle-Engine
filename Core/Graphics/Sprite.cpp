@@ -190,7 +190,7 @@ namespace Monocle
 			Graphics::SetBlend(blend);
             Graphics::SetColor(entity->color);
 
-			if (Debug::showBounds && entity->IsDebugLayer())
+			/*if (Debug::showBounds && entity->IsDebugLayer())
 			{
 				if (Debug::selectedEntity == entity)
 				{
@@ -204,7 +204,7 @@ namespace Monocle
 					copyColor.a *= 0.6f;
 					Graphics::SetColor(copyColor);
 				}
-			}
+			}*/
 
 			Graphics::RenderQuad(width, height, textureOffset, textureScale);
 
@@ -212,7 +212,7 @@ namespace Monocle
 		Shader::UseNone();
 
 		// show bounds, for editor/selection purposes
-		if ((Debug::showBounds || Debug::selectedEntity == entity) && entity->IsDebugLayer())
+		/*if ((Debug::showBounds || Debug::selectedEntity == entity) && entity->IsDebugLayer())
 		{
 			Graphics::PushMatrix();
 			Graphics::Translate(position.x+renderOffset.x, position.y+renderOffset.y, 0.0f);
@@ -238,7 +238,7 @@ namespace Monocle
 			}
 
 			Graphics::PopMatrix();
-		}
+		}*/
 	}
 	
     /**

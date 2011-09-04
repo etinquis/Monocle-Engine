@@ -3,10 +3,8 @@
 #include "Monocle.h"
 #include "Input.h"
 #include "Graphics.h"
-#include "Debug.h"
 #include "Scene.h"
 #include "Assets.h"
-#include "Tween.h"
 #include "Collision.h"
 #include "Random.h"
 #include "Audio/Audio.h"
@@ -23,6 +21,7 @@ namespace Monocle
 	public:
 		//! Initializes all the default sub-systems. Platform, Input, Graphics, Debug, Assets, Tween, Collision, Random, Audio, Level
 		Game(const std::string &name="MonoclePowered.org", int w=1024, int h=768, int bits = MONOCLE_DETECT_COLOR_DEPTH, bool fullscreen=false);
+		~Game();
 
 		//! Runs the main game loop. Handles timing and high-level updating, rendering.
 		void Main();
@@ -54,17 +53,32 @@ namespace Monocle
         //! Getter for isDone
         bool IsDone();
 
+		template <class t_component>
+		t_component* AddComponent()
+		{
+			t_component* comp = new t_component();
+
+			//make sure template class is a gamecomponent
+			GameComponent* iscomponent = comp;
+
+			components.push_back(comp);
+			comp->Init();
+			return comp;
+		}
+
+		GameComponent* operator[](std::string component_name);
+
 	protected:
 		Platform platform;
 		Input input;
 		Graphics graphics;
-		Debug debug;
 		Assets assets;
-		Tween tween;
 		Collision collision;
 		Random random;
 		Audio audio;
 		Level level;
+
+		std::vector<GameComponent*> components;
 
 	private:
 		static Game *instance;

@@ -1,4 +1,6 @@
 #include "Game.h"
+#include "Tween.h"
+#include "Debug.h"
 
 //If you want to use fixed timestep, uncomment the following three lines:
 //#define FIXED_TIMESTEP
@@ -20,8 +22,7 @@ namespace Monocle
         frames_per_sec = 0.0;
 		Monocle::deltaTime	= 0.0f;
         lastTick = firstTick = 0;
-
-		debug.Init();
+		
 		platform.Init(name, w, h, bits, fullscreen);
 		assets.Init();
 		input.Init();
@@ -29,6 +30,17 @@ namespace Monocle
 		collision.Init();
 		audio.Init();
 		level.Init();
+
+		AddComponent<Tween>();
+		AddComponent<Debug>();
+	}
+
+	Game::~Game()
+	{
+		for(std::vector<GameComponent*>::iterator i = components.begin(); i < components.end(); i++)
+		{
+			delete (*i);
+		}
 	}
 
 	//!
@@ -75,7 +87,6 @@ namespace Monocle
             audio.ResumeAll();
         
         audio.Update();
-        tween.Update();
         
         // update timer
         tick = Platform::GetMilliseconds();
@@ -129,6 +140,11 @@ namespace Monocle
         
         lastTick = tick;
 #endif
+
+		for(std::vector<GameComponent*>::iterator i = components.begin(); i < components.end(); i++)
+		{
+			(*i)->Update();
+		}
         
         //Switch scenes if necessary
         if (switchTo != NULL)
@@ -201,4 +217,14 @@ namespace Monocle
     {
         return isDone;
     }
+
+	GameComponent* Game::operator[](std::string component_name)
+	{
+		for(std::vector<GameComponent*>::iterator i = components.begin(); i < components.end(); i++)
+		{
+			if((*i)->GetName() == component_name) return (*i);
+		}
+
+		return NULL;
+	}
 }

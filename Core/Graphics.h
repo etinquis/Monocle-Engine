@@ -3,7 +3,6 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Color.h"
-#include "Tween.h"
 #include <vector>
 #include <string>
 
@@ -13,7 +12,7 @@ namespace Monocle
 	class Entity;
     class TextureAsset;
     class FontAsset;
-    
+
 	//! The type of blending to use between layers when a layer is drawn over another.
 	enum BlendType
 	{
