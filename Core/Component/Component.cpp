@@ -10,7 +10,6 @@ namespace Monocle
 		if(!unloaded)
 		{
 			Unload();
-			unloaded = true;
 		}
 	}
 

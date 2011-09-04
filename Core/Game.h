@@ -56,9 +56,6 @@ namespace Monocle
 		{
 			t_component* comp = new t_component();
 
-			//make sure template class is a gamecomponent
-			GameComponent* iscomponent = comp;
-
 			components.push_back(comp);
 			comp->Init(this);
 			return comp;
