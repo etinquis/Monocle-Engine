@@ -28,7 +28,7 @@ namespace Monocle
             {
                 Game g;
                 
-                Monocle::Assets::SetContentPath(CONTENT_PATH);
+                //Monocle::Assets::SetContentPath(CONTENT_PATH);
                 font = Monocle::Assets::RequestFont("AudioTest/LiberationSans-Regular.ttf", 24);
             }
             

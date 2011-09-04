@@ -31,8 +31,8 @@ namespace Monocle
 		Tween();
 		virtual ~Tween();
 
-		virtual void Init() { }
-		virtual void Unload() { }
+		virtual void Init(Game* game) { GameComponent::Init(game); }
+		virtual void Unload() { GameComponent::Unload(); }
 
 		virtual std::string GetName() { return "Tween"; }
 

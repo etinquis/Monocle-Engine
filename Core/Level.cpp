@@ -36,8 +36,9 @@ namespace Monocle
 		width = height = 0;
 	}
 
-	void Level::Init()
+	void Level::Init(Game* game)
 	{
+		GameComponent::Init(game);
 	}
 
 	void Level::SetScene(Scene *scene)

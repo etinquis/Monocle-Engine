@@ -34,11 +34,15 @@ namespace Monocle
 	//!
 	//! Can be extended to save/load any derivation of Entity, by overriding a few functions.
 	//!
-	class Level
+	class Level : public GameComponent
 	{
 	public:
 		Level();
-		void Init();
+
+		std::string GetName() { return "Level"; }
+		void Init(Game* game);
+		void Update() { }
+		void Unload() { }
 
 		static void SetScene(Scene *scene);
 		static void LoadProject(const std::string &filename);

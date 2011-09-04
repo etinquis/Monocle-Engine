@@ -1,6 +1,7 @@
 #include "Pong.h"
 #include <Input.h>
 #include <Collision.h>
+#include <Colliders/RectangleCollider.h>
 
 #include <stdlib.h>
 #include <sstream>

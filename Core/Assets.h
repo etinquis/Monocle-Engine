@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Asset.h"
+#include "Component/GameComponent.h"
 #include <list>
 #include <string>
 
@@ -18,7 +19,7 @@ namespace Monocle
 	//!
 	//! Call Assets::RequestTexture, Assets::RequestFont, Assets::RequestAudio to load different each type of Asset.
 	//!
-	class Assets
+	class Assets : public GameComponent
 	{
 	public:
 		//! \brief Requests a texture asset
@@ -58,13 +59,20 @@ namespace Monocle
         //! \return The current content path.
         //! \sa SetContentPath
 		static const std::string &GetContentPath();
+		
+		Assets();
+
+		std::string GetName() { return "Assets"; }
+
+		void Init(Game* game);
+		void Update() { }
+		void Unload() { }
 
 	protected:
 		friend class Asset;
 		friend class Game;
 		
-		Assets();
-		void Init();
+		
 		
 		static void RemoveAsset(Asset *asset);
 

@@ -20,8 +20,9 @@ namespace Monocle
 		instance = this;
 	}
 
-	void Assets::Init()
+	void Assets::Init(Game* game)
 	{
+		GameComponent::Init(game);
         SetContentPath(Platform::GetDefaultContentPath());
 	}
 

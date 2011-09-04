@@ -17,7 +17,7 @@ namespace Monocle
 	public:
 		virtual std::string GetName() { return "Debug"; }
 
-		virtual void Init();
+		virtual void Init(Game* game);
 		virtual void Update();
 		virtual void Unload();
 

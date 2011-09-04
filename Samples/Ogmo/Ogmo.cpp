@@ -3,6 +3,7 @@
 #include <Level.h>
 #include <Monocle.h>
 #include <Macros.h>
+#include <Colliders/RectangleCollider.h>
 
 #include <stdlib.h>
 

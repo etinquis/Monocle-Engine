@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Platform.h"
+#include "Component/GameComponent.h"
 #include "Vector2.h"
 #include <string>
 #include <map>
 #include <list>
 
 namespace Monocle
-{    
+{
+	class Game;
 	class Camera;
 
 	//!
@@ -17,7 +19,7 @@ namespace Monocle
 	//! Is*Pressed = was the key/mouse button go down in this frame
 	//! Is*Released = did the key/mouse button go up in this frame
 	//! 
-	class Input
+	class Input : public GameComponent
 	{
 	public:
 		//! Base for classes that handle input events.
@@ -117,12 +119,15 @@ namespace Monocle
 
 		static void SetWorldMouseCamera(Camera *camera);
 
+		void Init(Game* game);
 		void Update();
-	
+		void Unload() { }
+
+		std::string GetName() { return "Input"; }
+
 	protected:
 		friend class Game;
 		Input();
-		void Init();
 	
 	private:
 		static Input *instance;

@@ -3,18 +3,16 @@
 #include <stdio.h>
 
 #include "Entity.h"
+#include "Colliders/Collider.h"
+#include "CollisionData.h"
 
 namespace Monocle
 {
 	Collision* Collision::instance = NULL;
 
-	Collision::Collision()
+	Collision::Collision() : GameComponent()
 	{
 		instance = this;
-	}
-
-	void Collision::Init()
-	{
 	}
 
 	void Collision::RegisterColliderWithEntity(Collider *collider, Entity *entity)

@@ -1,6 +1,7 @@
 #include "Jumper.h"
 #include <Input.h>
 #include <Level.h>
+#include <Colliders/RectangleCollider.h>
 
 namespace Jumper
 {

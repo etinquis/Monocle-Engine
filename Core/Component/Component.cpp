@@ -2,7 +2,7 @@
 
 namespace Monocle
 {
-	Component::Component() : unloaded(false)
+	Component::Component() : unloaded(false), dependencies()
 	{ }
 
 	Component::~Component()
@@ -17,5 +17,15 @@ namespace Monocle
 	void Component::Unload()
 	{
 		unloaded = true;
+	}
+
+	void Component::AddDependency(std::string component_name)
+	{
+		dependencies.push_back(component_name);
+	}
+
+	std::vector<std::string> Component::GetDependencies()
+	{
+		return dependencies;
 	}
 }

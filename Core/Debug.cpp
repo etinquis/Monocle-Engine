@@ -11,8 +11,9 @@ namespace Monocle
 	//int Debug::layerMin = -50;
 	//int Debug::layerMax = 50;
 	
-	void Debug::Init()
+	void Debug::Init(Game* game)
 	{
+		GameComponent::Init(game);
 		render = false;
 	}
 

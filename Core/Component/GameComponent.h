@@ -4,10 +4,16 @@
 
 namespace Monocle
 {
+	class Game;
+
 	class GameComponent : public Component
 	{
 	public:
-		GameComponent() : Component() { }
-		virtual ~GameComponent() { }
+		GameComponent();
+		virtual ~GameComponent();
+
+		virtual void Init(Game* game);
+	protected:
+		Game* game;
 	};
 }

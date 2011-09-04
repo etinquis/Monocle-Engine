@@ -4,10 +4,16 @@
 
 namespace Monocle
 {
+	class Entity;
+
 	class EntityComponent : public Component
 	{
 	public:
-		EntityComponent() : Component() { }
-		virtual ~EntityComponent() { }
+		EntityComponent();
+		virtual ~EntityComponent();
+
+		virtual void Init(Entity* entity);
+	protected:
+		Entity* entity;
 	};
 }

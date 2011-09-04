@@ -1,17 +1,15 @@
 #pragma once
 
+#include "Platform.h"
 #include "Monocle.h"
-#include "Input.h"
 #include "Graphics.h"
-#include "Scene.h"
 #include "Assets.h"
-#include "Collision.h"
-#include "Random.h"
 #include "Audio/Audio.h"
 #include "Level.h"
 
 namespace Monocle
 {
+	class Scene;
 
 	//! Base class for creating a new game. Manages the main loop, timer and high-level updating, rendering.
 	//!	Some games will be able to get away with just instantiating this class and adding Scenes.
@@ -62,7 +60,7 @@ namespace Monocle
 			GameComponent* iscomponent = comp;
 
 			components.push_back(comp);
-			comp->Init();
+			comp->Init(this);
 			return comp;
 		}
 
@@ -70,13 +68,8 @@ namespace Monocle
 
 	protected:
 		Platform platform;
-		Input input;
 		Graphics graphics;
-		Assets assets;
-		Collision collision;
-		Random random;
 		Audio audio;
-		Level level;
 
 		std::vector<GameComponent*> components;
 

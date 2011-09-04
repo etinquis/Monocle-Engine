@@ -34,7 +34,7 @@ namespace Monocle
 		this->repeatY = repeatY;
         this->premultiplied = premultiply;
         
-        if (premultiply)
+        if (data && premultiply)
             PremultiplyAlpha((unsigned char*)data,w,h);
  
 		glGenTextures(1, &texID);
@@ -127,7 +127,7 @@ namespace Monocle
 		int w,h,n;
 		unsigned char* data = stbi_load(filename.c_str(), &w, &h, &n, STBI_rgb_alpha);
         
-        if (premultiply)
+        if (data && premultiply)
             PremultiplyAlpha(data,w,h);
  
 		if (data)

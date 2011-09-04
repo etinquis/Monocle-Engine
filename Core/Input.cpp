@@ -20,8 +20,10 @@ namespace Monocle
 		instance = this;
 	}
 
-	void Input::Init()
+	void Input::Init(Game* game)
 	{
+		GameComponent::Init(game);
+
 		worldMouseCamera = NULL;
 
 		for (int i = 0; i < (int)KEY_MAX; i++)

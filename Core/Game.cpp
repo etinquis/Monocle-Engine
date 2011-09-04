@@ -1,6 +1,9 @@
 #include "Game.h"
 #include "Tween.h"
 #include "Debug.h"
+#include "Input.h"
+#include "Random.h"
+#include "Collision.h"
 
 //If you want to use fixed timestep, uncomment the following three lines:
 //#define FIXED_TIMESTEP
@@ -24,15 +27,16 @@ namespace Monocle
         lastTick = firstTick = 0;
 		
 		platform.Init(name, w, h, bits, fullscreen);
-		assets.Init();
-		input.Init();
 		graphics.Init();
-		collision.Init();
 		audio.Init();
-		level.Init();
 
 		AddComponent<Tween>();
 		AddComponent<Debug>();
+		AddComponent<Input>();
+		AddComponent<Random>();
+		AddComponent<Collision>();
+		AddComponent<Level>();
+		AddComponent<Assets>();
 	}
 
 	Game::~Game()
@@ -127,7 +131,6 @@ namespace Monocle
         //printf("ms: %f\n", Monocle::deltaTime);
         
         //Update
-        input.Update();
         if (scene != NULL)
             scene->Update();
         
