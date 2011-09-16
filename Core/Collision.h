@@ -39,7 +39,7 @@ namespace Monocle
 		void Unload() { }
 
 	private:
-		friend Entity;
+		friend class Monocle::Entity;
 
 		static void RegisterColliderWithEntity(Collider *collider, Entity *entity);
 		static void RemoveCollider(Collider *collider);
