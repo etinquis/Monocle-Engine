@@ -56,7 +56,7 @@ namespace Monocle
 		{
 			t_component* comp = new t_component();
 
-			components.push_back(comp);
+			components[comp->GetName()] = comp;
 			comp->Init(this);
 			return comp;
 		}
@@ -68,7 +68,7 @@ namespace Monocle
 		Graphics graphics;
 		Audio audio;
 
-		std::vector<GameComponent*> components;
+		std::map<std::string, GameComponent*> components;
 
 	private:
 		static Game *instance;

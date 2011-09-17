@@ -6,6 +6,8 @@
 #include "FileNode.h"
 #include "Transform.h"
 
+#include "Component/EntityComponent.h"
+
 #include <string>
 #include <vector>
 #include <list>
@@ -197,6 +199,9 @@ namespace Monocle
 
         Vector2 cachedWorldPosition;
         Vector2 lastPositionWhenCached;
+
+		std::vector<EntityComponent*> components;
+
 	public:
 		//Entity* GetChildEntityAtPosition(const Vector2 &position);
 		//template <class T>

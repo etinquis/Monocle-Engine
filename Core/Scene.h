@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "Camera.h"
+#include "Entities.h"
 
 ///TODO: Replace with xml wrapper
 class TiXmlElement;
@@ -14,7 +15,6 @@ namespace Monocle
 {
 	class Game;
 	class Entity;
-	
 
 	//enum SearchType
 	//{
@@ -68,6 +68,12 @@ namespace Monocle
 
 		//! Add an entity to the scene
 		void Add(Entity* entity);
+
+		template<class T>
+		void AddEntity()
+		{
+			entities.AddEntity<T>();
+		}
 
 		//! Remove an entity from the scene
 		void Remove(Entity* entity);
@@ -142,7 +148,7 @@ namespace Monocle
 		//The map of entities sorted by tag
 		std::map<std::string, std::list<Entity*> > tagMap;
 
-
+		//Entities entities;
 
 		// for GetFirstEntity and GetNextEntity
 		//std::list<Entity*>::iterator entityIterator;
