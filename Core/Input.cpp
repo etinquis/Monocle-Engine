@@ -354,4 +354,9 @@ namespace Monocle
     {
         return Platform::numTouches;
     }
+
+	Input *Input::Clone() const
+	{
+		return new Input(*this);
+	}
 }

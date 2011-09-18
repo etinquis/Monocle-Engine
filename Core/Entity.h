@@ -9,7 +9,7 @@
 #include "Component/EntityComponent.h"
 
 #include <string>
-#include <vector>
+#include <map>
 #include <list>
 
 namespace Monocle
@@ -69,10 +69,9 @@ namespace Monocle
 	class Entity : public Transform
 	{
 	public:
-		Entity(const Entity &entity);
 		Entity();
 		virtual ~Entity();
-		virtual Entity *Clone();
+		virtual Entity *Clone() const;
 
 		//! Enable this object. Set isEnabled to true. Each derived Entity may decide how to handle isEnabled.
 		virtual void Enable();
@@ -104,13 +103,6 @@ namespace Monocle
         //! Called to determine if the entity should be drawn
         virtual bool IsOnCamera( Camera *camera );
 
-		//! Check our collider against all entities that have "tag"
-		Collider* Collide(const std::string &tag, CollisionData *collisionData=NULL);
-		//! Check our collider against all entities that have "tag" - warping us to atPosition first, then back to our original position after
-		Collider* CollideAt(const std::string &tag, const Vector2& atPosition, CollisionData *collisionData=NULL);
-		//! Do a circle collision
-		Collider *CollideWith(Collider *collider, const std::string &tag, CollisionData *collisionData=NULL);
-
 		//! Associates this entity with the given tag
 		void AddTag(const std::string& tag, bool save=false);
 		//! Checks whether this entity is associated with a given tag
@@ -136,7 +128,6 @@ namespace Monocle
 		//! is our layer number in the debug render range?
 		bool IsDebugLayer();
 
-		void SetCollider(Collider *collider);
 		void SetGraphic(Graphic *graphic);
 
 		//! set parent entity
@@ -145,6 +136,16 @@ namespace Monocle
 		Entity *GetParent();
 		//! return pointer to the Scene we are currently in
 		Scene *GetScene();
+
+		template <class t_component>
+		t_component* AddComponent()
+		{
+			t_component* comp = new t_component();
+
+			components[comp->GetName()] = comp;
+			comp->Init(this);
+			return comp;
+		}
 
 		// used by editors
 		bool IsPositionInGraphic(const Vector2 &position);
@@ -160,8 +161,9 @@ namespace Monocle
 
 		Color color;
 
+		EntityComponent* operator[](std::string component_name);
 	protected:
-		//void DestroyChildren();
+		Entity(const Entity &entity);
 
 		friend class Scene;
 
@@ -177,11 +179,6 @@ namespace Monocle
 		int id;
 
 		Entity *parent;
-
-		// only for use by Collision class
-		friend class Collision;
-		Collider* GetCollider();
-		Collider* collider;
 
 		// only for use by graphics
 		friend class Graphics;
@@ -200,7 +197,7 @@ namespace Monocle
         Vector2 cachedWorldPosition;
         Vector2 lastPositionWhenCached;
 
-		std::vector<EntityComponent*> components;
+		std::map<std::string, EntityComponent*> components;
 
 	public:
 		//Entity* GetChildEntityAtPosition(const Vector2 &position);

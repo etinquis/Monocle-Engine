@@ -10,6 +10,9 @@
 namespace Monocle
 {
 	class Entity;
+
+	class Collidable;
+
 	class Collider;
 	class CollisionData;
 
@@ -38,12 +41,14 @@ namespace Monocle
 		void Update() { }
 		void Unload() { }
 
-	private:
-		friend class Monocle::Entity;
+		Collision *Clone() const;
 
-		static void RegisterColliderWithEntity(Collider *collider, Entity *entity);
+	private:
+		friend class Monocle::Collidable;
+
+		static void RegisterColliderWithEntity(Collider *collider, Collidable *entity);
 		static void RemoveCollider(Collider *collider);
-		static Collider* Collide(Entity *entity, const std::string &tag, CollisionData *collisionData=NULL);
+		static Collider* Collide(Collidable *entity, const std::string &tag, CollisionData *collisionData=NULL);
 		static Collider* Collide(Collider *collider, const std::string &tag, CollisionData *collisionData=NULL);
 
 		static Collision *instance;

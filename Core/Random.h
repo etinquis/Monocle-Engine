@@ -21,6 +21,7 @@ namespace Monocle
 		static float Float(float start, float end);
 		static float Percent();
 		
+		Random *Clone() const;
 	private:
 		//static Random *instance;
 	};

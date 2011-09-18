@@ -10,9 +10,11 @@ namespace Monocle
 	{
 	public:
 		EntityComponent();
+		EntityComponent(const EntityComponent &ecp);
 		virtual ~EntityComponent();
 
 		virtual void Init(Entity* entity);
+		Entity* GetEntity();
 	protected:
 		Entity* entity;
 	};

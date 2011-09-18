@@ -15,23 +15,23 @@ namespace Monocle
 	{
 	}
 
-	void Collider::SetEntity(Entity* entity)
+	void Collider::SetCollidable(Collidable* entity)
 	{
 		this->entity = entity;
 	}
 
-	Entity* Collider::GetEntity()
+	Collidable* Collider::GetCollidable()
 	{
 		return entity;
 	}
 
-	Vector2 Collider::GetEntityPosition()
+	/*Vector2 Collider::GetEntityPosition()
 	{
 		if (entity != NULL)
 			return entity->GetWorldPosition();
 		else
 			return Vector2();
-	}
+	}*/
 
 	bool Collider::Collide(Collider* a, Collider* b, CollisionData *collisionData)
 	{

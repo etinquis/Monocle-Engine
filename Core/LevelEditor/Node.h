@@ -11,7 +11,7 @@ namespace Monocle
 		Node(const Node &node);
 		Node();
 		Node(const Vector2 &position);
-		Entity* Clone();
+		virtual Node* Clone() const;
 		void Update();
 		void Render();
 		void Disconnect();

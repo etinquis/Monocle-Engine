@@ -445,6 +445,11 @@ namespace Monocle
 		instance->scene = NULL;
 	}
 
+	Level* Level::Clone() const
+	{
+		return new Level(*this);
+	}
+
 	FringeTileset *Level::GetFringeTilesetByName(const std::string &name)
 	{
 		for (std::list<FringeTileset>::iterator i = fringeTilesets.begin(); i != fringeTilesets.end(); ++i)

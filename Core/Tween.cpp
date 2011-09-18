@@ -204,4 +204,9 @@ namespace Monocle
 	{
 		(*value) = ((end - start) * p) + start;
 	}
+
+	Tween *Tween::Clone() const
+	{
+		return new Tween(*this);
+	}
 }

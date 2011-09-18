@@ -25,6 +25,11 @@ namespace Monocle
 
 	}
 
+	Part *Part::Clone() const
+	{
+		return new Part(*this);
+	}
+
 	int Part::GetID()
 	{
 		return id;

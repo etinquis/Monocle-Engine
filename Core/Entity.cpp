@@ -6,6 +6,9 @@
 #include "MonocleToolkit.h"
 #include <sstream>
 
+#include "Component/Entity/Collidable.h"
+#include "Component/Entity/Transform.h"
+
 namespace Monocle
 {
 	InvokeData::InvokeData(void *me, void (*functionPointer) (void *), float delay)
@@ -46,7 +49,7 @@ namespace Monocle
 	///=====
 
 	Entity::Entity(const Entity &entity)
-		: Transform(entity), isEnabled(true), followCamera(entity.followCamera), scene(NULL), collider(NULL), graphic(NULL), parent(NULL), depth(entity.depth), isVisible(entity.isVisible), color(entity.color), layer(entity.layer)//, tags(entity.tags)
+		: Transform(entity), isEnabled(true), followCamera(entity.followCamera), scene(NULL), graphic(NULL), parent(NULL), depth(entity.depth), isVisible(entity.isVisible), color(entity.color), layer(entity.layer)//, tags(entity.tags)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
@@ -56,24 +59,25 @@ namespace Monocle
 		{
 			AddTag((*i).name, (*i).save);
 		}
+
+		/*for (std::map<std::string, EntityComponent*>::iterator i = copyTags.begin(); i != copyTags.end(); ++i)
+		{
+			AddTag((*i).second.name, (*i).second.save);
+		}*/
 	}
 
 	Entity::Entity()
-		: Transform(), isEnabled(true), scene(NULL), collider(NULL), graphic(NULL), parent(NULL), layer(0), depth(0.0f), color(Color::white), isVisible(true)
+		: Transform(), isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(0), depth(0.0f), color(Color::white), isVisible(true)
 		//, willDie(false)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
+
+		AddComponent<Collidable>();
 	}
 
 	Entity::~Entity()
 	{
-	}
-
-	Entity *Entity::Clone()
-	{
-		Debug::Log("Entity::Clone()");
-		return new Entity(*this);
 	}
 
 	void Entity::Added()
@@ -86,12 +90,6 @@ namespace Monocle
 
 	void Entity::Destroyed()
 	{
-		if (collider)
-		{
-			Collision::RemoveCollider(collider);
-			delete collider;
-			collider = NULL;
-		}
 		if (graphic)
 		{
 			delete graphic;
@@ -349,56 +347,6 @@ namespace Monocle
 	//	entity->parent = NULL;
 	//	children.remove(entity);
 	//}
-
-	void Entity::SetCollider(Collider *setCollider)
-	{
-		if (setCollider == NULL && this->collider != NULL)
-		{
-			// if we want to set null, and we already have a collider
-			// remove the collider that we had
-			Collision::RemoveCollider(this->collider);
-			// set it to null
-			this->collider = NULL;
-			// note the code doesn't delete it
-		}
-		else if (this->collider != NULL)
-		{
-			// we could change this so that it auto-removes the existing collider instead
-			Debug::Log("Error: Entity already has a collider.");
-		}
-		else
-		{
-			// set our collider pointer to the passed in collider
-			this->collider = setCollider;
-			// register the collider with the Collision manager
-			Collision::RegisterColliderWithEntity(setCollider, this);
-		}
-	}
-
-	Collider* Entity::GetCollider()
-	{
-		return collider;
-	}
-
-	Collider* Entity::Collide(const std::string &tag, CollisionData *collisionData)
-	{
-		return Collision::Collide(this, tag, collisionData);
-	}
-
-	Collider* Entity::CollideAt(const std::string &tag, const Vector2 &atPosition, CollisionData *collisionData)
-	{
-		Vector2 oldPosition = position;
-		position = atPosition;
-		Collider *collider = Collision::Collide(this, tag, collisionData);
-		position = oldPosition;
-		return collider;
-	}
-
-	Collider* Entity::CollideWith(Collider *pCollider, const std::string &tag, CollisionData *collisionData)
-	{
-		Collider *collider = Collision::Collide(pCollider, tag, collisionData);
-		return collider;
-	}
 
 	/*
 	RectangleCollider* Entity::AddRectangleCollider(float width, float height, const Vector2 &offset)
@@ -716,4 +664,19 @@ namespace Monocle
 		}
 	}
 	*/
+
+	EntityComponent* Entity::operator[](std::string component_name)
+	{
+		for(std::map<std::string, EntityComponent*>::iterator i = components.begin(); i != components.end(); i++)
+		{
+			if(i->second->GetName() == component_name) return i->second;
+		}
+
+		return NULL;
+	}
+
+	Entity *Entity::Clone() const
+	{
+		return new Entity(*this);
+	}
 }

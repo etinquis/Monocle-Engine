@@ -44,6 +44,8 @@ namespace Monocle
 		void Update() { }
 		void Unload() { }
 
+		Level *Clone() const;
+
 		static void SetScene(Scene *scene);
 		static void LoadProject(const std::string &filename);
 		static void Load(const std::string &filename, Scene* scene=NULL);

@@ -80,6 +80,11 @@ namespace Monocle
 		puppet.Update();
 	}
 
+	PuppetEntity *PuppetEntity::Clone() const
+	{
+		return new PuppetEntity(*this);
+	}
+
 	/// PUPPET EDITOR
 	PuppetEditor::PuppetEditor() : Editor()
 	{

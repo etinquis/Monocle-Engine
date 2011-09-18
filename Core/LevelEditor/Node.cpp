@@ -24,7 +24,7 @@ namespace Monocle
 		this->position = position;
 	}
 
-	Entity* Node::Clone()
+	Node* Node::Clone() const
 	{
 		return new Node(*this);
 	}

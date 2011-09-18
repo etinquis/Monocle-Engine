@@ -34,10 +34,10 @@ namespace Monocle
 
 	void PathMesh::MakeCollision(float radius)
 	{
-		if (pathCollider)
-			delete pathCollider;
+		//if (pathCollider)
+		//	delete pathCollider;
 
-		SetCollider(pathCollider = new PathCollider(startNode, radius));
+		//SetCollider(pathCollider = new PathCollider(startNode, radius));
 	}
 
 	//void PathMesh::Adopted(Entity *entity)

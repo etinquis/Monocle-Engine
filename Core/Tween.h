@@ -53,6 +53,7 @@ namespace Monocle
 		static float Ease(float p, EaseType easeType);
 		static void Remove(Tweener *tweener);
 
+		Tween *Clone() const;
 	private:
 		template <typename T, typename N>
 		static void To(T *value, const T &end, float time, EaseType easeType);

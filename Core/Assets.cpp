@@ -189,4 +189,9 @@ namespace Monocle
 	}
 	*/
 
+	Assets *Assets::Clone() const
+	{
+		return new Assets(*this);
+	}
+
 }

@@ -31,6 +31,8 @@ namespace Monocle
 		static void Log(const Vector3& vec);
 		static void Log(const std::string& string);
 
+		Debug *Clone() const;
+
 		bool render;
 		bool showBounds;
 

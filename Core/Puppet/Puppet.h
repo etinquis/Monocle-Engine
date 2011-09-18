@@ -17,6 +17,9 @@ namespace Monocle
 	public:
 		Part(int id, const std::string &name, const std::string &imageFilename);
 		Part();
+
+		Part *Clone() const;
+
 		int GetID();
 		bool IsName(const std::string &name);
 		std::string GetName();

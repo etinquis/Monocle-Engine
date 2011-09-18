@@ -125,6 +125,8 @@ namespace Monocle
 
 		std::string GetName() { return "Input"; }
 
+		Input *Clone() const;
+
 	protected:
 		friend class Game;
 		Input();

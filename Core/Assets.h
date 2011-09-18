@@ -68,6 +68,8 @@ namespace Monocle
 		void Update() { }
 		void Unload() { }
 
+		Assets *Clone() const;
+
 	protected:
 		friend class Asset;
 		friend class Game;

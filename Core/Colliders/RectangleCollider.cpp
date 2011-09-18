@@ -1,4 +1,5 @@
 #include "RectangleCollider.h"
+#include "../Component/Entity/Collidable.h"
 
 #include <cmath>
 
@@ -49,33 +50,33 @@ namespace Monocle
 	float RectangleCollider::GetRight(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.x + width*0.5f * fabs(GetEntity()->scale.x);
+			return offset.x + width*0.5f * fabs(GetCollidable()->GetEntity()->scale.x);
 		else
-			return GetEntityPosition().x + offset.x + width*0.5f * fabs(GetEntity()->scale.x);
+			return GetEntityPosition().x + offset.x + width*0.5f * fabs(GetCollidable()->GetEntity()->scale.x);
 	}
 
 	float RectangleCollider::GetLeft(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.x - width*0.5f * fabs(GetEntity()->scale.x);		
+			return offset.x - width*0.5f * fabs(GetCollidable()->GetEntity()->scale.x);		
 		else
-			return GetEntityPosition().x + offset.x - width*0.5f * fabs(GetEntity()->scale.x);
+			return GetEntityPosition().x + offset.x - width*0.5f * fabs(GetCollidable()->GetEntity()->scale.x);
 	}
 
 	float RectangleCollider::GetTop(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.y - height*0.5f * fabs(GetEntity()->scale.y);
+			return offset.y - height*0.5f * fabs(GetCollidable()->GetEntity()->scale.y);
 		else
-			return GetEntityPosition().y + offset.y - height*0.5f * fabs(GetEntity()->scale.y);	
+			return GetEntityPosition().y + offset.y - height*0.5f * fabs(GetCollidable()->GetEntity()->scale.y);	
 	}
 
 	float RectangleCollider::GetBottom(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.y + height*0.5f * fabs(GetEntity()->scale.y);	
+			return offset.y + height*0.5f * fabs(GetCollidable()->GetEntity()->scale.y);	
 		else
-			return GetEntityPosition().y + offset.y + height*0.5f * fabs(GetEntity()->scale.y);
+			return GetEntityPosition().y + offset.y + height*0.5f * fabs(GetCollidable()->GetEntity()->scale.y);
 	}
 
 	Vector2 RectangleCollider::GetTopLeft(bool relativeToEntity)

@@ -67,4 +67,9 @@ namespace Monocle
 
 	void Debug::Update() {}
 	void Debug::Unload() {}
+
+	Debug *Debug::Clone() const
+	{
+		return new Debug(*this);
+	}
 }

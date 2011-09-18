@@ -9,6 +9,8 @@ namespace Monocle
 		public:
 			SelectionImage(const std::string &image, int size);
 			void Update();
+
+			SelectionImage *Clone() const;
 	};
 
 	class ImageBrowser : public Entity
@@ -19,6 +21,8 @@ namespace Monocle
 			//void Render();
 			void ScanDirectory(const std::string &directory);
 			void SetImages(const std::vector<std::string> &images);
+
+			ImageBrowser *Clone() const;
 
 		private:
 			static void FileCallback(const std::string &filename, intptr_t pointer);

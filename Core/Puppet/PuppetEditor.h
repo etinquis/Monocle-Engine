@@ -12,6 +12,8 @@ namespace Monocle
         Timeline();
         Animation *currentAnimation;
         void Render();
+
+		virtual Timeline *Clone() const;
     };
     
 	class PuppetEntity : public Entity
@@ -20,6 +22,8 @@ namespace Monocle
 		PuppetEntity();
 		void Load(const std::string &filename);
 		void Update();
+		
+		virtual PuppetEntity *Clone() const;
 
 		Puppet puppet;
 	};

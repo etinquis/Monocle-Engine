@@ -19,6 +19,8 @@ namespace Monocle
 		/*virtual void Init() = 0;*/
 		virtual void Update() = 0;
 		virtual void Unload();
+
+		virtual Component* Clone() const = 0;
 	protected:
 		void AddDependency(std::string component_name);
 	private:
