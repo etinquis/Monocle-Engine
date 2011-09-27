@@ -1,6 +1,7 @@
 #include "Pong.h"
 #include <Input.h>
 #include <Collision.h>
+#include <Component/Entity/Collidable.h>
 #include <Colliders/RectangleCollider.h>
 
 #include <stdlib.h>
@@ -41,8 +42,8 @@ namespace Pong
 
 	Ball::Ball() : Entity(), texture(NULL)
 	{
-		AddTag("Ball");
-		SetCollider(new RectangleCollider(25.0f, 25.0f));
+		((Collidable *)(*this)["Collidable"])->AddTag("Ball");
+		((Collidable *)(*this)["Collidable"])->SetCollider(new RectangleCollider(25.0f, 25.0f));
 		//Collision::AddRectangleCollider(this, 25.0f, 25.0f);
 		velocity = Vector2::right * 200.0f;
 	}
@@ -56,7 +57,7 @@ namespace Pong
 		position += velocity * Monocle::deltaTime;
 
 		// check collisions against the paddles
-		Collider* collider = Collide("Paddle");
+		Collider* collider = ((Collidable *)((*this)["Collidable"]))->Collide("Paddle");
 		if (collider)
 		{
 			Debug::Log("Ball hit an entity tagged with 'Paddle'");
@@ -112,8 +113,8 @@ namespace Pong
 	Paddle::Paddle()
 		: Entity(), speed(0.0f)
 	{
-		AddTag("Paddle");
-		SetCollider(new RectangleCollider(25.0f, 100.0f));
+		((Collidable *)(*this)["Collidable"])->AddTag("Paddle");
+		((Collidable *)((*this)["Collidable"]))->SetCollider(new RectangleCollider(25.0f, 100.0f));
 	}
 
 	void Paddle::Update()

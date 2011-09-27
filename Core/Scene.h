@@ -86,10 +86,10 @@ namespace Monocle
 		void EntityRemoveTag(Entity* entity, const std::string& tag);
 
 		//Tag API
-		Entity* GetFirstTag(const std::string& tag);
-		std::list<Entity*>* GetAllTag(const std::string& tag);
+		//Entity* GetFirstTag(const std::string& tag);
+		//std::list<Entity*>* GetAllTag(const std::string& tag);
 
-		int GetAmountTag(const std::string& tag);
+		//int GetAmountTag(const std::string& tag);
 
 		//Entity *GetFirstEntity();
 		//Entity *GetNextEntity();

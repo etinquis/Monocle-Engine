@@ -1,6 +1,6 @@
 #include "FringeTile.h"
 #include "../Assets.h"
-#include "../Level.h"
+#include "../Level/Level.h"
 
 #include <cstdio>
 
@@ -87,7 +87,7 @@ namespace Monocle
 		RefreshTexture();
 	}
 
-	FringeTile *FringeTile::Clone() const
+	Entity* FringeTile::Clone()
 	{
 		return new FringeTile(*this);
 	}

@@ -3,6 +3,7 @@
 #include "FileNode.h"
 #include "Vector2.h"
 #include "Rect.h"
+#include "Graphics/Sprite.h"
 
 #include <map>
 #include <vector>
@@ -17,14 +18,14 @@ namespace Monocle
     class TextureAsset;
     
     // (frames)
-    class ZwopSprite
+    class ZwopSprite : public Sprite
     {
     public:
         
         ZwopSprite( ZwopSpriteSheet *sheet, int index );
         ~ZwopSprite();
         
-        void Load(TiXmlElement *element);
+        virtual void Load(TiXmlElement *element);
         
         Vector2 GetSize();
         Vector2 GetSourceSize();

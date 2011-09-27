@@ -7,7 +7,6 @@
 #include "../FontAsset.h"
 #include "../Color.h"
 #include "../Tween.h"
-#include "../LevelEditor/Node.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -533,78 +532,78 @@ namespace Monocle
 
 	void Graphics::RenderPathMesh(const std::vector<Node*> &nodes, int cells, float size, bool flipX, bool flipY, Vector2 textureOffset, Vector2 textureScale)
 	{
-		glBegin(GL_QUADS);
-		for (int i = 0; i < nodes.size()-1; i++)
-		{
-			if (nodes[i]->variant != -1 && nodes[i]->variant < cells)
-			{
-				Vector2 diff1;
-				Vector2 perp1;
+		//glBegin(GL_QUADS);
+		//for (int i = 0; i < nodes.size()-1; i++)
+		//{
+		//	if (nodes[i]->variant != -1 && nodes[i]->variant < cells)
+		//	{
+		//		Vector2 diff1;
+		//		Vector2 perp1;
 
-				/*
-				if (i-1 >= 0)
-				{
-					diff1 = points[i] - points[i-1];
-					perp1 = diff1.GetNormalized().GetPerpendicularLeft();
-					//diff1 = points[i + 1] - points[i];
-					//perp1 = perp1*0.5f + diff1.GetNormalized().GetPerpendicularLeft()*0.5f;
-				}
-				else
-				{
-					diff1 = points[i + 1] - points[i];
-					perp1 = diff1.GetNormalized().GetPerpendicularLeft();
-				}
-				*/
+		//		/*
+		//		if (i-1 >= 0)
+		//		{
+		//			diff1 = points[i] - points[i-1];
+		//			perp1 = diff1.GetNormalized().GetPerpendicularLeft();
+		//			//diff1 = points[i + 1] - points[i];
+		//			//perp1 = perp1*0.5f + diff1.GetNormalized().GetPerpendicularLeft()*0.5f;
+		//		}
+		//		else
+		//		{
+		//			diff1 = points[i + 1] - points[i];
+		//			perp1 = diff1.GetNormalized().GetPerpendicularLeft();
+		//		}
+		//		*/
 
-				diff1 = nodes[i + 1]->position - nodes[i]->position;
-				perp1 = diff1.GetNormalized().GetPerpendicularLeft();
+		//		diff1 = nodes[i + 1]->position - nodes[i]->position;
+		//		perp1 = diff1.GetNormalized().GetPerpendicularLeft();
 
-				Vector2 diff2;
-				Vector2 perp2 = perp1;
-			
-				if (i+2 < nodes.size())
-				{
-					diff2 = nodes[i+2]->position - nodes[i+1]->position;
-					perp2 = diff2.GetNormalized().GetPerpendicularLeft();
-				}
-				else
-				{
-					perp2 = perp1;
-				}
-			
-				Vector2 pos1 = nodes[i]->position;
-				Vector2 pos2 = nodes[i+1]->position;
-			
-				Vector2 texOffset = textureOffset;
-				Vector2 texScale = textureScale * 1.0f/(float)cells;
-				texOffset.x += (nodes[i]->variant % (cells)) * texScale.x;
-				texOffset.y += (int)(nodes[i]->variant / (cells)) * texScale.y;
+		//		Vector2 diff2;
+		//		Vector2 perp2 = perp1;
+		//	
+		//		if (i+2 < nodes.size())
+		//		{
+		//			diff2 = nodes[i+2]->position - nodes[i+1]->position;
+		//			perp2 = diff2.GetNormalized().GetPerpendicularLeft();
+		//		}
+		//		else
+		//		{
+		//			perp2 = perp1;
+		//		}
+		//	
+		//		Vector2 pos1 = nodes[i]->position;
+		//		Vector2 pos2 = nodes[i+1]->position;
+		//	
+		//		Vector2 texOffset = textureOffset;
+		//		Vector2 texScale = textureScale * 1.0f/(float)cells;
+		//		texOffset.x += (nodes[i]->variant % (cells)) * texScale.x;
+		//		texOffset.y += (int)(nodes[i]->variant / (cells)) * texScale.y;
 
-				if (flipY)
-				{
-					texOffset.y = (textureOffset.y+textureScale.y) - texOffset.y;
-					texScale.y = - texScale.y;
-					//printf("%f, %f\n", texOffset.y, texScale.y);
-				}
-			
-				Graphics::SetColor(nodes[i]->color);
-				glTexCoord2f(texOffset.x, texOffset.y);
-				Vertex(pos1 - perp1 * nodes[i]->scale.y * size * 0.5f);
+		//		if (flipY)
+		//		{
+		//			texOffset.y = (textureOffset.y+textureScale.y) - texOffset.y;
+		//			texScale.y = - texScale.y;
+		//			//printf("%f, %f\n", texOffset.y, texScale.y);
+		//		}
+		//	
+		//		Graphics::SetColor(nodes[i]->color);
+		//		glTexCoord2f(texOffset.x, texOffset.y);
+		//		Vertex(pos1 - perp1 * nodes[i]->scale.y * size * 0.5f);
 
-				Graphics::SetColor(nodes[i+1]->color);
-				glTexCoord2f(texOffset.x + texScale.x, texOffset.y);
-				Vertex(pos2 - perp2 * nodes[i+1]->scale.y * size * 0.5f);
+		//		Graphics::SetColor(nodes[i+1]->color);
+		//		glTexCoord2f(texOffset.x + texScale.x, texOffset.y);
+		//		Vertex(pos2 - perp2 * nodes[i+1]->scale.y * size * 0.5f);
 
-				Graphics::SetColor(nodes[i+1]->color);
-				glTexCoord2f(texOffset.x + texScale.x, texOffset.y + texScale.y);
-				Vertex(pos2 + perp2 * nodes[i+1]->scale.y * size * 0.5f);
+		//		Graphics::SetColor(nodes[i+1]->color);
+		//		glTexCoord2f(texOffset.x + texScale.x, texOffset.y + texScale.y);
+		//		Vertex(pos2 + perp2 * nodes[i+1]->scale.y * size * 0.5f);
 
-				Graphics::SetColor(nodes[i]->color);
-				glTexCoord2f(texOffset.x, texOffset.y + texScale.y);
-				Vertex(pos1 + perp1 * nodes[i]->scale.y * size * 0.5f);
-			}
-		}
-		glEnd();
+		//		Graphics::SetColor(nodes[i]->color);
+		//		glTexCoord2f(texOffset.x, texOffset.y + texScale.y);
+		//		Vertex(pos1 + perp1 * nodes[i]->scale.y * size * 0.5f);
+		//	}
+		//}
+		//glEnd();
 	}
     
     void Graphics::EnableBackgroundReset( bool bgReset )
@@ -642,7 +641,9 @@ namespace Monocle
         }
         
         delete tmpline;
+		tmpline = NULL;
         delete data;
+		data = NULL;
     }
     
     void Graphics::CheckErrors()

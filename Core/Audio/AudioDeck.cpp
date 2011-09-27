@@ -211,6 +211,7 @@ namespace Monocle {
         if (!visEnable && this->vis){
             vc.Destroy();
             delete this->vis;
+			this->vis = NULL;
         }
     }
     
@@ -286,11 +287,14 @@ namespace Monocle {
     {
         this->cs->Close();
         delete this->cs;
+		this->cs = NULL;
         
         if (this->decoder && freeDecoder) delete this->decoder;
-        
+        this->decoder = NULL;
+
         if (this->vis)
             delete this->vis;
+		this->vis = NULL;
         
         this->prevDeckPointerToHere[0] = this->nextDeck;
         

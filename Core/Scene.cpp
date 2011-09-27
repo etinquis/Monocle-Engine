@@ -193,13 +193,14 @@ namespace Monocle
 			entities.remove(*i);
 
 			//If the tag is set, remove the entity from the tag map
-			for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
-				EntityRemoveTag(*i, (*i)->GetTag(j));
+			//for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
+				//EntityRemoveTag(*i, (*i)->GetTag(j));
 
 			(*i)->scene = NULL;
 			(*i)->Removed();
 
 			delete (*i);
+			*i = NULL;
 		}
 		toRemove.clear();
 
@@ -209,8 +210,8 @@ namespace Monocle
 			entities.push_back(*i);
 
 			//If the tag is set, add the entity to the tag map
-			for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
-				EntityAddTag(*i, (*i)->GetTag(j));
+			//for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
+				//EntityAddTag(*i, (*i)->GetTag(j));
 
 			(*i)->scene = this;
 			(*i)->Added();
@@ -263,7 +264,8 @@ namespace Monocle
 	{
 		for (std::list<Camera*>::iterator i = cameras.begin(); i != cameras.end(); i++)
 		{
-			delete *i;
+			delete (*i);
+			(*i) = NULL;
 		}
 		cameras.clear();
 	}
@@ -291,7 +293,7 @@ namespace Monocle
 	{
 	}
 
-	Entity* Scene::GetFirstEntityWithTag(const std::string &tag)
+	/*Entity* Scene::GetFirstEntityWithTag(const std::string &tag)
 	{
 		for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 		{
@@ -301,7 +303,7 @@ namespace Monocle
 			}
 		}
 		return NULL;
-	}
+	}*/
 
 	Entity* Scene::GetNearestEntity(const Vector2 &position, Entity *ignoreEntity)
 	{
@@ -325,7 +327,7 @@ namespace Monocle
 		return nearestEntity;
 	}
 
-	Entity* Scene::GetNearestEntityWithTag(const Vector2 &position, const std::string &tag)
+	/*Entity* Scene::GetNearestEntityWithTag(const Vector2 &position, const std::string &tag)
 	{
 		float smallestSqrMag = -1.0f;
 
@@ -342,7 +344,7 @@ namespace Monocle
 		}
 
 		return nearestEntity;
-	}
+	}*/
 
 	Entity* Scene::GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity)
 	{
@@ -352,10 +354,10 @@ namespace Monocle
 
 		std::list<Entity*> *entities = &this->entities;
 
-		if (tag != "")
+		/*if (tag != "")
 		{
 			entities = GetAllTag(tag);
-		}
+		}*/
 
 		if (entities != NULL)
 		{
@@ -387,7 +389,7 @@ namespace Monocle
 		return nearestEntity;
 	}
 
-	Entity* Scene::GetFirstTag(const std::string& tag)
+	/*Entity* Scene::GetFirstTag(const std::string& tag)
 	{
 		if (tagMap.count(tag) == 0 || tagMap[tag].size() == 0)
 			return NULL;
@@ -409,7 +411,7 @@ namespace Monocle
 			return 0;
 		
 		return static_cast<int>(tagMap[tag].size());
-	}
+	}*/
 
 	const std::list<Entity*>* Scene::GetEntities()
 	{

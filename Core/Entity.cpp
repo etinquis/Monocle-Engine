@@ -5,6 +5,7 @@
 #include "FileNode.h"
 #include "MonocleToolkit.h"
 #include <sstream>
+#include <iostream>
 
 #include "Component/Entity/Collidable.h"
 #include "Component/Entity/Transform.h"
@@ -55,10 +56,10 @@ namespace Monocle
         cachedWorldPosition = Vector2::zero;
         
 		EntityTags copyTags = entity.tags;
-		for (EntityTags::iterator i = copyTags.begin(); i != copyTags.end(); ++i)
+		/*for (EntityTags::iterator i = copyTags.begin(); i != copyTags.end(); ++i)
 		{
 			AddTag((*i).name, (*i).save);
-		}
+		}*/
 
 		/*for (std::map<std::string, EntityComponent*>::iterator i = copyTags.begin(); i != copyTags.end(); ++i)
 		{
@@ -102,6 +103,7 @@ namespace Monocle
 		for (std::list<InvokeData*>::iterator i = invokes.begin(); i != invokes.end(); ++i)
 		{
 			delete (*i);
+			(*i) = NULL;
 		}
 		invokes.clear();
 	}
@@ -143,8 +145,9 @@ namespace Monocle
 
 		for (std::list<InvokeData*>::iterator i = removeInvokes.begin(); i != removeInvokes.end(); ++i)
 		{
-			delete *i;
 			invokes.remove(*i);
+			delete (*i);
+			(*i) = NULL;
 		}
 	}
 
@@ -242,65 +245,65 @@ namespace Monocle
 		//}
 	}
 
-	const std::string& Entity::GetTag(int index)
-	{
-#ifdef DEBUG
-		//Error: If the tag index to get is out of bounds
-		if (index >= tags.size())
-			Debug::Log("ERROR: Tag index out of bounds.");
-#endif
-		return tags[index].name;
-	}
+//	const std::string& Entity::GetTag(int index)
+//	{
+//#ifdef DEBUG
+//		//Error: If the tag index to get is out of bounds
+//		if (index >= tags.size())
+//			Debug::Log("ERROR: Tag index out of bounds.");
+//#endif
+//		return tags[index].name;
+//	}
 
-	void Entity::AddTag(const std::string& tag, bool save)
-	{
-#ifdef DEBUG
-		//Error: If the entity already has that tag
-		if (HasTag(tag))
-			Debug::Log("ERROR: Duplicate tag added to entity.");
-#endif
-		if (!HasTag(tag))
-		{
-			tags.push_back(EntityTagData(tag, save));
-			if (scene != NULL)
-				scene->EntityAddTag(this, tag);
-		}
-	}
-
-	void Entity::RemoveTag(const std::string& tag)
-	{
-#ifdef DEBUG
-		//Error: If the entity doesn't have that tag
-		if (!HasTag(tag))
-			Debug::Log("ERROR: Removing tag from an entity that doesn't have that tag.");
-#endif
-		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
-		{
-			if ((*i).name.compare(tag) == 0)
-			{
-				tags.erase(i);
-				break;
-			}
-		}
-		if (scene != NULL)
-			scene->EntityRemoveTag(this, tag);
-	}
-
-	bool Entity::HasTag(const std::string& tag)
-	{
-		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
-		{
-			if ((*i).name.compare(tag) == 0)
-				return true;
-		}
-
-		return false;
-	}
-
-	int Entity::GetNumberOfTags()
-	{
-		return static_cast<int>(tags.size());
-	}
+//	void Entity::AddTag(const std::string& tag, bool save)
+//	{
+//#ifdef DEBUG
+//		//Error: If the entity already has that tag
+//		if (HasTag(tag))
+//			Debug::Log("ERROR: Duplicate tag added to entity.");
+//#endif
+//		if (!HasTag(tag))
+//		{
+//			tags.push_back(EntityTagData(tag, save));
+//			if (scene != NULL)
+//				scene->EntityAddTag(this, tag);
+//		}
+//	}
+//
+//	void Entity::RemoveTag(const std::string& tag)
+//	{
+//#ifdef DEBUG
+//		//Error: If the entity doesn't have that tag
+//		if (!HasTag(tag))
+//			Debug::Log("ERROR: Removing tag from an entity that doesn't have that tag.");
+//#endif
+//		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
+//		{
+//			if ((*i).name.compare(tag) == 0)
+//			{
+//				tags.erase(i);
+//				break;
+//			}
+//		}
+//		if (scene != NULL)
+//			scene->EntityRemoveTag(this, tag);
+//	}
+//
+//	bool Entity::HasTag(const std::string& tag)
+//	{
+//		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
+//		{
+//			if ((*i).name.compare(tag) == 0)
+//				return true;
+//		}
+//
+//		return false;
+//	}
+//
+//	int Entity::GetNumberOfTags()
+//	{
+//		return static_cast<int>(tags.size());
+//	}
 
 	int Entity::GetLayer()
 	{
@@ -459,6 +462,7 @@ namespace Monocle
 		std::list<Entity*> entityChain;
 
 		Entity *current = this;
+		//std::cout << typeid(*this).name() << std::endl;
 		while (current)
 		{
 			entityChain.push_back(current);
@@ -556,7 +560,7 @@ namespace Monocle
 		fileNode->Read("layer", newLayer);
 		SetLayer(newLayer);
 		fileNode->Read("color", color);
-		std::string tags;
+		/*std::string tags;
 		fileNode->Read("tags", tags);
 		if (tags.size() > 0)
 		{
@@ -566,7 +570,7 @@ namespace Monocle
 			{
 				AddTag(tag, true);
 			}
-		}
+		}*/
 		fileNode->Read("followCamera", followCamera);
 	}
 

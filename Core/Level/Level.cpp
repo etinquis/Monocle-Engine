@@ -5,8 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include "Entity.h"
-#include "LevelEditor/Node.h"
-#include "LevelEditor/PathMesh.h"
 
 namespace Monocle
 {
@@ -30,7 +28,7 @@ namespace Monocle
 	Level *Level::instance = NULL;
 
 	Level::Level()
-		: scene(NULL), fringeTileset(NULL)
+		: scene(NULL)
 	{
 		instance = this;
 		width = height = 0;
@@ -89,58 +87,6 @@ namespace Monocle
 						eTileset = eTilesets->NextSiblingElement("Tileset");
 					}
 				}
-
-				// Load FringeTileset data (for arbitrarily sized 'n placed tiles)
-				TiXmlElement* eFringeTilesets = eProject->FirstChildElement("FringeTilesets");
-				if (eFringeTilesets)
-				{
-					TiXmlElement* eFringeTileset = eFringeTilesets->FirstChildElement("FringeTileset");
-					while (eFringeTileset)
-					{
-						FringeTileset fringeTileset = FringeTileset(XMLReadString(eFringeTileset, "name"));
-						
-						TiXmlElement* eFringeTile = eFringeTileset->FirstChildElement("FringeTile");
-						while (eFringeTile)
-						{
-							if (eFringeTile->Attribute("id") && eFringeTile->Attribute("image"))
-							{
-								int tileID = XMLReadInt(eFringeTile, "id");
-								std::string image = XMLReadString(eFringeTile, "image");
-								int width = -1;
-								int height = -1;
-								if (eFringeTile->Attribute("width") && eFringeTile->Attribute("height"))
-								{
-									width = XMLReadInt(eFringeTile, "width");
-									height = XMLReadInt(eFringeTile, "height");
-								}
-
-								FilterType filter = FILTER_LINEAR;
-
-								bool repeatX = XMLReadBool(eFringeTile, "repeatX");
-								bool repeatY = XMLReadBool(eFringeTile, "repeatY");
-								bool autoTile = XMLReadBool(eFringeTile, "autoTile");
-
-								int atlasX=0, atlasY=0, atlasW=0, atlasH=0;
-								std::string atlas = XMLReadString(eFringeTile, "atlas");
-								if (atlas != "")
-								{
-									std::istringstream is(atlas);
-									is >> atlasX >> atlasY >> atlasW >> atlasH;
-								}
-
-								if (image != "")
-								{
-									fringeTileset.SetFringeTileData(tileID, new FringeTileData(image, width, height, filter, repeatX, repeatY, atlasX, atlasY, atlasW, atlasH, autoTile));
-								}
-							}
-							eFringeTile = eFringeTile->NextSiblingElement("FringeTile");
-						}
-						
-						instance->fringeTilesets.push_back(fringeTileset);
-
-						eFringeTileset = eFringeTileset->NextSiblingElement("FringeTileset");
-					}
-				}
 			}
 		}
 		Debug::Log("...done");
@@ -172,12 +118,6 @@ namespace Monocle
 				{
 					instance->width = XMLReadInt(eLevel, "width");
 					instance->height = XMLReadInt(eLevel, "height");
-					std::string fringeTilesetName = XMLReadString(eLevel, "fringeTileset");
-
-					if (fringeTilesetName != "")
-					{
-						instance->fringeTileset = instance->GetFringeTilesetByName(fringeTilesetName);
-					}
 
 					/*
 					Color backgroundColor = Color::black;
@@ -282,8 +222,6 @@ namespace Monocle
 
 	void Level::SaveEntities(TiXmlElement *element, Entity *fromEntity)
 	{
-		SaveEntitiesOfType<PathMesh>("PathMesh", element, fromEntity);
-		SaveEntitiesOfType<FringeTile>("FringeTile", element, fromEntity);
 		//SaveEntitiesOfType<Node>("Node", element, fromEntity);
 	}
 
@@ -291,8 +229,6 @@ namespace Monocle
 	{
 		if (element)
 		{
-			LoadEntitiesOfType<PathMesh>("PathMesh", element, intoEntity);
-			LoadEntitiesOfType<FringeTile>("FringeTile", element, intoEntity);
 			//LoadEntitiesOfType<Node>("Node", element, intoEntity);
 		}
 	}
@@ -328,13 +264,6 @@ namespace Monocle
 				TiXmlElement eLevel("Level");
 				eLevel.SetAttribute("width", instance->width);
 				eLevel.SetAttribute("height", instance->height);
-
-
-
-				if (instance->fringeTileset)
-				{
-					eLevel.SetAttribute("fringeTileset", instance->fringeTileset->GetName());
-				}
 				
 				/*
 				Color backgroundColor = Graphics::GetBackgroundColor();

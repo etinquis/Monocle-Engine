@@ -54,7 +54,7 @@ namespace Monocle
 	public:
 		FringeTile();
 		FringeTile(const FringeTile &fringeTile);
-		FringeTile *Clone() const;
+		Entity *Clone();
 		//FringeTile(FringeTileset *fringeTileset, int tileID);
 		void SetTileID(int tileID);
 		int GetTileID();

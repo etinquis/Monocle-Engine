@@ -5,7 +5,6 @@
 #include "../TextureAsset.h"
 #include "../Colliders/PathCollider.h"
 #include "../Graphics/ZwopSpriteSheet.h"
-#include "Component/Entity/Collidable.h"
 
 namespace Monocle
 {
@@ -35,10 +34,10 @@ namespace Monocle
 
 	void PathMesh::MakeCollision(float radius)
 	{
-		if (pathCollider)
-			delete pathCollider;
+		//if (pathCollider)
+		//	delete pathCollider;
 
-		((Collidable *)(*this)["Collidable"])->SetCollider(pathCollider = new PathCollider(startNode, radius));
+		//SetCollider(pathCollider = new PathCollider(startNode, radius));
 	}
 
 	//void PathMesh::Adopted(Entity *entity)
@@ -80,7 +79,7 @@ namespace Monocle
 			Graphics::BindTexture(texture);
 			Graphics::PushMatrix();
 
-			if (followCamera == Vector2::zero)
+			if (followCamera == Vector2::zero /*|| (Debug::render && Debug::selectedEntity != this)*/)
 				Graphics::Translate(position.x, position.y, depth);
 			else
 				Graphics::Translate(scene->GetCamera()->position * followCamera + position * (Vector2::one - followCamera));

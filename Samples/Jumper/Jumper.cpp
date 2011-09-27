@@ -1,7 +1,8 @@
 #include "Jumper.h"
 #include <Input.h>
-#include <Level.h>
+#include <Level/Level.h>
 #include <Colliders/RectangleCollider.h>
+#include <Component/Entity/Collidable.h>
 
 namespace Jumper
 {
@@ -12,9 +13,9 @@ namespace Jumper
 		position = pos;
 		SetLayer(-10);
 
-		AddTag("Player");
+		((Collidable *)(*this)["Collidable"])->AddTag("Player");
 
-		SetCollider(new RectangleCollider(40, 64));
+		((Collidable *)((*this)["Collidable"]))->SetCollider(new RectangleCollider(40, 64));
 
 		sprite = new Sprite("Graphics/Player.png", FILTER_NONE, 64, 64);
 		SetGraphic(sprite);
@@ -69,7 +70,7 @@ namespace Jumper
 		float temp = 0.001f;
 
 		position.x += velocity.x * Monocle::deltaTime;
-		if(Collide("Wall") || Collide("Player"))
+		if(((Collidable *)((*this)["Collidable"]))->Collide("Wall") || ((Collidable *)((*this)["Collidable"]))->Collide("Player"))
 		{
 			position.x = lastPosition.x;
 			velocity.x = 0.0f;
@@ -79,7 +80,7 @@ namespace Jumper
 
 		onGround = false;
 
-		if (Collide("Wall") || Collide("Player"))
+		if (((Collidable *)((*this)["Collidable"]))->Collide("Wall") || ((Collidable *)((*this)["Collidable"]))->Collide("Player"))
 		{
 			// small ground collision problem here if falling fast (warps back up too far)
 			// could do a line intersection with the collider we hit
@@ -112,8 +113,8 @@ namespace Jumper
 		: Entity()
 	{
 		position = pos;
-		AddTag("Wall");
-		SetCollider(new RectangleCollider(w, h));
+		((Collidable *)(*this)["Collidable"])->AddTag("Wall");
+		((Collidable *)((*this)["Collidable"]))->SetCollider(new RectangleCollider(w, h));
 		this->width = w;
 		this->height = h;
 	}

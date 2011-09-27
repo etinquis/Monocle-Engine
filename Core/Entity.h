@@ -104,15 +104,15 @@ namespace Monocle
         virtual bool IsOnCamera( Camera *camera );
 
 		//! Associates this entity with the given tag
-		void AddTag(const std::string& tag, bool save=false);
+		//void AddTag(const std::string& tag, bool save=false);
 		//! Checks whether this entity is associated with a given tag
-		bool HasTag(const std::string& tag);
+		//bool HasTag(const std::string& tag);
 		//! Removes a tag from this Entity
-		void RemoveTag(const std::string& tag);
+		//void RemoveTag(const std::string& tag);
 		//! Gets the tag at the given offset from the list of tags
-		const std::string& GetTag(int index);
+		//const std::string& GetTag(int index);
 		//! Gets the number of tags associated with this entity
-		int GetNumberOfTags();
+		//int GetNumberOfTags();
 
 		//! Checks if this entity is on the given layer
 		bool IsLayer(int layer);

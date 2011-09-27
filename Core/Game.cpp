@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Random.h"
 #include "Collision.h"
+#include "Scene.h"
 
 //If you want to use fixed timestep, uncomment the following three lines:
 //#define FIXED_TIMESTEP

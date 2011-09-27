@@ -1,9 +1,11 @@
 #include "Ogmo.h"
 #include <Input.h>
-#include <Level.h>
+#include <Level/Level.h>
 #include <Monocle.h>
 #include <Macros.h>
 #include <Colliders/RectangleCollider.h>
+
+#include <Component/Entity/Collidable.h>
 
 #include <stdlib.h>
 
@@ -30,8 +32,8 @@ namespace Ogmo
 	{
 		position = Vector2(x, y);
 
-		AddTag("PLAYER");
-		SetCollider(new RectangleCollider(8, 8));
+		((Collidable *)(*this)["Collidable"])->AddTag("PLAYER");
+		((Collidable *)(*this)["Collidable"])->SetCollider(new RectangleCollider(8, 8));
 
 		sprite = new SpriteAnimation("player.png", FILTER_NONE, 8, 8);
 		sprite->Add("stand", 0, 0, 0);
@@ -174,7 +176,7 @@ namespace Ogmo
 		cling --;
 
 		//and at the end of the day, are we dead?
-		if(Collide("SPIKE"))
+		if(((Collidable *)(*this)["Collidable"])->Collide("SPIKE"))
 		{
 			World::ResetCoins();
 		}
@@ -188,7 +190,7 @@ namespace Ogmo
 
 		// collide
 		bool col = false;
-		while(Collide("WALL"))
+		while(((Collidable *)(*this)["Collidable"])->Collide("WALL"))
 		{
 			to -= SIGN(speed, 0.1);
 			col = true;
@@ -212,7 +214,7 @@ namespace Ogmo
 
 		position = Vector2(x, y);
 
-		if(Collide(tag))
+		if(((Collidable *)(*this)["Collidable"])->Collide(tag))
 		{
 			collide = true;
 		}
@@ -225,8 +227,8 @@ namespace Ogmo
 	Wall::Wall(int x, int y) : Entity()
 	{
 		position = Vector2(x, y);
-		AddTag("WALL");
-		SetCollider(new RectangleCollider(8, 8));
+		((Collidable *)(*this)["Collidable"])->AddTag("WALL");
+		((Collidable *)(*this)["Collidable"])->SetCollider(new RectangleCollider(8, 8));
 		SetLayer(5);
 	}
 
@@ -247,10 +249,10 @@ namespace Ogmo
 		SetLayer(-1);
 		SetGraphic(sprite);
 
-		AddTag("COIN");
-		SetCollider(new RectangleCollider(8, 8));
+		((Collidable *)(*this)["Collidable"])->AddTag("COIN");
+		((Collidable *)(*this)["Collidable"])->SetCollider(new RectangleCollider(8, 8));
 
-		while(Collide("WALL"))
+		while(((Collidable *)(*this)["Collidable"])->Collide("WALL"))
 		{
 			position = Vector2(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
 			start = Vector2(position.x, position.y);
@@ -264,7 +266,7 @@ namespace Ogmo
 		//we hit the player!
 		if(!collected)
 		{
-			if (Collide("PLAYER") && !reset)
+			if (((Collidable *)(*this)["Collidable"])->Collide("PLAYER") && !reset)
 			{
                 float coinpitch = ((rand()%101) / 250.0) - 0.2; // Vary from -0.2 to 0.2
                 if (sfxCoin)
@@ -323,18 +325,18 @@ namespace Ogmo
 		SetLayer(-1);
 		SetGraphic(sprite);
 
-		AddTag("SPIKE");
-		SetCollider(new RectangleCollider(8, 8));
+		((Collidable *)(*this)["Collidable"])->AddTag("SPIKE");
+		((Collidable *)(*this)["Collidable"])->SetCollider(new RectangleCollider(8, 8));
 
 		if(position.x == -1 && position.y == -1)
 		{
 			position = Vector2(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
-			while(Collide("WALL"))
+			while(((Collidable *)(*this)["Collidable"])->Collide("WALL"))
 			{
 				position = Vector2(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
 			}
 
-			while(!Collide("WALL")) { position.y += 1; }
+			while(!((Collidable *)(*this)["Collidable"])->Collide("WALL")) { position.y += 1; }
 		}
 	}
 

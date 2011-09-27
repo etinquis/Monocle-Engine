@@ -1,7 +1,7 @@
 
 #include "ZwopSpriteSheet.h"
-#include "../Assets.h"
-#include "../TextureAsset.h"
+#include "Assets.h"
+#include "TextureAsset.h"
 
 #include <XML/XMLFileNode.h>
 #include <TinyXML/tinyxml.h>
@@ -180,6 +180,7 @@ namespace Monocle
         for (std::map<std::string, ZwopSprite*>::iterator i = entries.begin(); i != entries.end(); ++i)
 		{
 			delete (*i).second;
+			(*i).second = NULL;
 		}
 		entries.clear();
         orderedSprites.clear();

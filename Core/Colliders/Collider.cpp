@@ -7,31 +7,35 @@
 #include <stdio.h> // for NULL
 #include "../CollisionData.h"
 #include "../Macros.h"
+#include "../Component/Entity/Collidable.h"
 
 namespace Monocle
 {
 	Collider::Collider()
-		: entity(NULL)
+		: collidable(NULL)
 	{
 	}
 
-	void Collider::SetCollidable(Collidable* entity)
+	/*void Collider::SetEntity(Entity* entity)
 	{
 		this->entity = entity;
+	}*/
+
+	Entity* Collider::GetEntity()
+	{
+		if(collidable)
+			return collidable->GetEntity();
+		return NULL;
 	}
 
-	Collidable* Collider::GetCollidable()
+	Vector2 Collider::GetEntityPosition()
 	{
-		return entity;
-	}
-
-	/*Vector2 Collider::GetEntityPosition()
-	{
-		if (entity != NULL)
+		Entity *entity = GetEntity();
+		if (entity)
 			return entity->GetWorldPosition();
 		else
 			return Vector2();
-	}*/
+	}
 
 	bool Collider::Collide(Collider* a, Collider* b, CollisionData *collisionData)
 	{
@@ -357,5 +361,15 @@ namespace Monocle
 		}
 
 		return false;
+	}
+
+	void Collider::SetCollidable(Collidable *coll)
+	{
+		this->collidable = coll;
+	}
+
+	Collidable *Collider::GetCollidable()
+	{
+		return this->collidable;
 	}
 }

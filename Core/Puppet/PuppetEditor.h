@@ -13,7 +13,7 @@ namespace Monocle
         Animation *currentAnimation;
         void Render();
 
-		virtual Timeline *Clone() const;
+		//virtual Timeline *Clone() const;
     };
     
 	class PuppetEntity : public Entity

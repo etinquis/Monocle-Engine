@@ -4,9 +4,9 @@
 #include <vector>
 #include <list>
 
-#include "Graphics.h"
+#include "../Graphics.h"
 #include "Tileset.h"
-#include "Graphics/Tilemap.h"
+#include "../Graphics/Tilemap.h"
 #include "LevelEditor/FringeTile.h"
 
 // temp, replace with generic file interface later
@@ -128,7 +128,6 @@ namespace Monocle
 		std::string filename;
 
 		FringeTileset *fringeTileset;
-
 		std::list<EntityType> entityTypes;
 
 		void SaveEntities(TiXmlElement *element, Entity *fromEntity=NULL);

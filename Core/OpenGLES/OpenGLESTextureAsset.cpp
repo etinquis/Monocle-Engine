@@ -166,6 +166,7 @@ namespace Monocle
 		unsigned char *cpyrect = ReadRect(srcPos, copysize);
 		UpdateRect(cpyrect, dstPos, copysize);
 		delete cpyrect;
+		cpyrect = NULL;
 	}
     
     void _getTextureImageData( TextureAsset *texture, unsigned char *data )
@@ -191,6 +192,7 @@ namespace Monocle
         fb->Stop();
         
         delete fb;
+		fb = NULL;
     }
     
 	unsigned char *TextureAsset::ReadRect(Monocle::Vector2 srcPos, Monocle::Vector2 size)

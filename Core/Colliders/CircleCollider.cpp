@@ -1,6 +1,5 @@
 #include "CircleCollider.h"
 #include "../CollisionData.h"
-#include "../Component/Entity/Collidable.h"
 #include <cmath>
 
 namespace Monocle
@@ -19,14 +18,14 @@ namespace Monocle
 
 	float CircleCollider::GetRadius()
 	{
-		float scale = (fabs(GetCollidable()->GetEntity()->scale.x) + fabs(GetCollidable()->GetEntity()->scale.y)) * 0.5f;
+		float scale = (fabs(GetEntity()->scale.x) + fabs(GetEntity()->scale.y)) * 0.5f;
 		//printf("GetRadius scale: %f\n", scale);
 		return radius * scale;
 	}
 
 	bool CircleCollider::IntersectsPoint(const Vector2& point, CollisionData *collisionData)
 	{
-		Vector2 ePos = GetCollidable()->GetEntity()->GetWorldPosition(offset);
+		Vector2 ePos = GetEntity()->GetWorldPosition(offset);
 
 		Vector2 diff = point - ePos;
 		return (diff.IsInRange(GetRadius()));
@@ -37,7 +36,7 @@ namespace Monocle
 		//Algorithm stolen from: http://www.gamedev.net/topic/304578-finite-line-circle-intersection/page__view__findpost__p__2938618
 
 		Vector2 ePos = GetEntityPosition();
-		Vector2 eWorldPos = GetCollidable()->GetEntity()->GetWorldPosition(offset);
+		Vector2 eWorldPos = GetEntity()->GetWorldPosition(offset);
 		float eRadius = GetRadius();
 		//float eRadius = radius;
 
@@ -73,7 +72,7 @@ namespace Monocle
 		if (relativeToEntity)
 			return offset.x;
 		else
-			return GetCollidable()->GetEntity()->GetWorldPosition(offset).x;
+			return GetEntity()->GetWorldPosition(offset).x;
 	}
 
 	float CircleCollider::GetCenterY(bool relativeToEntity)
@@ -81,7 +80,7 @@ namespace Monocle
 		if (relativeToEntity)
 			return offset.y;
 		else
-			return GetCollidable()->GetEntity()->GetWorldPosition(offset).y;
+			return GetEntity()->GetWorldPosition(offset).y;
 	}
 
 	Vector2 CircleCollider::GetCenter(bool relativeToEntity)

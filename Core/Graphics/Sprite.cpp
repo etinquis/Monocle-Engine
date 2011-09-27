@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "ZwopSpriteSheet.h"
 #include "../Assets.h"
 #include "../Entity.h"
 

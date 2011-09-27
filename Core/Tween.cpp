@@ -76,6 +76,7 @@ namespace Monocle
 		{
 			tweeners.remove(*i);
 			delete *i;
+			*i = NULL;
 		}
 		tweenersToRemove.clear();
 	}
@@ -91,6 +92,7 @@ namespace Monocle
 		for (std::list<Tweener*>::iterator i = tweeners.begin(); i != tweeners.end(); ++i)
 		{
 			delete *i;
+			*i = NULL;
 		}
 
 		tweeners.clear();

@@ -296,7 +296,9 @@ namespace Monocle
             Close();
         
         delete this->buffers;
+		this->buffers = NULL;
         delete this->obtainedBuffer;
+		this->obtainedBuffer = NULL;
     }
     
     static         ALCcontext *s_context=NULL;

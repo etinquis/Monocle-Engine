@@ -14,8 +14,6 @@ namespace Monocle
 		CT_PATH
 	};
 
-	class Collidable;
-
 	class RectangleCollider;
 	class CircleCollider;
 	class PolygonCollider;
@@ -23,17 +21,21 @@ namespace Monocle
 	class PathCollider;
 	class Entity;
 	class CollisionData;
+	class Collidable;
 
 	class Collider
 	{
 	public:
 		Collider();
 
-		void SetCollidable(Collidable* coll);
-		Collidable* GetCollidable();
+		//void SetEntity(Entity* entity);
+		Entity* GetEntity();
 		Vector2 GetEntityPosition();
 
 		Vector2 offset;
+
+		void SetCollidable(Collidable *coll);
+		Collidable *GetCollidable();
 
 		virtual ColliderType GetColliderType() = 0;
 		virtual bool IntersectsPoint(const Vector2& point, CollisionData *collisionData=NULL)=0;
@@ -43,7 +45,8 @@ namespace Monocle
 		static bool LinesIntersect(const Vector2& aStart, const Vector2& aEnd, const Vector2& bStart, const Vector2& bEnd, CollisionData *collisionData=NULL);
 
 	private:
-		Collidable *entity;
+		Collidable *collidable;
+
 		static bool CollideRectRect(RectangleCollider* a, RectangleCollider* b, CollisionData *collisionData);
 		static bool CollideCircleCircle(CircleCollider* a, CircleCollider* b, CollisionData *collisionData);
 		static bool CollidePolygonPolygon(PolygonCollider* a, PolygonCollider* b, CollisionData *collisionData);

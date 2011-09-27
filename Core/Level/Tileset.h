@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "TextureAsset.h"
+#include "../TextureAsset.h"
 
 namespace Monocle
 {

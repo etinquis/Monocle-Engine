@@ -102,6 +102,7 @@ namespace Monocle {
         vorbisData = (AudioAssetReader*)datasource;
         
         delete vorbisData;
+		vorbisData = NULL;
         return 1;
     }
     
@@ -238,6 +239,7 @@ namespace Monocle {
         OggDecoderData *data = OGGDATA(this);
         ov_clear(&data->vf);
         delete data;
+		data = NULL;
     }
     
 }

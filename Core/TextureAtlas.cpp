@@ -77,6 +77,7 @@ namespace Monocle
 		for (std::map<std::string, TextureAtlasEntry*>::iterator i = entries.begin(); i != entries.end(); ++i)
 		{
 			delete (*i).second;
+			(*i).second = NULL;
 		}
 		entries.clear();
 	}
