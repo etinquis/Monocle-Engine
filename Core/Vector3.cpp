@@ -19,4 +19,14 @@ namespace Monocle
 		: x(x), y(y), z(z)
 	{
 	}
+
+	Vector3::Vector3(Vector2 xy, float z)
+		: x(xy.x), y(xy.y), z(z)
+	{
+	}
+
+	Vector2 Vector3::xy() const
+	{
+		return Vector2(x, y);
+	}
 }

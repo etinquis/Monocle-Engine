@@ -50,7 +50,7 @@ namespace Monocle
 	///=====
 
 	Entity::Entity(const Entity &entity)
-		: Transform(entity), isEnabled(true), followCamera(entity.followCamera), scene(NULL), graphic(NULL), parent(NULL), depth(entity.depth), isVisible(entity.isVisible), color(entity.color), layer(entity.layer)//, tags(entity.tags)
+		: isEnabled(true), followCamera(entity.followCamera), scene(NULL), graphic(NULL), parent(NULL), isVisible(entity.isVisible), color(entity.color), layer(entity.layer)//, tags(entity.tags)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
@@ -68,12 +68,13 @@ namespace Monocle
 	}
 
 	Entity::Entity()
-		: Transform(), isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(0), depth(0.0f), color(Color::white), isVisible(true)
+		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(0), color(Color::white), isVisible(true)
 		//, willDie(false)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
-
+		
+		AddComponent<Transform>();
 		AddComponent<Collidable>();
 	}
 
@@ -170,26 +171,6 @@ namespace Monocle
 	bool Entity::IsEnabled()
 	{
 		return isEnabled;
-	}
-
-	void Entity::ApplyMatrix()
-	{
-		if (followCamera == Vector2::zero /*|| (Debug::render && Debug::selectedEntity != this && IsDebugLayer())*/)
-			Graphics::Translate(position.x, position.y, depth);
-		else
-		{
-			Camera *camera = scene->GetActiveCamera();
-			if (!camera)
-				camera = scene->GetMainCamera();
-			if (camera != NULL)
-				Graphics::Translate(camera->position * followCamera + position * (Vector2::one - followCamera));
-		}
-        
-		if (rotation != 0.0f)
-			Graphics::Rotate(rotation, 0, 0, 1);
-        
-        if (scale != Vector2::one)
-            Graphics::Scale(scale);
 	}
 
 	void Entity::Render()
@@ -380,42 +361,42 @@ namespace Monocle
 		return graphic;
 	}
     
-    bool Entity::IsOnCamera( Camera *camera )
-    {
-        Graphic* graphic = GetGraphic();
-		if (graphic != NULL)
-		{
-			float biggersize, h, w;
-            
-            graphic->GetWidthHeight(&w, &h);
-            
-            // We use the greatest possible rectangle in case of rotations
-            biggersize = MAX(w,h);
-            
-			Vector2 ul = position - (Vector2(biggersize,biggersize)*0.5f*scale);
-			Vector2 lr = position + (Vector2(biggersize,biggersize)*0.5f*scale);
-            
-            float vw = Graphics::GetVirtualWidth()*camera->scale.x;
-            float vh = Graphics::GetVirtualHeight()*camera->scale.x;
-            float cx = (camera->position.x);
-            float cy = (camera->position.y);
-            
-            // As long as any one of the corners could be on screen we draw
-            return !(
-                    // What it means to be off screen:
-                     (ul.x > cx+vw) || (lr.x < cx-vw) ||
-                     (ul.y > cy+vh) || (lr.y < cy-vh)
-                    );
-            
-//            printf("%.2f < %.2f && %.2f > %.2f && %.2f < %.2f && %.2f > %.2f\n",cx-vw,ul.x,cx+vw,lr.x,cy-vh,ul.y,cy+vh,lr.y);
-            
-//			return (cx-vw < ul.x && cx+vw > lr.x && cy-vh < ul.y && cy+vh > lr.y);
-            
-//            return (ul.x < cx+vw && ul.x > cx-vw && ul.y > cy-vh && ul.y < cy+vh) ||
-//                    (lr.x > cx-vw && lr.x < cx+vw && lr.y > cy-vh && lr.y < cy+vh);
-		}
-		return true;
-    }
+//    bool Entity::IsOnCamera( Camera *camera )
+//    {
+//        Graphic* graphic = GetGraphic();
+//		if (graphic != NULL)
+//		{
+//			float biggersize, h, w;
+//            
+//            graphic->GetWidthHeight(&w, &h);
+//            
+//            // We use the greatest possible rectangle in case of rotations
+//            biggersize = MAX(w,h);
+//            
+//			Vector2 ul = ((Transform*)(*this)["Transform"])->position - (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
+//			Vector2 lr = ((Transform*)(*this)["Transform"])->position + (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
+//            
+//            float vw = Graphics::GetVirtualWidth()* ((Transform*)(*camera)["Transform"])->scale.x;
+//            float vh = Graphics::GetVirtualHeight()* ((Transform*)(*camera)["Transform"])->scale.x;
+//            float cx = (((Transform*)(*camera)["Transform"])->position.x);
+//            float cy = (((Transform*)(*camera)["Transform"])->position.y);
+//            
+//            // As long as any one of the corners could be on screen we draw
+//            return !(
+//                    // What it means to be off screen:
+//                     (ul.x > cx+vw) || (lr.x < cx-vw) ||
+//                     (ul.y > cy+vh) || (lr.y < cy-vh)
+//                    );
+//            
+////            printf("%.2f < %.2f && %.2f > %.2f && %.2f < %.2f && %.2f > %.2f\n",cx-vw,ul.x,cx+vw,lr.x,cy-vh,ul.y,cy+vh,lr.y);
+//            
+////			return (cx-vw < ul.x && cx+vw > lr.x && cy-vh < ul.y && cy+vh > lr.y);
+//            
+////            return (ul.x < cx+vw && ul.x > cx-vw && ul.y > cy-vh && ul.y < cy+vh) ||
+////                    (lr.x > cx-vw && lr.x < cx+vw && lr.y > cy-vh && lr.y < cy+vh);
+//		}
+//		return true;
+//    }
 
 	bool Entity::IsPositionInGraphic(const Vector2 &point)
 	{
@@ -424,59 +405,34 @@ namespace Monocle
 		{
 			float width, height;
 			graphic->GetWidthHeight(&width, &height);
-			Vector2 ul = GetWorldPosition(Vector2( - width * 0.5f, - height * 0.5f));
-			Vector2 lr = GetWorldPosition(Vector2( + width * 0.5f, + height * 0.5f));
+			Vector2 ul = ((Transform *)(*this)["Transform"])->GetWorldPosition(Vector2( - width * 0.5f, - height * 0.5f));
+			Vector2 lr = ((Transform *)(*this)["Transform"])->GetWorldPosition(Vector2( + width * 0.5f, + height * 0.5f));
 			printf("p(%d, %d) ul(%d, %d) lr(%d, %d)\n", (int)point.x, (int)point.y, (int)ul.x, (int)ul.y, (int)lr.x, (int)lr.y);
 			return (point.x > ul.x && point.x < lr.x && point.y > ul.y && point.y < lr.y);
 		}
 		return false;
 	}
 
-    /// TODO: write our own matrix functions to replace this stuff
-	Vector2 Entity::GetWorldPosition(const Vector2 &position)
-	{
-		Vector2 returnPos;
-        
-        if (this->position == lastPositionWhenCached)
-            return this->cachedWorldPosition;
+	//void Entity::MatrixChain()
+	//{
+	//	std::list<Entity*> entityChain;
 
-		Graphics::PushMatrix();
-		Graphics::IdentityMatrix();
+	//	Entity *current = this;
+	//	//std::cout << typeid(*this).name() << std::endl;
+	//	while (current)
+	//	{
+	//		entityChain.push_back(current);
+	//		current = current->parent;
+	//	}
 
-		MatrixChain();
-        
-        Graphics::Translate(position);
-
-		returnPos = Graphics::GetMatrixPosition();
-
-		Graphics::PopMatrix();
-
-        this->cachedWorldPosition = returnPos;
-        this->lastPositionWhenCached = this->position;
-        
-		return returnPos;
-	}
-
-	void Entity::MatrixChain()
-	{
-		std::list<Entity*> entityChain;
-
-		Entity *current = this;
-		//std::cout << typeid(*this).name() << std::endl;
-		while (current)
-		{
-			entityChain.push_back(current);
-			current = current->parent;
-		}
-
-		for (std::list<Entity*>::reverse_iterator i = entityChain.rbegin(); i != entityChain.rend(); ++i)
-		{
-			(*i)->ApplyMatrix();
-			//Graphics::Translate(scene->GetCamera()->position * (*i)->followCamera + (*i)->position * (Vector2::one - (*i)->followCamera));
-			//Graphics::Rotate((*i)->rotation, 0, 0, 1);
-			//Graphics::Scale((*i)->scale);
-		}
-	}
+	//	for (std::list<Entity*>::reverse_iterator i = entityChain.rbegin(); i != entityChain.rend(); ++i)
+	//	{
+	//		(*i)->ApplyMatrix();
+	//		//Graphics::Translate(scene->GetCamera()->position * (*i)->followCamera + (*i)->position * (Vector2::one - (*i)->followCamera));
+	//		//Graphics::Rotate((*i)->rotation, 0, 0, 1);
+	//		//Graphics::Scale((*i)->scale);
+	//	}
+	//}
 
 	/// TODO: write our own matrix functions to replace this stuff
 	Vector2 Entity::GetLocalPosition(const Vector2 &worldPosition)
@@ -498,9 +454,9 @@ namespace Monocle
 
 		for (std::list<Entity*>::iterator i = entityChain.begin(); i != entityChain.end(); ++i)
 		{
-			Graphics::Scale(1.0f/(*i)->scale);
-			Graphics::Rotate(-(*i)->rotation, 0, 0, 1);
-			Graphics::Translate(-(*i)->position);
+			Graphics::Scale(1.0f/((Transform*)(**i)["Transform"])->scale);
+			Graphics::Rotate(-((Transform*)(**i)["Transform"])->rotation, 0, 0, 1);
+			Graphics::Translate(-((Transform*)(**i)["Transform"])->position.xy());
 		}
 
 		returnPos = Graphics::GetMatrixPosition();
@@ -528,7 +484,7 @@ namespace Monocle
 
 	void Entity::Save(FileNode *fileNode)
 	{
-		Transform::Save(fileNode);
+		//Transform::Save(fileNode);
 
 		if (layer != 0)
 			fileNode->Write("layer", layer);
@@ -554,7 +510,7 @@ namespace Monocle
 
 	void Entity::Load(FileNode *fileNode)
 	{
-		Transform::Load(fileNode);
+		//Transform::Load(fileNode);
 
 		int newLayer =0;
 		fileNode->Read("layer", newLayer);

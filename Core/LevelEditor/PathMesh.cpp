@@ -6,6 +6,8 @@
 #include "../Colliders/PathCollider.h"
 #include "../Graphics/ZwopSpriteSheet.h"
 #include "Component/Entity/Collidable.h"
+#include "Component/Entity/Transform.h"
+#include "Camera.h"
 
 namespace Monocle
 {
@@ -81,12 +83,12 @@ namespace Monocle
 			Graphics::PushMatrix();
 
 			if (followCamera == Vector2::zero)
-				Graphics::Translate(position.x, position.y, depth);
+				Graphics::Translate(((Transform*)(*this)["Transform"])->position.x, ((Transform*)(*this)["Transform"])->position.y, ((Transform*)(*this)["Transform"])->position.z);
 			else
-				Graphics::Translate(scene->GetCamera()->position * followCamera + position * (Vector2::one - followCamera));
+				Graphics::Translate(((Transform*)(*scene->GetCamera())["Transform"])->position.xy() * followCamera + ((Transform*)(*this)["Transform"])->position.xy() * (Vector2::one - followCamera));
 
-			Graphics::Rotate(rotation, 0, 0, 1);
-			Graphics::Scale(scale);
+			Graphics::Rotate(((Transform*)(*this)["Transform"])->rotation, 0, 0, 1);
+			Graphics::Scale(((Transform*)(*this)["Transform"])->scale);
 
 			if (nodes.size() > 0){
                 if (zSprite)

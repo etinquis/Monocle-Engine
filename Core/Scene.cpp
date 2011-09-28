@@ -3,6 +3,8 @@
 #include "Graphics.h"
 #include "MonocleToolkit.h"
 #include "Platform.h"
+#include "Component/Entity/Transform.h"
+#include "Camera.h"
 
 namespace Monocle
 {
@@ -10,7 +12,7 @@ namespace Monocle
 		: isVisible(true), isPaused(false), activeCamera(NULL), mainCamera(NULL)
 	{
 		Camera *camera = new Camera();
-		camera->position = Graphics::GetScreenCenter();
+		((Transform*)(*camera)["Transform"])->position = Vector3(Graphics::GetScreenCenter(), 0);
 		AddCamera(camera);
 		SetMainCamera(camera);
 	}
@@ -315,7 +317,7 @@ namespace Monocle
 		{
 			if ((*i) != ignoreEntity)
 			{
-				Vector2 diff = (*i)->position - position;
+				Vector2 diff = ((Transform *)(**i)["Transform"])->position.xy() - position;
 				float sqrMag = diff.GetSquaredMagnitude();
 				if (smallestSqrMag <= -1 || sqrMag < smallestSqrMag)
 				{
@@ -365,7 +367,7 @@ namespace Monocle
 			{
 				if ((*i) != ignoreEntity)
 				{
-					Vector2 diff = (*i)->GetWorldPosition() - position;
+					Vector2 diff = ((Transform *)(**i)["Transform"])->GetWorldPosition() - position;
 					if (diff.IsInRange(ENTITY_CONTROLPOINT_SIZE))
 					{
 						float sqrMag = diff.GetSquaredMagnitude();

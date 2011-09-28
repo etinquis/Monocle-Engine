@@ -8,6 +8,8 @@
 #include <cstdio>
 #include <cmath>
 #include "ImageBrowser.h"
+#include "Component/Entity/Transform.h"
+#include "Camera.h"
 
 namespace Monocle
 {
@@ -72,7 +74,7 @@ namespace Monocle
 		//Debug::showBounds = true;
 		//Debug::render = true;
 
-		Game::GetScene()->GetCamera()->rotation = 0;
+		((Transform*)(*Game::GetScene()->GetCamera())["Transform"])->rotation = 0;
 	}
 
 	void LevelEditor::Disable()
@@ -221,11 +223,11 @@ namespace Monocle
 
 		if (entity->GetParent())
 		{
-			newEntity->position = position - entity->GetParent()->GetWorldPosition();
+			((Transform*)(*newEntity)["Transform"])->position = position - ((Transform*)(*entity->GetParent())["Transform"])->GetWorldPosition();
 		}
 		else
 		{
-			newEntity->position = position;
+			((Transform*)(*newEntity)["Transform"])->position = position;
 		}
 
 		// special case code
@@ -283,7 +285,7 @@ namespace Monocle
 		if (entity != NULL)
 		{
 //			printf("entity type: %s and %s\n", typeid(entity).name(), typeid(entity).raw_name());
-			printf("entity selected: p(%f, %f) s(%f, %f) r(%f)\n", entity->position.x, entity->position.y, entity->scale.x, entity->scale.y, entity->rotation);
+			printf("entity selected: p(%f, %f) s(%f, %f) r(%f)\n", ((Transform*)(*entity)["Transform"])->position.x, ((Transform*)(*entity)["Transform"])->position.y, ((Transform*)(*entity)["Transform"])->scale.x, ((Transform*)(*entity)["Transform"])->scale.y, ((Transform*)(*entity)["Transform"])->rotation);
 
 			printf("(Q) move (W) rotate (E) scale\n");
 		}
@@ -291,12 +293,12 @@ namespace Monocle
 
 	void LevelEditor::ApplyGrid(Entity *entity, int gridSize)
 	{
-		int x = (entity->position.x / gridSize);
-		entity->position.x = (x * gridSize) + gridSize*0.5f;
-		int y = (entity->position.y / gridSize);
-		entity->position.y = (y * gridSize) + gridSize*0.5f;
+		int x = (((Transform*)(*entity)["Transform"])->position.x / gridSize);
+		((Transform*)(*entity)["Transform"])->position.x = (x * gridSize) + gridSize*0.5f;
+		int y = (((Transform*)(*entity)["Transform"])->position.y / gridSize);
+		((Transform*)(*entity)["Transform"])->position.y = (y * gridSize) + gridSize*0.5f;
 
-		printf("applied grid %d now (%d, %d)\n", gridSize, (int)entity->position.x, (int)entity->position.y);
+		printf("applied grid %d now (%d, %d)\n", gridSize, (int)((Transform*)(*entity)["Transform"])->position.x, (int)((Transform*)(*entity)["Transform"])->position.y);
 	}
 
 	void LevelEditor::UpdateOpportunity()
@@ -340,18 +342,18 @@ namespace Monocle
 		if (Input::IsKeyPressed(keyFocus))
 		{
 			//Graphics::MoveCameraPosition(selectedEntity->position, 0.125f, EASE_OUTSIN);
-			scene->GetMainCamera()->position = selectedEntity->position;
+			((Transform*)(*scene->GetMainCamera())["Transform"])->position = ((Transform*)(*selectedEntity)["Transform"])->position;
 		}
 
 		if (Input::IsKeyHeld(keyFlip))
 		{
 			if (Input::IsKeyPressed(keyFlipH))
 			{
-				selectedEntity->scale.x *= -1;
+				((Transform*)(*selectedEntity)["Transform"])->scale.x *= -1;
 			}
 			if (Input::IsKeyPressed(keyFlipV))
 			{
-				selectedEntity->scale.y *= -1;
+				((Transform*)(*selectedEntity)["Transform"])->scale.y *= -1;
 			}
 		}
 
@@ -431,7 +433,7 @@ namespace Monocle
 
 			if (Input::IsKeyHeld(KEY_LSHIFT) && Input::IsKeyPressed(KEY_0))
 			{
-				selectedEntity->rotation = 0;
+				((Transform*)(*selectedEntity)["Transform"])->rotation = 0;
 			}
 
 		}
@@ -454,13 +456,13 @@ namespace Monocle
 
 		if (Input::IsKeyPressed(keyScaleUp))
 		{
-			Vector2 add = Vector2(SIGNOF(selectedEntity->scale.x), SIGNOF(selectedEntity->scale.y)) * 0.125f;
-			selectedEntity->scale += add;
+			Vector2 add = Vector2(SIGNOF(((Transform*)(*selectedEntity)["Transform"])->scale.x), SIGNOF(((Transform*)(*selectedEntity)["Transform"])->scale.y)) * 0.125f;
+			((Transform*)(*selectedEntity)["Transform"])->scale += add;
 			printf("add(%f, %f)\n", add.x, add.y);
 		}
 		if (Input::IsKeyPressed(keyScaleDown))
 		{
-			selectedEntity->scale -= Vector2(SIGNOF(selectedEntity->scale.x), SIGNOF(selectedEntity->scale.y)) * 0.125f;
+			((Transform*)(*selectedEntity)["Transform"])->scale -= Vector2(SIGNOF(((Transform*)(*selectedEntity)["Transform"])->scale.x), SIGNOF(((Transform*)(*selectedEntity)["Transform"])->scale.y)) * 0.125f;
 		}
 
 
@@ -480,7 +482,7 @@ namespace Monocle
 			if (Input::IsKeyHeld(keyRotate))
 			{
 				moveStartPosition = Input::GetWorldMousePosition();
-				startRotation = selectedEntity->rotation;
+				startRotation = ((Transform*)(*selectedEntity)["Transform"])->rotation;
 				SetState(FTES_ROTATE);
 				return;
 			}
@@ -489,8 +491,8 @@ namespace Monocle
 			{
 				Debug::Log("scale start");
 				moveStartPosition = Input::GetWorldMousePosition();
-				moveStartMagnitude = (Input::GetWorldMousePosition() - selectedEntity->position).GetMagnitude();
-				startScale = selectedEntity->scale;
+				moveStartMagnitude = (Input::GetWorldMousePosition() - ((Transform*)(*selectedEntity)["Transform"])->position.xy()).GetMagnitude();
+				startScale = ((Transform*)(*selectedEntity)["Transform"])->scale;
 				SetState(FTES_SCALE);
 				return;
 			}
@@ -498,8 +500,8 @@ namespace Monocle
 			if (Input::IsKeyPressed(keyMove))//Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) //
 			{
 				Debug::Log("move start");
-				moveStartPosition = selectedEntity->position;
-				moveOffset = selectedEntity->position - Input::GetWorldMousePosition();
+				moveStartPosition = ((Transform*)(*selectedEntity)["Transform"])->position.xy();
+				moveOffset = ((Transform*)(*selectedEntity)["Transform"])->position.xy() - Input::GetWorldMousePosition();
 				moveAxisLock = 0;
 				SetState(FTES_MOVE);
 				return;
@@ -533,15 +535,15 @@ namespace Monocle
 				moveAxisLock = 2;
 		}
 
-		selectedEntity->position = Input::GetWorldMousePosition() + moveOffset;
+		((Transform*)(*selectedEntity)["Transform"])->position = Input::GetWorldMousePosition() + moveOffset;
 
 		switch(moveAxisLock)
 		{
 		case 1:
-			selectedEntity->position.y = moveStartPosition.y;
+			((Transform*)(*selectedEntity)["Transform"])->position.y = moveStartPosition.y;
 			break;
 		case 2:
-			selectedEntity->position.x = moveStartPosition.x;
+			((Transform*)(*selectedEntity)["Transform"])->position.x = moveStartPosition.x;
 			break;
 		}
 		
@@ -578,7 +580,7 @@ namespace Monocle
 		// cancel out of move by hitting escape or rmb
 		if (Input::IsKeyPressed(KEY_ESCAPE) || Input::IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
 		{
-			selectedEntity->position = moveStartPosition;
+			((Transform*)(*selectedEntity)["Transform"])->position = moveStartPosition;
 			SetState(FTES_NONE);
 			return;
 		}
@@ -587,7 +589,7 @@ namespace Monocle
 		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || Input::IsKeyPressed(keyMove) || Input::IsKeyPressed(keySelect))
 		{
 			SetState(FTES_NONE);
-			printf("position: (%d, %d)\n", (int)selectedEntity->position.x, (int)selectedEntity->position.y);
+			printf("position: (%d, %d)\n", (int)((Transform*)(*selectedEntity)["Transform"])->position.x, (int)((Transform*)(*selectedEntity)["Transform"])->position.y);
 			return;
 		}
 
@@ -598,13 +600,13 @@ namespace Monocle
 			switch(moveAxisLock)
 			{
 			case 1:
-				selectedEntity->position.x = numberEntryValue;
+				((Transform*)(*selectedEntity)["Transform"])->position.x = numberEntryValue;
 				break;
 			case 2:
-				selectedEntity->position.y = numberEntryValue;
+				((Transform*)(*selectedEntity)["Transform"])->position.y = numberEntryValue;
 				break;
 			default:
-				selectedEntity->position = Vector2::one * numberEntryValue;
+				((Transform*)(*selectedEntity)["Transform"])->position = Vector2::one * numberEntryValue;
 				break;
 			}
 		}
@@ -621,13 +623,13 @@ namespace Monocle
 		{
 			if (Input::IsKeyPressed(KEY_0))
 			{
-				selectedEntity->rotation = 0;
+				((Transform*)(*selectedEntity)["Transform"])->rotation = 0;
 				SetState(FTES_NONE);
 				return;
 			}
 			else if (Input::IsKeyPressed(KEY_ESCAPE) || Input::IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
 			{
-				selectedEntity->rotation = startRotation;
+				((Transform*)(*selectedEntity)["Transform"])->rotation = startRotation;
 				SetState(FTES_NONE);
 				return;
 			}
@@ -637,11 +639,11 @@ namespace Monocle
 				if (Input::IsKeyHeld(KEY_LCTRL))
 				{
 					int grads = (startRotation + add) / (45.0f/2.0f);
-					selectedEntity->rotation = grads * (45.0f/2.0f);
+					((Transform*)(*selectedEntity)["Transform"])->rotation = grads * (45.0f/2.0f);
 				}
 				else
 				{
-					selectedEntity->rotation = startRotation + add;
+					((Transform*)(*selectedEntity)["Transform"])->rotation = startRotation + add;
 				}
 			}
 		}
@@ -664,33 +666,33 @@ namespace Monocle
 				moveAxisLock = 2;
 		}
 
-		Vector2 diff = (Input::GetWorldMousePosition() - selectedEntity->position);
+		Vector2 diff = (Input::GetWorldMousePosition() - ((Transform*)(*selectedEntity)["Transform"])->position.xy());
 		float mag = diff.GetMagnitude();
 
-		Vector2 add = Vector2(SIGNOF(selectedEntity->scale.x), SIGNOF(selectedEntity->scale.y)) * (mag - moveStartMagnitude);
+		Vector2 add = Vector2(SIGNOF(((Transform*)(*selectedEntity)["Transform"])->scale.x), SIGNOF(((Transform*)(*selectedEntity)["Transform"])->scale.y)) * (mag - moveStartMagnitude);
 
 		//printf("mag: %f add: (%f, %f) scale: (%f, %f)\n", mag, add.x, add.y, selectedEntity->scale.x, selectedEntity->scale.y);
 
 		float scaleSpeed = 1.0f/moveStartMagnitude;
 
-		selectedEntity->scale = startScale + add * scaleSpeed;
+		((Transform*)(*selectedEntity)["Transform"])->scale = startScale + add * scaleSpeed;
 
-		selectedEntity->scale.x = MAX(selectedEntity->scale.x, 0.0f);
-		selectedEntity->scale.y = MAX(selectedEntity->scale.y, 0.0f);
+		((Transform*)(*selectedEntity)["Transform"])->scale.x = MAX(((Transform*)(*selectedEntity)["Transform"])->scale.x, 0.0f);
+		((Transform*)(*selectedEntity)["Transform"])->scale.y = MAX(((Transform*)(*selectedEntity)["Transform"])->scale.y, 0.0f);
 
 		switch(moveAxisLock)
 		{
 		case 1:
-			selectedEntity->scale.y = startScale.y;
+			((Transform*)(*selectedEntity)["Transform"])->scale.y = startScale.y;
 			break;
 		case 2:
-			selectedEntity->scale.x = startScale.x;
+			((Transform*)(*selectedEntity)["Transform"])->scale.x = startScale.x;
 			break;
 		}
 		
 		if (Input::IsKeyPressed(KEY_0))
 		{
-			selectedEntity->scale = Vector2::one;
+			((Transform*)(*selectedEntity)["Transform"])->scale = Vector2::one;
 			SetState(FTES_NONE);
 			return;
 		}
@@ -698,7 +700,7 @@ namespace Monocle
 		// cancel out of move by hitting escape or rmb
 		if (Input::IsKeyPressed(KEY_ESCAPE) || Input::IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
 		{
-			selectedEntity->scale = startScale;
+			((Transform*)(*selectedEntity)["Transform"])->scale = startScale;
 			SetState(FTES_NONE);
 			return;
 		}

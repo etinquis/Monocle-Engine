@@ -3,6 +3,7 @@
 
 #include "../MonocleToolkit.h"
 #include "../Assets.h"
+#include "Component/Entity/Transform.h"
 
 namespace Monocle
 {
@@ -121,8 +122,8 @@ namespace Monocle
 		//Graphics::SetBackgroundColor(Color::white);
         //Game::GetScene()->GetCamera()->position = Graphics::GetScreenCenter();
 
-		puppetEntity->position = Graphics::GetScreenCenter() + Vector2::down * 100;
-		puppetEntity->scale = Vector2::one * 0.75f;
+		((Transform*)(*puppetEntity)["Transform"])->position = Graphics::GetScreenCenter() + Vector2::down * 100;
+		((Transform*)(*puppetEntity)["Transform"])->scale = Vector2::one * 0.75f;
 		//Load("puppet.xml");
 		scene->Add(puppetEntity);
 

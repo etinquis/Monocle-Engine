@@ -43,7 +43,7 @@ namespace Monocle
 		Puppet *puppet;
 	};
 
-	class KeyFrame : public Transform
+	class KeyFrame : public Entity
 	{
 	public:
         KeyFrame(float time, const Entity &entity);

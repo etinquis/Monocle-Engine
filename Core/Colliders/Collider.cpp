@@ -8,6 +8,7 @@
 #include "../CollisionData.h"
 #include "../Macros.h"
 #include "../Component/Entity/Collidable.h"
+#include "../Component/Entity/Transform.h"
 
 namespace Monocle
 {
@@ -32,7 +33,7 @@ namespace Monocle
 	{
 		Entity *entity = GetEntity();
 		if (entity)
-			return entity->GetWorldPosition();
+			return ((Transform*)(*entity)["Transform"])->GetWorldPosition();
 		else
 			return Vector2();
 	}
@@ -332,8 +333,8 @@ namespace Monocle
 		{
 			if (prevNode && prevNode->variant != -1)
 			{
-				start = prevNode->GetWorldPosition();
-				end = node->GetWorldPosition();
+				start = ((Transform*)(*node)["Transform"])->GetWorldPosition();
+				end = ((Transform*)(*node)["Transform"])->GetWorldPosition();
 				if (a->IntersectsLine(start, end, b->radius, collisionData))
 				{
 					if (collisionData)

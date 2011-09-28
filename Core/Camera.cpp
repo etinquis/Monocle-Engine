@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Graphics.h"
+#include "Component/Entity/Transform.h"
 
 namespace Monocle
 {
@@ -24,24 +25,15 @@ namespace Monocle
 
 
 	Camera::Camera(const Camera& camera)
-		: Transform(camera), isVisible(camera.isVisible), frontLayer(camera.frontLayer), backLayer(camera.backLayer)
+		: isVisible(camera.isVisible), frontLayer(camera.frontLayer), backLayer(camera.backLayer)
 	{
 
 	}
 
 	Camera::Camera()
-		: Transform(), isVisible(true), frontLayer(-100), backLayer(100)
+		: isVisible(true), frontLayer(-100), backLayer(100)
 	{
-		position = Graphics::GetScreenCenter();
-	}
-
-	void Camera::ApplyMatrix()
-	{
-		//Graphics::IdentityMatrix();
-		Graphics::DefaultMatrix();
-		Graphics::Scale(scale);
-		Graphics::Translate(position * -1.0f);
-		Graphics::Rotate(rotation, 0, 0, 1);
+		((Transform*)(*this)["Transform"])->position = Graphics::GetScreenCenter();
 	}
 
 	void Camera::SetLayers(int backLayer, int frontLayer)

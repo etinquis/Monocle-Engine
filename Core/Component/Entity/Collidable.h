@@ -5,6 +5,8 @@
 #include <set>
 #include <string>
 
+#define MONOCLE_ENTITYCOMPONENT_COLLIDABLE "Collidable"
+
 namespace Monocle
 {
 	class Collider;
@@ -21,7 +23,7 @@ namespace Monocle
 		void Update();
 		void Unload();
 
-		std::string GetName() { return "Collidable"; }
+		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_COLLIDABLE; }
 
 		//! Check our collider against all entities that have "tag"
 		Collider* Collide(const std::string &tag, CollisionData *collisionData=NULL);

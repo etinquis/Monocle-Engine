@@ -1,6 +1,7 @@
 #include "FringeTile.h"
 #include "../Assets.h"
 #include "../Level/Level.h"
+#include "Component/Entity/Transform.h"
 
 #include <cstdio>
 
@@ -165,11 +166,11 @@ namespace Monocle
 			{
 				if (sprite->texture->repeatX)
 				{
-					sprite->textureScale.x = scale.x;
+					sprite->textureScale.x = ((Transform*)(*this)["Transform"])->scale.x;
 				}
 				if (sprite->texture->repeatY)
 				{
-					sprite->textureScale.y = scale.y;
+					sprite->textureScale.y = ((Transform*)(*this)["Transform"])->scale.y;
 				}
 			}
 

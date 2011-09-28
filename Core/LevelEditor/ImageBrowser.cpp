@@ -3,6 +3,8 @@
 #include "../MonocleToolkit.h"
 #include "../Graphics/Sprite.h"
 #include "../Game.h"
+#include "Component/Entity/Transform.h"
+#include "Camera.h"
 
 namespace Monocle
 {
@@ -27,12 +29,12 @@ namespace Monocle
 	{
 		Entity::Update();
 
-		Vector2 diff = Input::GetWorldMousePosition() - GetWorldPosition();//position - Graphics::GetScreenCenter();
+		Vector2 diff = Input::GetWorldMousePosition() - ((Transform*)(*this)["Transform"])->GetWorldPosition();//position - Graphics::GetScreenCenter();
 		float mag = (1.0f-(diff.GetMagnitude()/256.0f)) * 1.0f;
 		if (mag < 0.5f) mag = 0.5f;
 		if (mag > 1.25f) mag = 1.25f;
-		scale = Vector2::one * mag;
-		printf("scale %f, %f\n", scale.x, scale.y);
+		((Transform*)(*this)["Transform"])->scale = Vector2::one * mag;
+		printf("scale %f, %f\n", ((Transform*)(*this)["Transform"])->scale.x, ((Transform*)(*this)["Transform"])->scale.y);
 	}
 
 	/// IMAGE BROWSER
@@ -45,8 +47,8 @@ namespace Monocle
 
 	void ImageBrowser::Update()
 	{
-		scale = Game::GetScene()->GetCamera()->scale;
-		scale = Vector2(1/scale.x, 1/scale.y);
+		((Transform*)(*this)["Transform"])->scale = ((Transform*)(*Game::GetScene()->GetCamera())["Transform"])->scale;
+		((Transform*)(*this)["Transform"])->scale = Vector2(1/((Transform*)(*this)["Transform"])->scale.x, 1/((Transform*)(*this)["Transform"])->scale.y);
 
 		Entity::Update();
 
@@ -62,8 +64,8 @@ namespace Monocle
 				}
 			}
 
-			grid->position += Platform::mouseScroll * Vector2::down * 0.25f;
-			printf("position %f, %f\n", grid->position.x, grid->position.y);
+			((Transform*)(*grid)["Transform"])->position = Vector3( ((Transform*)(*grid)["Transform"])->position.xy() + (Platform::mouseScroll * Vector2::down * 0.25f));
+			printf("position %f, %f\n", ((Transform*)(*grid)["Transform"])->position.x, ((Transform*)(*grid)["Transform"])->position.y);
 		}
 	}
 
@@ -111,7 +113,7 @@ namespace Monocle
 		scene->Add(selectionImage);
 		selectionImage->SetParent(this);
 		//grid->Add(selectionImage);
-		selectionImage->position = Vector2(0.0f, selectionImageSize * selectionImages.size());
+		((Transform*)(*selectionImage)["Transform"])->position = Vector2(0.0f, selectionImageSize * selectionImages.size());
 		
 		selectionImages.push_back(selectionImage);
 

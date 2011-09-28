@@ -1,4 +1,5 @@
 #include "Puppet.h"
+#include "Component/Entity/Transform.h"
 
 #include <TinyXML/tinyxml.h>
 #include <Assets.h>
@@ -181,12 +182,12 @@ namespace Monocle
 	}
 
     KeyFrame::KeyFrame(float time, const Entity &entity)
-        : Transform(entity), time(time)
+        : time(time)
     {
     }
     
 	KeyFrame::KeyFrame()
-		: Transform(), easeType(EASE_LINEAR)
+		: easeType(EASE_LINEAR)
 	{
 	}
 
@@ -203,14 +204,14 @@ namespace Monocle
 
 	void KeyFrame::Save(FileNode *fileNode)
 	{
-		Transform::Save(fileNode);
+		//Transform::Save(fileNode);
 
 		fileNode->Write("time", time);
 	}
 
 	void KeyFrame::Load(FileNode *fileNode)
 	{
-		Transform::Load(fileNode);
+		//Transform::Load(fileNode);
 
 		fileNode->Read("time", time);
 	}
@@ -348,7 +349,7 @@ namespace Monocle
 				currentPartKeyFrames->GetKeyFrameForTime(currentTime, &prev, &next);
 				if (prev && !next)
 				{
-					currentPartKeyFrames->GetPart()->LerpTransform(prev, prev, 1.0f);
+					((Transform*)((*currentPartKeyFrames->GetPart())[MONOCLE_ENTITYCOMPONENT_TRANSFORM]))->LerpTransform( (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], 1.0f);
 				}
 				else if (prev && next)
 				{
@@ -357,7 +358,7 @@ namespace Monocle
                     
 					//printf("LerpTransform %f\n", p);
 					// adjust p by ease
-					currentPartKeyFrames->GetPart()->LerpTransform(prev, next, Tween::Ease(p, EASE_INOUTSIN));//prev->easeType));
+					((Transform*)((*currentPartKeyFrames->GetPart())[MONOCLE_ENTITYCOMPONENT_TRANSFORM]))->LerpTransform( (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], (Transform*)(*next)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], Tween::Ease(p, EASE_INOUTSIN));
 				}
 			}
 		}

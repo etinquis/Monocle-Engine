@@ -5,7 +5,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Camera.h"
 #include "Entities.h"
 
 ///TODO: Replace with xml wrapper
@@ -15,6 +14,8 @@ namespace Monocle
 {
 	class Game;
 	class Entity;
+	class Camera;
+	class FileNode;
 
 	//enum SearchType
 	//{
@@ -60,9 +61,9 @@ namespace Monocle
 			Add(t);
 			if (parent)
 				t->SetParent(parent);
-			t->position = position;
-			t->rotation = rotation;
-			t->scale = scale;
+			((Transform*)(*t)["Transform"])->position = position;
+			((Transform*)(*t)["Transform"])->rotation = rotation;
+			((Transform*)(*t)["Transform"])->scale = scale;
 			return t;
 		}
 

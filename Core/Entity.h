@@ -4,7 +4,6 @@
 #include "Scene.h"
 #include "Color.h"
 #include "FileNode.h"
-#include "Transform.h"
 
 #include "Component/EntityComponent.h"
 
@@ -24,7 +23,6 @@ namespace Monocle
 	class Graphics;
 	class Graphic;
 	class CollisionData;
-    class Camera;
 
 	class InvokeData
 	{
@@ -66,7 +64,7 @@ namespace Monocle
 	//!
 	//!		Add(new Player)
 	//!
-	class Entity : public Transform
+	class Entity
 	{
 	public:
 		Entity();
@@ -101,7 +99,7 @@ namespace Monocle
 		virtual void Destroyed();
         
         //! Called to determine if the entity should be drawn
-        virtual bool IsOnCamera( Camera *camera );
+        //virtual bool IsOnCamera( Camera *camera );
 
 		//! Associates this entity with the given tag
 		//void AddTag(const std::string& tag, bool save=false);
@@ -150,12 +148,10 @@ namespace Monocle
 		// used by editors
 		bool IsPositionInGraphic(const Vector2 &position);
 		
-		Vector2 GetWorldPosition(const Vector2 &position=Vector2::zero);
 		Vector2 GetWorldScale(const Vector2 &scale);
 		Vector2 GetLocalPosition(const Vector2 &worldPosition);
 		void Invoke(void (*functionPointer)(void*), float delay);
 
-		float depth;
 		bool isVisible;
 		Vector2 followCamera;
 
@@ -172,7 +168,6 @@ namespace Monocle
 
 		bool isEnabled;
 
-		void ApplyMatrix();
 		void MatrixChain();
 
 	private:
