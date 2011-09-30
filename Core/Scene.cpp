@@ -12,7 +12,7 @@ namespace Monocle
 		: isVisible(true), isPaused(false), activeCamera(NULL), mainCamera(NULL)
 	{
 		Camera *camera = new Camera();
-		((Transform*)(*camera)["Transform"])->position = Vector3(Graphics::GetScreenCenter(), 0);
+		((Transform*)(*camera)["Transform"])->position = Graphics::GetScreenCenter();
 		AddCamera(camera);
 		SetMainCamera(camera);
 	}
@@ -83,7 +83,7 @@ namespace Monocle
 				{
 					// set viewport
 
-					activeCamera->ApplyMatrix();
+					//activeCamera->ApplyMatrix();
 
 					///HACK: optimize later so we don't run through all the layers
 					// TODO sort entities into layer buckets? or one big sorted list?
@@ -92,13 +92,13 @@ namespace Monocle
 					{
 						for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 						{
-							if ((*i)->isVisible && (*i)->IsLayer(layer))
-							{
+							/*if ((*i)->isVisible && (*i)->IsLayer(layer))
+							{*/
 //                                if ((*i)->IsOnCamera(activeCamera)){
                                     (*i)->Render();
                                     entitiesDrawn++;
 //                                }
-							}
+							//}
 						}
 					}
 				}
@@ -317,7 +317,7 @@ namespace Monocle
 		{
 			if ((*i) != ignoreEntity)
 			{
-				Vector2 diff = ((Transform *)(**i)["Transform"])->position.xy() - position;
+				Vector2 diff = ((Transform *)(**i)["Transform"])->position - position;
 				float sqrMag = diff.GetSquaredMagnitude();
 				if (smallestSqrMag <= -1 || sqrMag < smallestSqrMag)
 				{
@@ -424,10 +424,10 @@ namespace Monocle
 	{
 		for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 		{
-			if ((*i)->IsPositionInGraphic(position))
+			/*if ((*i)->IsPositionInGraphic(position))
 			{
 				return *i;
-			}
+			}*/
 		}
 		//if (searchType == SEARCH_TOP)
 		//{

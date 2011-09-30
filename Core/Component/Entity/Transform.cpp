@@ -1,11 +1,12 @@
 #include "Transform.h"
 #include "../../MonocleToolkit.h"
 #include "../../Graphics.h"
+#include "../../File/FileNode.h"
 
 namespace Monocle
 {
 	Transform::Transform() 
-		: EntityComponent(), position(Vector3::zero), rotation(0.0f), scale(Vector2::one)
+		: EntityComponent(), position(Vector2::zero), rotation(0.0f), scale(Vector2::one)
 	{
 	}
 
@@ -14,6 +15,11 @@ namespace Monocle
 	{
 	}
     
+	void Transform::Update()
+	{
+
+	}
+
     Vector2 Transform::GetDirectionVector()
     {
         return Vector2(sin(rotation*pi / 180.0),cos(rotation*pi / 180.0)*-1.0);
@@ -22,7 +28,7 @@ namespace Monocle
 	void Transform::ApplyMatrix()
 	{
 		//if (followCamera == Vector2::zero /*|| (Debug::render && Debug::selectedEntity != this && IsDebugLayer())*/)
-			Graphics::Translate(position.x, position.y, position.z);
+			Graphics::Translate(position.x, position.y, 0);
 		//else
 		//{
 			/*Camera *camera = scene->GetActiveCamera();
@@ -41,7 +47,7 @@ namespace Monocle
 
 	void Transform::LerpTransform(Transform *prev, Transform *next, float percent)
 	{
-		position = Vector3(next->position.xy()*percent + prev->position.xy()*(1.0f - percent), position.z);
+		position = next->position*percent + prev->position*(1.0f - percent);
 		rotation = next->rotation*percent + prev->rotation*(1.0f - percent);
 		scale = next->scale*percent + prev->scale*(1.0f-percent);
 	}
@@ -50,7 +56,7 @@ namespace Monocle
 	{
 		Vector2 returnPos;
         
-        if (this->position.xy() == lastPositionWhenCached)
+        if (this->position == lastPositionWhenCached)
             return this->cachedWorldPosition;
 
 		Graphics::PushMatrix();
@@ -63,8 +69,22 @@ namespace Monocle
 		Graphics::PopMatrix();
 
         this->cachedWorldPosition = returnPos;
-        this->lastPositionWhenCached = this->position.xy();
+        this->lastPositionWhenCached = this->position;
         
 		return returnPos;
+	}
+
+	void Transform::Save(FileNode *myNode)
+	{
+		myNode->Write("position", position);
+		myNode->Write("rotation", rotation);
+		myNode->Write("scale", scale);
+	}
+
+	void Transform::Load(FileNode *myNode)
+	{
+		myNode->Read("position", position);
+		myNode->Read("rotation", rotation);
+		myNode->Read("scale", scale);
 	}
 }

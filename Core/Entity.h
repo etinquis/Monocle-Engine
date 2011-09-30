@@ -3,7 +3,6 @@
 #include "Vector2.h"
 #include "Scene.h"
 #include "Color.h"
-#include "FileNode.h"
 
 #include "Component/EntityComponent.h"
 
@@ -23,6 +22,7 @@ namespace Monocle
 	class Graphics;
 	class Graphic;
 	class CollisionData;
+	class FileNode;
 
 	class InvokeData
 	{
@@ -126,7 +126,7 @@ namespace Monocle
 		//! is our layer number in the debug render range?
 		bool IsDebugLayer();
 
-		void SetGraphic(Graphic *graphic);
+		//void SetGraphic(Graphic *graphic);
 
 		//! set parent entity
 		void SetParent(Entity *parent);
@@ -146,16 +146,16 @@ namespace Monocle
 		}
 
 		// used by editors
-		bool IsPositionInGraphic(const Vector2 &position);
+		//bool IsPositionInGraphic(const Vector2 &position);
 		
 		Vector2 GetWorldScale(const Vector2 &scale);
 		Vector2 GetLocalPosition(const Vector2 &worldPosition);
-		void Invoke(void (*functionPointer)(void*), float delay);
+		//void Invoke(void (*functionPointer)(void*), float delay);
 
-		bool isVisible;
-		Vector2 followCamera;
+		//bool isVisible;
+		//Vector2 followCamera;
 
-		Color color;
+		//Color color;
 
 		EntityComponent* operator[](std::string component_name);
 	protected:
@@ -168,7 +168,7 @@ namespace Monocle
 
 		bool isEnabled;
 
-		void MatrixChain();
+		//void MatrixChain();
 
 	private:
 		int id;

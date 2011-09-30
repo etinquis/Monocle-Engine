@@ -1,6 +1,5 @@
 #include "TextureAtlas.h"
 
-#include <XML/XMLFileNode.h>
 #include <TinyXML/tinyxml.h>
 
 #include <sstream>
@@ -89,7 +88,7 @@ namespace Monocle
 
 	void TextureAtlas::Save(TiXmlDocument *document)
 	{
-		TiXmlElement xmlTextureAtlas("TextureAtlas");
+		/*TiXmlElement xmlTextureAtlas("TextureAtlas");
 
 		XMLFileNode xmlOut(&xmlTextureAtlas);
 		xmlOut.Write("image", image);
@@ -108,12 +107,12 @@ namespace Monocle
 			xmlTextureAtlas.InsertEndChild(xmlAtlasEntry);
 		}
 
-		document->InsertEndChild(xmlTextureAtlas);
+		document->InsertEndChild(xmlTextureAtlas);*/
 	}
 
 	void TextureAtlas::Load(TiXmlElement *element)
 	{
-		XMLFileNode xmlFileNodeTextureAtlas(element);
+		/*XMLFileNode xmlFileNodeTextureAtlas(element);
 		xmlFileNodeTextureAtlas.Read("image", image);
 		xmlFileNodeTextureAtlas.Read("width", width);
 		xmlFileNodeTextureAtlas.Read("height", height);
@@ -130,7 +129,7 @@ namespace Monocle
 				entries[textureAtlasEntry->name] = textureAtlasEntry;
 
 			xmlAtlasEntry = xmlAtlasEntry->NextSiblingElement("TextureAtlasEntry");
-		}
+		}*/
 	}
 
 	std::string TextureAtlas::GetImageName()

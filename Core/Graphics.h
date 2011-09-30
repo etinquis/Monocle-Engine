@@ -38,19 +38,6 @@ namespace Monocle
         TEXTALIGN_RIGHT,
     };
 
-	//! Base class for graphic types that may be attached to and rendered with entities.
-	class Graphic
-	{
-	public:
-		Graphic() : rotation(0.0f)
-		{}
-		Vector2 position;
-		float rotation;
-		virtual void Update()=0;
-		virtual void Render(Entity *entity)=0;
-		virtual void GetWidthHeight(float *width, float *height)=0;
-	};
-
 	//! \brief Static class responsble for rendering to the screen.
 	//! \remark This class is meant to be generic enough so as to allow it to serve as
 	//! an interface to several different rendering engines.

@@ -2,6 +2,7 @@
 #include "../../Collision.h"
 #include "../../CollisionData.h"
 #include "../../Debug.h"
+#include "../../File/FileNode.h"
 
 namespace Monocle
 {
@@ -80,5 +81,15 @@ namespace Monocle
 	Collidable *Collidable::Clone() const
 	{
 		return new Collidable(*this);
+	}
+
+	void Collidable::Save(FileNode *myNode)
+	{
+		
+	}
+
+	void Collidable::Load(FileNode *myNode)
+	{
+
 	}
 }

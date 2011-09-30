@@ -82,11 +82,8 @@ namespace Monocle
 			Graphics::BindTexture(texture);
 			Graphics::PushMatrix();
 
-			if (followCamera == Vector2::zero)
-				Graphics::Translate(((Transform*)(*this)["Transform"])->position.x, ((Transform*)(*this)["Transform"])->position.y, ((Transform*)(*this)["Transform"])->position.z);
-			else
-				Graphics::Translate(((Transform*)(*scene->GetCamera())["Transform"])->position.xy() * followCamera + ((Transform*)(*this)["Transform"])->position.xy() * (Vector2::one - followCamera));
-
+			Graphics::Translate(((Transform*)(*this)["Transform"])->position.x, ((Transform*)(*this)["Transform"])->position.y, /*depth*/ 0);
+			
 			Graphics::Rotate(((Transform*)(*this)["Transform"])->rotation, 0, 0, 1);
 			Graphics::Scale(((Transform*)(*this)["Transform"])->scale);
 
@@ -111,7 +108,7 @@ namespace Monocle
 
 	void PathMesh::Save(FileNode *fileNode)
 	{
-		Entity::Save(fileNode);
+		/*Entity::Save(fileNode);
 
 		fileNode->Write("cells", cells);
 		fileNode->Write("size", size);
@@ -130,73 +127,73 @@ namespace Monocle
 		{
 			fileNode->SaveChildNode("Node", curNode);
 			curNode = curNode->GetNext();
-		}
+		}*/
 	}
 
 	void PathMesh::Load(FileNode *fileNode)
 	{
-		Entity::Load(fileNode);
+		//Entity::Load(fileNode);
 
-		fileNode->Read("cells", cells);
-		fileNode->Read("size", size);
-		
-		std::string image;
-		fileNode->Read("image", image);
+		//fileNode->Read("cells", cells);
+		//fileNode->Read("size", size);
+		//
+		//std::string image;
+		//fileNode->Read("image", image);
 
-		float radius = 0.0f;
-		fileNode->Read("radius", radius);
+		//float radius = 0.0f;
+		//fileNode->Read("radius", radius);
 
-		fileNode->Read("flipX", flipX);
-		fileNode->Read("flipY", flipY);
+		//fileNode->Read("flipX", flipX);
+		//fileNode->Read("flipY", flipY);
 
-		if (texture)
-		{
-			texture->RemoveReference();
-			texture = NULL;
-		}
-
-		if (!image.empty())
-			texture = Assets::RequestTexture(image);
-
-		startNode = NULL;
-		//startNode = GetFirstChildOfType<Node>();
-		Node *lastNode = NULL;
-		Node *firstNode = NULL;
-
-		FileNode *curNode = fileNode->FirstChildNode("Node");
-		while (curNode)
-		{
-			Node *newNode = scene->Create<Node>();
-			newNode->Load(curNode);
-			
-			if (firstNode == NULL)
-				firstNode = newNode;
-			if (lastNode)
-				lastNode->SetNext(newNode);
-			lastNode = newNode;
-
-			newNode->SetParent(this);
-
-			curNode = fileNode->NextChildNode("Node");
-		}
-
-		startNode = firstNode;
-
-		//for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		//if (texture)
 		//{
-		//	Node *node = dynamic_cast<Node*>(*i);
-		//	if (node)
-		//	{
-		//		if (!startNode)
-		//			startNode = node;
-		//		if (lastNode)
-		//		{
-		//			lastNode->SetNext(node);
-		//		}
-		//		lastNode = node;
-		//	}
+		//	texture->RemoveReference();
+		//	texture = NULL;
 		//}
 
-		MakeCollision(radius);
+		//if (!image.empty())
+		//	texture = Assets::RequestTexture(image);
+
+		//startNode = NULL;
+		////startNode = GetFirstChildOfType<Node>();
+		//Node *lastNode = NULL;
+		//Node *firstNode = NULL;
+
+		//FileNode *curNode = fileNode->FirstChildNode("Node");
+		//while (curNode)
+		//{
+		//	Node *newNode = scene->Create<Node>();
+		//	newNode->Load(curNode);
+		//	
+		//	if (firstNode == NULL)
+		//		firstNode = newNode;
+		//	if (lastNode)
+		//		lastNode->SetNext(newNode);
+		//	lastNode = newNode;
+
+		//	newNode->SetParent(this);
+
+		//	curNode = fileNode->NextChildNode("Node");
+		//}
+
+		//startNode = firstNode;
+
+		////for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
+		////{
+		////	Node *node = dynamic_cast<Node*>(*i);
+		////	if (node)
+		////	{
+		////		if (!startNode)
+		////			startNode = node;
+		////		if (lastNode)
+		////		{
+		////			lastNode->SetNext(node);
+		////		}
+		////		lastNode = node;
+		////	}
+		////}
+
+		//MakeCollision(radius);
 	}
 }

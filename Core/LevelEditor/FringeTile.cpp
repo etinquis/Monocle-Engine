@@ -2,6 +2,8 @@
 #include "../Assets.h"
 #include "../Level/Level.h"
 #include "Component/Entity/Transform.h"
+#include "Component/Entity/Sprite.h"
+#include "../File/FileNode.h"
 
 #include <cstdio>
 
@@ -68,43 +70,21 @@ namespace Monocle
 	}
 
 	FringeTile::FringeTile()
-		: Entity(), tileID(0), sprite(NULL)
+		: Entity(), tileID(0)
 	{
-		//AddTag("FringeTile");
-		sprite = new Sprite();
-		SetGraphic(sprite);
-
-		//RefreshTexture();
+		AddComponent<Sprite>();
 	}
 
 	FringeTile::FringeTile(const FringeTile &fringeTile)
-		: Entity(fringeTile), tileID(fringeTile.tileID), sprite(NULL)
+		: Entity(fringeTile), tileID(fringeTile.tileID)
 	{
-		//AddTag("FringeTile");
-		sprite = new Sprite();
-		sprite->blend = fringeTile.sprite->blend;
-		SetGraphic(sprite);
 		
-		RefreshTexture();
 	}
 
-	Entity* FringeTile::Clone()
+	FringeTile* FringeTile::Clone()
 	{
 		return new FringeTile(*this);
 	}
-
-	/*
-	FringeTile::FringeTile(int tileID)
-		: Entity(), tileID(tileID), sprite(NULL)
-	{
-		AddTag("FringeTile");
-
-		sprite = new Sprite();
-		SetGraphic(sprite);
-
-		RefreshTexture();
-	}
-	*/
 	
 	void FringeTile::SetTileID(int tileID)
 	{
@@ -138,16 +118,16 @@ namespace Monocle
 
 	void FringeTile::NextBlend()
 	{
-		int spriteBlend = (int)sprite->blend;
+		int spriteBlend = (int)((Sprite*)(*this)["Sprite"])->blend;
 		spriteBlend++;
-		sprite->blend = (BlendType)spriteBlend;
+		((Sprite*)(*this)["Sprite"])->blend = (BlendType)spriteBlend;
 	}
 
 	void FringeTile::PrevBlend()
 	{
-		int spriteBlend = (int)sprite->blend;
+		int spriteBlend = (int)((Sprite*)(*this)["Sprite"])->blend;
 		spriteBlend--;
-		sprite->blend = (BlendType)spriteBlend;
+		((Sprite*)(*this)["Sprite"])->blend = (BlendType)spriteBlend;
 	}
 
 	void FringeTile::Update()
@@ -159,18 +139,18 @@ namespace Monocle
 
 	void FringeTile::RefreshScale()
 	{
-		if (sprite->texture && (sprite->texture->repeatX || sprite->texture->repeatY))
+		if (((Sprite*)(*this)["Sprite"])->texture && (((Sprite*)(*this)["Sprite"])->texture->repeatX || ((Sprite*)(*this)["Sprite"])->texture->repeatY))
 		{
 			const FringeTileData *fringeTileData = Level::GetCurrentFringeTileset()->GetFringeTileDataByID(tileID);
 			if (fringeTileData->autoTile)
 			{
-				if (sprite->texture->repeatX)
+				if (((Sprite*)(*this)["Sprite"])->texture->repeatX)
 				{
-					sprite->textureScale.x = ((Transform*)(*this)["Transform"])->scale.x;
+					((Sprite*)(*this)["Sprite"])->textureScale.x = ((Transform*)(*this)["Transform"])->scale.x;
 				}
-				if (sprite->texture->repeatY)
+				if (((Sprite*)(*this)["Sprite"])->texture->repeatY)
 				{
-					sprite->textureScale.y = ((Transform*)(*this)["Transform"])->scale.y;
+					((Sprite*)(*this)["Sprite"])->textureScale.y = ((Transform*)(*this)["Transform"])->scale.y;
 				}
 			}
 
@@ -182,35 +162,35 @@ namespace Monocle
 		//printf("RefreshTexture to tileID: %d\n", tileID);
 
 		// free old texture here somehow:
-		if (sprite->texture)
+		if (((Sprite*)(*this)["Sprite"])->texture)
 		{
-			sprite->texture->RemoveReference();
-			sprite->texture = NULL;
+			((Sprite*)(*this)["Sprite"])->texture->RemoveReference();
+			((Sprite*)(*this)["Sprite"])->texture = NULL;
 		}
 
 		const FringeTileData *fringeTileData = Level::GetCurrentFringeTileset()->GetFringeTileDataByID(tileID);
 		if (fringeTileData)
 		{
-			sprite->texture = Assets::RequestTexture(fringeTileData->imageFilename, fringeTileData->filter, fringeTileData->repeatX, fringeTileData->repeatY);
-			if (fringeTileData->width == -1 && fringeTileData->height == -1 && sprite->texture)
+			((Sprite*)(*this)["Sprite"])->texture = Assets::RequestTexture(fringeTileData->imageFilename, fringeTileData->filter, fringeTileData->repeatX, fringeTileData->repeatY);
+			if (fringeTileData->width == -1 && fringeTileData->height == -1 && ((Sprite*)(*this)["Sprite"])->texture)
 			{
-				sprite->width = sprite->texture->width;
-				sprite->height = sprite->texture->height;
+				((Sprite*)(*this)["Sprite"])->width = ((Sprite*)(*this)["Sprite"])->texture->width;
+				((Sprite*)(*this)["Sprite"])->height = ((Sprite*)(*this)["Sprite"])->texture->height;
 			}
 			else
 			{
-				sprite->width = fringeTileData->width;
-				sprite->height = fringeTileData->height;
+				((Sprite*)(*this)["Sprite"])->width = fringeTileData->width;
+				((Sprite*)(*this)["Sprite"])->height = fringeTileData->height;
 			}
 
-			if (sprite->texture && (sprite->texture->repeatX || sprite->texture->repeatY))
+			if (((Sprite*)(*this)["Sprite"])->texture && (((Sprite*)(*this)["Sprite"])->texture->repeatX || ((Sprite*)(*this)["Sprite"])->texture->repeatY))
 			{
 				RefreshScale();
 			}
 			else if (fringeTileData->atlasX != 0 || fringeTileData->atlasW != 0 || fringeTileData->atlasY != 0 || fringeTileData->atlasH != 0)
 			{
-				sprite->textureOffset = Vector2(fringeTileData->atlasX / (float)sprite->texture->width, fringeTileData->atlasY / (float)sprite->texture->height);
-				sprite->textureScale = Vector2(fringeTileData->atlasW / (float)sprite->texture->width, fringeTileData->atlasH / (float)sprite->texture->height);
+				((Sprite*)(*this)["Sprite"])->textureOffset = Vector2(fringeTileData->atlasX / (float)((Sprite*)(*this)["Sprite"])->texture->width, fringeTileData->atlasY / (float)((Sprite*)(*this)["Sprite"])->texture->height);
+				((Sprite*)(*this)["Sprite"])->textureScale = Vector2(fringeTileData->atlasW / (float)((Sprite*)(*this)["Sprite"])->texture->width, fringeTileData->atlasH / (float)((Sprite*)(*this)["Sprite"])->texture->height);
 			}
 		}
 	}
@@ -219,8 +199,8 @@ namespace Monocle
 	{
 		Entity::Save(fileNode);
 		fileNode->Write("tileID", tileID);
-		if (sprite->blend != BLEND_ALPHA)
-			fileNode->Write("blend", (int)sprite->blend);
+		if (((Sprite*)(*this)["Sprite"])->blend != BLEND_ALPHA)
+			fileNode->Write("blend", (int)((Sprite*)(*this)["Sprite"])->blend);
 	}
 
 	void FringeTile::Load(FileNode *fileNode)
@@ -231,7 +211,7 @@ namespace Monocle
 
 		int spriteBlend = BLEND_ALPHA;
 		fileNode->Read("blend", spriteBlend);
-		sprite->blend = (BlendType)spriteBlend;
+		((Sprite*)(*this)["Sprite"])->blend = (BlendType)spriteBlend;
 
 		RefreshTexture();
 	}

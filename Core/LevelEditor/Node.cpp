@@ -22,7 +22,7 @@ namespace Monocle
 	Node::Node(const Vector2 &position)
 		: Entity(),next(NULL), prev(NULL), variant(0)//, isIgnored(false)
 	{
-		((Transform*)(*this)["Transform"])->position = Vector3(position,0);
+		((Transform*)(*this)["Transform"])->position = position;
 	}
 
 	Entity* Node::Clone()
@@ -96,16 +96,16 @@ namespace Monocle
 			PathMesh *pathMesh = dynamic_cast<PathMesh*>(GetParent());
 			if (pathMesh)
 			{
-				Color color = pathMesh->color;
-				color.a = 1;
-				if (variant == -1)
-				{
-					Graphics::SetColor(color * 0.5f);
-				}
-				else
-				{
-					Graphics::SetColor(pathMesh->color);
-				}
+				//Color color = pathMesh->color;
+				//color.a = 1;
+				//if (variant == -1)
+				//{
+				//	Graphics::SetColor(color * 0.5f);
+				//}
+				//else
+				//{
+				//	//Graphics::SetColor(pathMesh->color);
+				//}
 			}
 
 
@@ -154,8 +154,8 @@ namespace Monocle
 	{
 		Entity::Save(fileNode);
 
-		if (variant != 0)
-			fileNode->Write("variant", variant);
+		//if (variant != 0)
+		//	fileNode->Write("variant", variant);
 		/*
 		if (radius != 0)
 			fileNode->Write("radius", radius);
@@ -166,7 +166,7 @@ namespace Monocle
 	{
 		Entity::Load(fileNode);
 
-		fileNode->Read("variant", variant);
+		//fileNode->Read("variant", variant);
 		//fileNode->Read("radius", radius);
 	}
 

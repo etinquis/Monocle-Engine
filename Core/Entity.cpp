@@ -2,7 +2,7 @@
 #include "Entity.h"
 #include "Collision.h"
 #include "Graphics.h"
-#include "FileNode.h"
+#include "File/FileNode.h"
 #include "MonocleToolkit.h"
 #include <sstream>
 #include <iostream>
@@ -50,7 +50,7 @@ namespace Monocle
 	///=====
 
 	Entity::Entity(const Entity &entity)
-		: isEnabled(true), followCamera(entity.followCamera), scene(NULL), graphic(NULL), parent(NULL), isVisible(entity.isVisible), color(entity.color), layer(entity.layer)//, tags(entity.tags)
+		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(entity.layer)//, tags(entity.tags)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
@@ -68,7 +68,7 @@ namespace Monocle
 	}
 
 	Entity::Entity()
-		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(0), color(Color::white), isVisible(true)
+		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(0)
 		//, willDie(false)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
@@ -139,10 +139,10 @@ namespace Monocle
 			}
 		}
 
-		if (graphic)
+		/*if (graphic)
 		{
 			graphic->Update();
-		}
+		}*/
 
 		for (std::list<InvokeData*>::iterator i = removeInvokes.begin(); i != removeInvokes.end(); ++i)
 		{
@@ -177,13 +177,18 @@ namespace Monocle
 	{
         Graphics::PushMatrix();
 
-		MatrixChain();
+		for(std::map< std::string, EntityComponent* >::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->Render();
+		}
 
-		if (graphic != NULL)
+		//MatrixChain();
+
+		/*if (graphic != NULL)
 		{
 			Graphics::SetColor(color);
 			graphic->Render(this);
-		}
+		}*/
         
         Graphics::PopMatrix();
 		
@@ -339,23 +344,6 @@ namespace Monocle
 	}
 	*/
 
-	void Entity::SetGraphic(Graphic *graphic)
-	{
-		// not sure if we want this yet, sets our graphic's entity pointer to NULL
-		// if we're about to set the graphic pointer to NULL
-		if (graphic == NULL && this->graphic != NULL)
-		{
-			//this->graphic->entity = NULL;
-		}
-
-		if (this->graphic != NULL)
-		{
-			Debug::Log("Note: Entity already has a graphic.");
-		}
-
-		this->graphic = graphic;
-	}
-
 	Graphic* Entity::GetGraphic()
 	{
 		return graphic;
@@ -398,7 +386,7 @@ namespace Monocle
 //		return true;
 //    }
 
-	bool Entity::IsPositionInGraphic(const Vector2 &point)
+	/*bool Entity::IsPositionInGraphic(const Vector2 &point)
 	{
 		Graphic* graphic = GetGraphic();
 		if (graphic != NULL)
@@ -411,7 +399,7 @@ namespace Monocle
 			return (point.x > ul.x && point.x < lr.x && point.y > ul.y && point.y < lr.y);
 		}
 		return false;
-	}
+	}*/
 
 	//void Entity::MatrixChain()
 	//{
@@ -456,7 +444,7 @@ namespace Monocle
 		{
 			Graphics::Scale(1.0f/((Transform*)(**i)["Transform"])->scale);
 			Graphics::Rotate(-((Transform*)(**i)["Transform"])->rotation, 0, 0, 1);
-			Graphics::Translate(-((Transform*)(**i)["Transform"])->position.xy());
+			Graphics::Translate(-((Transform*)(**i)["Transform"])->position);
 		}
 
 		returnPos = Graphics::GetMatrixPosition();
@@ -486,11 +474,11 @@ namespace Monocle
 	{
 		//Transform::Save(fileNode);
 
-		if (layer != 0)
-			fileNode->Write("layer", layer);
-		if (color != Color::white)
-			fileNode->Write("color", color);
-		if (tags.size() != 0)
+		//if (layer != 0)
+		//	fileNode->Write("layer", layer);
+		/*if (color != Color::white)
+			fileNode->Write("color", color);*/
+		/*if (tags.size() != 0)
 		{
 			std::ostringstream os;
 			for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
@@ -503,19 +491,30 @@ namespace Monocle
 			{
 				fileNode->Write("tags", os.str());
 			}
+		}*/
+		/*if (followCamera != Vector2::zero)
+			fileNode->Write("followCamera", followCamera);*/
+
+		FileNode *node = fileNode->InsertEndChildNode("entity");
+
+		for(std::map<std::string, EntityComponent*>::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->SaveTo(node);
 		}
-		if (followCamera != Vector2::zero)
-			fileNode->Write("followCamera", followCamera);
 	}
 
 	void Entity::Load(FileNode *fileNode)
 	{
 		//Transform::Load(fileNode);
 
-		int newLayer =0;
-		fileNode->Read("layer", newLayer);
-		SetLayer(newLayer);
-		fileNode->Read("color", color);
+		FileNode *node = fileNode->GetChild("entity");
+
+		for(std::map<std::string, EntityComponent*>::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->LoadFrom(node);
+		}
+
+		/*fileNode->Read("color", color);*/
 		/*std::string tags;
 		fileNode->Read("tags", tags);
 		if (tags.size() > 0)
@@ -527,7 +526,7 @@ namespace Monocle
 				AddTag(tag, true);
 			}
 		}*/
-		fileNode->Read("followCamera", followCamera);
+		/*fileNode->Read("followCamera", followCamera);*/
 	}
 
 	void Entity::SetParent(Entity *parent)
@@ -585,10 +584,10 @@ namespace Monocle
 	//}
 
 	
-	void Entity::Invoke(void (*functionPointer)(void*), float delay)
+	/*void Entity::Invoke(void (*functionPointer)(void*), float delay)
 	{
 		invokes.push_back(new InvokeData((void*)this, functionPointer, delay));
-	}
+	}*/
 
 	/*
 	void Entity::Die()

@@ -26,7 +26,7 @@ namespace Monocle
 		Camera(const Camera& camera);
 
         //! Applies the position translation, scale, and rotation of this camera to the graphics context.
-		void ApplyMatrix();
+		//void ApplyMatrix();
 
         //! Sets the layers that this camera can see.
         //! \param backLayer The deepest layer in this camera's vision

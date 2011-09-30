@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Monocle
 {
 	//!
@@ -69,6 +71,8 @@ namespace Monocle
 		Vector2& operator*=(float rhs);				// scalar multiplication
 		Vector2& operator/=(float rhs);				// scalar inverse multiplication
 
+		friend std::ostream &operator<<(std::ostream& os, Vector2 vec);
+		friend std::istream &operator>>(std::istream& os, Vector2 &vec);
 	};
 
 	Vector2 operator+(const Vector2& lhs, const Vector2& rhs);	

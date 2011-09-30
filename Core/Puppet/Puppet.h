@@ -3,7 +3,7 @@
 #include <list>
 #include "../Entity.h"
 #include "../Tween.h"
-#include "../Graphics/Sprite.h"
+#include "Component/Entity/Sprite.h"
 
 class TiXmlElement;
 
@@ -30,8 +30,6 @@ namespace Monocle
 		void Save(FileNode *fileNode);
 		void Load(FileNode *fileNode);
 
-		Sprite *GetSprite();
-
 		std::list<Part*> parts;
 
 	private:
@@ -39,7 +37,6 @@ namespace Monocle
 		int id;
 		std::string atlasEntry;
 		std::string name;
-		Sprite *sprite;
 		Puppet *puppet;
 	};
 
@@ -124,19 +121,26 @@ namespace Monocle
 
 	class TextureAtlas;
 	
-	class Puppet
+	class Puppet : public EntityComponent
 	{
 	public:
 		Puppet();
 		~Puppet();
 
+		std::string GetName() { return "Puppet"; }
+		Puppet *Clone() const { return new Puppet(*this); }
+
 		void Save();
 		void Load(const std::string &filename, Entity *entity);
+		//void Load(FileNode *node);
 
 		void Play(const std::string &animationName, bool isLooping=true);
 		void Stop();
 		void Pause();
 		void Resume();
+
+		virtual void Save(FileNode *myNode);
+		virtual void Load(FileNode *myNode);
 
 		void TogglePause();
 

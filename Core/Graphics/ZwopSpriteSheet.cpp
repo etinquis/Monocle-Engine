@@ -3,7 +3,6 @@
 #include "Assets.h"
 #include "TextureAsset.h"
 
-#include <XML/XMLFileNode.h>
 #include <TinyXML/tinyxml.h>
 
 #include <sstream>
@@ -29,13 +28,13 @@ namespace Monocle
         // This is <Sprite>
         // <Sprite name="tree.png" size="{64, 116}" sourcesize="{64, 128}" rect="{{2, 2}, {64, 116}}" />
         
-        XMLFileNode zwopSprite(element);
+        /*XMLFileNode zwopSprite(element);
         zwopSprite.Read("name",name);
         size = ZwopSpriteSheet::XMLToVector(&zwopSprite,"size");
         sourceSize = ZwopSpriteSheet::XMLToVector(&zwopSprite,"sourceSize");
         rect = ZwopSpriteSheet::XMLToRect(&zwopSprite,"rect");
         colorRect = ZwopSpriteSheet::XMLToRect(&zwopSprite, "colorRect");
-        spriteOffset = ZwopSpriteSheet::XMLToVector(&zwopSprite, "offset");
+        spriteOffset = ZwopSpriteSheet::XMLToVector(&zwopSprite, "offset");*/
     } 
     
     Rect ZwopSprite::GetColorRect()
@@ -91,88 +90,90 @@ namespace Monocle
     
     Vector2 ZwopSpriteSheet::XMLToVector( XMLFileNode *node, std::string key )
     {
-        std::string instr;
-        node->Read(key,instr);
-        std::istringstream read(instr);
-        
-        // {64, 64}
-        int x,y;
-        char br;
-        read >> br;
-        
-        assert(br == '{');
-        
-        read >> x;
-        
-        read >> br;
-        
-        assert(br == ',');
-        
-        read >> y;
-        
-        return Vector2(x,y);
+		return Vector2::zero;
+        //std::string instr;
+        //node->Read(key,instr);
+        //std::istringstream read(instr);
+        //
+        //// {64, 64}
+        //int x,y;
+        //char br;
+        //read >> br;
+        //
+        //assert(br == '{');
+        //
+        //read >> x;
+        //
+        //read >> br;
+        //
+        //assert(br == ',');
+        //
+        //read >> y;
+        //
+        //return Vector2(x,y);
     }
     
     Rect ZwopSpriteSheet::XMLToRect( XMLFileNode *node, std::string key )
     {
-        std::string instr;
-        node->Read(key,instr);
-        std::istringstream read(instr);
-        
-        // {{64, 64}, {64, 64}}
-        Rect out;
-        int x,y;
-        char br;
-        read >> br;
-        assert(br == '{');
-        read >> br;
-        assert(br == '{');
-        
-        read >> x;
-        read >> br;
-        assert(br == ',');
-        read >> y;
-        out.topLeft = Vector2(x,y);
-        
-        read >> br;
-        assert(br == '}');
-        read >> br;
-        assert(br == ',');
-        read >> br;
-        assert(br == '{');
-        
-        read >> x;
-        read >> br;
-        assert(br == ',');
-        read >> y;
-        out.bottomRight = Vector2(x,y);
-        
-        return out;
+		return Rect();
+        //std::string instr;
+        //node->Read(key,instr);
+        //std::istringstream read(instr);
+        //
+        //// {{64, 64}, {64, 64}}
+        //Rect out;
+        //int x,y;
+        //char br;
+        //read >> br;
+        //assert(br == '{');
+        //read >> br;
+        //assert(br == '{');
+        //
+        //read >> x;
+        //read >> br;
+        //assert(br == ',');
+        //read >> y;
+        //out.topLeft = Vector2(x,y);
+        //
+        //read >> br;
+        //assert(br == '}');
+        //read >> br;
+        //assert(br == ',');
+        //read >> br;
+        //assert(br == '{');
+        //
+        //read >> x;
+        //read >> br;
+        //assert(br == ',');
+        //read >> y;
+        //out.bottomRight = Vector2(x,y);
+        //
+        //return out;
     }
     
     void ZwopSpriteSheet::Load(TiXmlElement *element, const std::string &textureName)
 	{
-        // This is <ZwopSpriteSheet>
-        XMLFileNode zwopSheetNode(element);
-        size = XMLToVector( &zwopSheetNode, "size" );
-        
-        TiXmlElement *xmlSprite = element->FirstChildElement("Sprite");
-		while (xmlSprite)
-		{
-			XMLFileNode zwopSpriteNode(xmlSprite);
-            
-			ZwopSprite *zSprite = new ZwopSprite(this,orderedSprites.size());
-			zSprite->Load(xmlSprite);
-			if (zSprite->name != "")
-				entries[zSprite->name] = zSprite;
-            
-            orderedSprites.push_back(zSprite);
-            
-			xmlSprite = xmlSprite->NextSiblingElement("Sprite");
-		}
-        
-        this->textureName = textureName;
-        this->texture = Assets::RequestTexture(textureName);
+  //      // This is <ZwopSpriteSheet>
+  //      XMLFileNode zwopSheetNode(element);
+  //      size = XMLToVector( &zwopSheetNode, "size" );
+  //      
+  //      TiXmlElement *xmlSprite = element->FirstChildElement("Sprite");
+		//while (xmlSprite)
+		//{
+		//	XMLFileNode zwopSpriteNode(xmlSprite);
+  //          
+		//	ZwopSprite *zSprite = new ZwopSprite(this,orderedSprites.size());
+		//	zSprite->Load(xmlSprite);
+		//	if (zSprite->name != "")
+		//		entries[zSprite->name] = zSprite;
+  //          
+  //          orderedSprites.push_back(zSprite);
+  //          
+		//	xmlSprite = xmlSprite->NextSiblingElement("Sprite");
+		//}
+  //      
+  //      this->textureName = textureName;
+  //      this->texture = Assets::RequestTexture(textureName);
     }
     
     ZwopSpriteSheet::~ZwopSpriteSheet()

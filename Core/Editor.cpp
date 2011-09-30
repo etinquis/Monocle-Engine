@@ -64,10 +64,10 @@ namespace Monocle
 			else if (Input::IsMouseButtonHeld(MOUSE_BUTTON_MIDDLE) || Input::IsKeyHeld(KEY_LSHIFT))
 			{
 				Vector2 diff = Input::GetWorldMousePosition() - lastWorldMousePosition;
-				((Transform*)(*mainCamera)["Transform"])->position = Vector3(((Transform*)(*mainCamera)["Transform"])->position.xy() + (-1*diff));
+				((Transform*)(*mainCamera)["Transform"])->position = ((Transform*)(*mainCamera)["Transform"])->position + (-1*diff);
 				lastWorldMousePosition = Input::GetWorldMousePosition();
 
-				Vector2 camPos = ((Transform*)(*mainCamera)["Transform"])->position.xy();
+				Vector2 camPos = ((Transform*)(*mainCamera)["Transform"])->position;
 				printf("camPos (%d, %d)\n", (int)camPos.x, (int)camPos.y);
 			}
 
@@ -76,7 +76,7 @@ namespace Monocle
 
 			const float cameraMoveSpeed = 800.0f; // replace with virtualWidth
 			moveDiff *= Monocle::deltaTime * cameraMoveSpeed;
-			((Transform*)(*mainCamera)["Transform"])->position = Vector3(((Transform*)(*mainCamera)["Transform"])->position.xy() + moveDiff);
+			((Transform*)(*mainCamera)["Transform"])->position = ((Transform*)(*mainCamera)["Transform"])->position + moveDiff;
 
 			float zoomDiff = (Input::IsKeyHeld(KEY_KP7) ? -1.0f : 0.0f) + (Input::IsKeyHeld(KEY_KP9) ? 1.0f : 0.0f);
 			const float cameraZoomSpeed = 1.0f;

@@ -1,5 +1,6 @@
 #include "EntityComponent.h"
 #include "../Entity.h"
+#include "../File/FileNode.h"
 
 namespace Monocle
 {
@@ -24,8 +25,27 @@ namespace Monocle
 		this->entity = entity;
 	}
 
+	void EntityComponent::Render()
+	{
+
+	}
+
 	Entity* EntityComponent::GetEntity()
 	{
 		return entity;
+	}
+
+	void EntityComponent::SaveTo(FileNode *parentNode)
+	{
+		Save(parentNode->InsertEndChildNode(GetName()));
+	}
+
+	void EntityComponent::LoadFrom(FileNode *parentNode)
+	{
+		FileNode *myNode = parentNode->GetChild(GetName());
+		if(myNode)
+		{
+			Load( myNode );
+		}
 	}
 }

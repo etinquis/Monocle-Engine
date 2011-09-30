@@ -36,6 +36,9 @@ namespace Monocle
 		Collider* GetCollider();
 
 		Collidable *Clone() const;
+	protected:
+		void Save(FileNode *myNode);
+		void Load(FileNode *myNode);
 	private:
 		Collider *collider;
 	};

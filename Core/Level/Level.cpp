@@ -1,7 +1,7 @@
 #include "Level.h"
 #include "Assets.h"
 #include <TinyXML/tinyxml.h>
-#include "XML/XMLFileNode.h"
+#include "File/Types/XML.h"
 #include <iostream>
 #include <fstream>
 #include "Entity.h"
@@ -46,119 +46,119 @@ namespace Monocle
 
 	void Level::LoadProject(const std::string &filename)
 	{
-		Debug::Log("Loading Level...");
-		// load the project data from an xml file
-		instance->tilesets.clear();
-		///TODO: clear fringeTileset
+		//Debug::Log("Loading Level...");
+		//// load the project data from an xml file
+		//instance->tilesets.clear();
+		/////TODO: clear fringeTileset
 
-		TiXmlDocument xml(Assets::GetContentPath() + filename);
-		bool isLoaded = xml.LoadFile();
-		if (isLoaded)
-		{
-			TiXmlElement* eProject = xml.FirstChildElement("Project");
-			if (eProject)
-			{
-				TiXmlElement* eEntityTypes = eProject->FirstChildElement("EntityTypes");
-				if (eEntityTypes)
-				{
-					TiXmlElement* eEntityType = eEntityTypes->FirstChildElement("EntityType");
-					while (eEntityType)
-					{
-						XMLFileNode xmlFileNode(eEntityType);
+		//TiXmlDocument xml(Assets::GetContentPath() + filename);
+		//bool isLoaded = xml.LoadFile();
+		//if (isLoaded)
+		//{
+		//	TiXmlElement* eProject = xml.FirstChildElement("Project");
+		//	if (eProject)
+		//	{
+		//		TiXmlElement* eEntityTypes = eProject->FirstChildElement("EntityTypes");
+		//		if (eEntityTypes)
+		//		{
+		//			TiXmlElement* eEntityType = eEntityTypes->FirstChildElement("EntityType");
+		//			while (eEntityType)
+		//			{
+		//				XMLFileNode xmlFileNode(eEntityType);
 
-						EntityType entityType;
-						entityType.Load(&xmlFileNode);
+		//				EntityType entityType;
+		//				entityType.Load(&xmlFileNode);
 
-						instance->entityTypes.push_back(entityType);
+		//				instance->entityTypes.push_back(entityType);
 
-						eEntityType = eEntityType->NextSiblingElement("EntityType");
-					}
-				}
+		//				eEntityType = eEntityType->NextSiblingElement("EntityType");
+		//			}
+		//		}
 
-				// Load Tileset data (for tiles on a grid)
-				TiXmlElement* eTilesets = eProject->FirstChildElement("Tilesets");
-				if (eTilesets)
-				{
-					TiXmlElement* eTileset = eTilesets->FirstChildElement("Tileset");
-					while (eTileset)
-					{
-						instance->tilesets.push_back(Tileset(XMLReadString(eTileset, "name"), XMLReadString(eTileset, "image"), XMLReadInt(eTileset, "tileWidth"), XMLReadInt(eTileset, "tileHeight")));
+		//		// Load Tileset data (for tiles on a grid)
+		//		TiXmlElement* eTilesets = eProject->FirstChildElement("Tilesets");
+		//		if (eTilesets)
+		//		{
+		//			TiXmlElement* eTileset = eTilesets->FirstChildElement("Tileset");
+		//			while (eTileset)
+		//			{
+		//				instance->tilesets.push_back(Tileset(XMLReadString(eTileset, "name"), XMLReadString(eTileset, "image"), XMLReadInt(eTileset, "tileWidth"), XMLReadInt(eTileset, "tileHeight")));
 
-						eTileset = eTilesets->NextSiblingElement("Tileset");
-					}
-				}
-			}
-		}
-		Debug::Log("...done");
+		//				eTileset = eTilesets->NextSiblingElement("Tileset");
+		//			}
+		//		}
+		//	}
+		//}
+		//Debug::Log("...done");
 	}
 
 	void Level::Load(const std::string &filename, Scene* scene)
 	{
-		// load from an xml file, into the scene
+		//// load from an xml file, into the scene
 
-		if (scene != NULL)
-		{
-			instance->scene = scene;
-		}
+		//if (scene != NULL)
+		//{
+		//	instance->scene = scene;
+		//}
 
-		if (instance->scene)
-		{
-			// unload tilemaps... (need to destroy them?)
-			instance->tilemaps.clear();
-			//clearfringeTileset
+		//if (instance->scene)
+		//{
+		//	// unload tilemaps... (need to destroy them?)
+		//	//instance->tilemaps.clear();
+		//	//clearfringeTileset
 
-			TiXmlDocument xml(Assets::GetContentPath() + filename);
-			instance->filename = filename;
-			bool isLoaded = xml.LoadFile();
+		//	TiXmlDocument xml(Assets::GetContentPath() + filename);
+		//	instance->filename = filename;
+		//	bool isLoaded = xml.LoadFile();
 
-			if (isLoaded)
-			{
-				TiXmlElement* eLevel = xml.FirstChildElement("Level");
-				if (eLevel)
-				{
-					instance->width = XMLReadInt(eLevel, "width");
-					instance->height = XMLReadInt(eLevel, "height");
+		//	if (isLoaded)
+		//	{
+		//		TiXmlElement* eLevel = xml.FirstChildElement("Level");
+		//		if (eLevel)
+		//		{
+		//			instance->width = XMLReadInt(eLevel, "width");
+		//			instance->height = XMLReadInt(eLevel, "height");
 
-					/*
-					Color backgroundColor = Color::black;
-					XMLReadColor(eLevel, "backgroundColor", &backgroundColor);
-					Graphics::SetBackgroundColor(backgroundColor);
-					*/
+		//			/*
+		//			Color backgroundColor = Color::black;
+		//			XMLReadColor(eLevel, "backgroundColor", &backgroundColor);
+		//			Graphics::SetBackgroundColor(backgroundColor);
+		//			*/
 
-					XMLFileNode xmlFileNode(eLevel);
-					instance->scene->LoadLevel(&xmlFileNode);
+		//			XMLFileNode xmlFileNode(eLevel);
+		//			instance->scene->LoadLevel(&xmlFileNode);
 
-					TiXmlElement *eTilemap = eLevel->FirstChildElement("Tilemap");
-					while (eTilemap)
-					{
-						
-						Tilemap *tilemap = new Tilemap(instance->GetTilesetByName(XMLReadString(eTilemap, "set")), instance->width, instance->height, XMLReadInt(eTilemap, "tileWidth"), XMLReadInt(eTilemap, "tileHeight"));
-						instance->tilemaps.push_back(tilemap);
-						Entity *entity = new Entity();
-						entity->SetGraphic(tilemap);
-						instance->scene->Add(entity);
+		//			TiXmlElement *eTilemap = eLevel->FirstChildElement("Tilemap");
+		//			//while (eTilemap)
+		//			//{
+		//			//	
+		//			//	//Tilemap *tilemap = new Tilemap(instance->GetTilesetByName(XMLReadString(eTilemap, "set")), instance->width, instance->height, XMLReadInt(eTilemap, "tileWidth"), XMLReadInt(eTilemap, "tileHeight"));
+		//			//	//instance->tilemaps.push_back(tilemap);
+		//			//	//Entity *entity = new Entity();
+		//			//	//entity->SetGraphic(tilemap);
+		//			//	instance->scene->Add(entity);
 
-						TiXmlElement *eTile = eTilemap->FirstChildElement("Tile");
-						while (eTile)
-						{
-							tilemap->SetTile(XMLReadInt(eTile, "x"), XMLReadInt(eTile, "y"), XMLReadInt(eTile, "tileID"));
-							eTile = eTile->NextSiblingElement("Tile");
-						}
-						eTilemap = eTilemap->NextSiblingElement("Tilemap");
-					}
+		//			//	TiXmlElement *eTile = eTilemap->FirstChildElement("Tile");
+		//			//	while (eTile)
+		//			//	{
+		//			//		tilemap->SetTile(XMLReadInt(eTile, "x"), XMLReadInt(eTile, "y"), XMLReadInt(eTile, "tileID"));
+		//			//		eTile = eTile->NextSiblingElement("Tile");
+		//			//	}
+		//			//	eTilemap = eTilemap->NextSiblingElement("Tilemap");
+		//			//}
 
-					TiXmlElement *eEntities = eLevel->FirstChildElement("Entities");
-					if (eEntities)
-					{
-						instance->LoadEntities(eEntities);
-						instance->scene->LoadEntities(eEntities);
-					}
+		//			TiXmlElement *eEntities = eLevel->FirstChildElement("Entities");
+		//			if (eEntities)
+		//			{
+		//				instance->LoadEntities(eEntities);
+		//				instance->scene->LoadEntities(eEntities);
+		//			}
 
 
-					instance->scene->ResolveEntityChanges();
-				}
-			}
-		}
+		//			instance->scene->ResolveEntityChanges();
+		//		}
+		//	}
+		//}
 	}
 
 
@@ -247,119 +247,119 @@ namespace Monocle
 
 	void Level::Save()
 	{
-		if (instance->filename == "")
-		{
-			// open save as dialog or something
-			Debug::Log("Warning: Won't save level, no filename set");
-		}
-		else
-		{
-			// save our data out to xml file
-			if (instance->scene)
-			{
-				Debug::Log("Saving scene...");
+		//if (instance->filename == "")
+		//{
+		//	// open save as dialog or something
+		//	Debug::Log("Warning: Won't save level, no filename set");
+		//}
+		//else
+		//{
+		//	// save our data out to xml file
+		//	if (instance->scene)
+		//	{
+		//		Debug::Log("Saving scene...");
 
-				TiXmlDocument xml;
+		//		TiXmlDocument xml;
 
-				TiXmlElement eLevel("Level");
-				eLevel.SetAttribute("width", instance->width);
-				eLevel.SetAttribute("height", instance->height);
-				
-				/*
-				Color backgroundColor = Graphics::GetBackgroundColor();
-				if (backgroundColor != Color::black)
-				{
-					XMLWriteColor(&eLevel, "backgroundColor", backgroundColor);
-				}
-				*/
+		//		TiXmlElement eLevel("Level");
+		//		eLevel.SetAttribute("width", instance->width);
+		//		eLevel.SetAttribute("height", instance->height);
+		//		
+		//		/*
+		//		Color backgroundColor = Graphics::GetBackgroundColor();
+		//		if (backgroundColor != Color::black)
+		//		{
+		//			XMLWriteColor(&eLevel, "backgroundColor", backgroundColor);
+		//		}
+		//		*/
 
-				XMLFileNode xmlFileNode(&eLevel);
-				instance->scene->SaveLevel(&xmlFileNode);
+		//		XMLFileNode xmlFileNode(&eLevel);
+		//		instance->scene->SaveLevel(&xmlFileNode);
 
-				if (!instance->tilemaps.empty())
-				{
-					//TiXmlElement eTilemaps("Tilemaps");
+		//		//if (!instance->tilemaps.empty())
+		//		//{
+		//		//	//TiXmlElement eTilemaps("Tilemaps");
 
-					// save tilemaps
-					for (std::list<Tilemap*>::iterator i = instance->tilemaps.begin(); i != instance->tilemaps.end(); ++i)
-					{
-						TiXmlElement eTilemap("Tilemap");
-						if ((*i)->tileset)
-							eTilemap.SetAttribute("set", (*i)->tileset->name);
-						eTilemap.SetAttribute("tileWidth", (*i)->tileWidth);
-						eTilemap.SetAttribute("tileHeight", (*i)->tileHeight);
+		//		//	// save tilemaps
+		//		//	for (std::list<Tilemap*>::iterator i = instance->tilemaps.begin(); i != instance->tilemaps.end(); ++i)
+		//		//	{
+		//		//		TiXmlElement eTilemap("Tilemap");
+		//		//		if ((*i)->tileset)
+		//		//			eTilemap.SetAttribute("set", (*i)->tileset->name);
+		//		//		eTilemap.SetAttribute("tileWidth", (*i)->tileWidth);
+		//		//		eTilemap.SetAttribute("tileHeight", (*i)->tileHeight);
 
-						for (int ty = 0; ty < (*i)->height / (*i)->tileHeight; ty++)
-						{
-							for (int tx = 0; tx < (*i)->width / (*i)->tileWidth; tx++)
-							{
-								TiXmlElement eTile("Tile");
-								eTile.SetAttribute("x", tx);
-								eTile.SetAttribute("y", ty);
-								eTile.SetAttribute("tileID", (*i)->GetTile(tx, ty));
-								eTilemap.InsertEndChild(eTile);
-							}
-						}
+		//		//		for (int ty = 0; ty < (*i)->height / (*i)->tileHeight; ty++)
+		//		//		{
+		//		//			for (int tx = 0; tx < (*i)->width / (*i)->tileWidth; tx++)
+		//		//			{
+		//		//				TiXmlElement eTile("Tile");
+		//		//				eTile.SetAttribute("x", tx);
+		//		//				eTile.SetAttribute("y", ty);
+		//		//				eTile.SetAttribute("tileID", (*i)->GetTile(tx, ty));
+		//		//				eTilemap.InsertEndChild(eTile);
+		//		//			}
+		//		//		}
 
-						eLevel.InsertEndChild(eTilemap);
-					}
-				}
+		//		//		eLevel.InsertEndChild(eTilemap);
+		//		//	}
+		//		//}
 
-				TiXmlElement eEntities("Entities");
-				instance->SaveEntities(&eEntities);
-				instance->scene->SaveEntities(&eEntities);
-				eLevel.InsertEndChild(eEntities);
+		//		TiXmlElement eEntities("Entities");
+		//		instance->SaveEntities(&eEntities);
+		//		instance->scene->SaveEntities(&eEntities);
+		//		eLevel.InsertEndChild(eEntities);
 
-				/*
-				// save fringe tiles
-				// go through the sets
-				for (std::list<FringeTileset>::iterator i = instance->fringeTilesets.begin(); i != instance->fringeTilesets.end(); ++i)
-				{
-					bool savedAny = false;
-					TiXmlElement eFringeTiles("FringeTiles");
-					eFringeTiles.SetAttribute("set", (*i).GetName());
+		//		/*
+		//		// save fringe tiles
+		//		// go through the sets
+		//		for (std::list<FringeTileset>::iterator i = instance->fringeTilesets.begin(); i != instance->fringeTilesets.end(); ++i)
+		//		{
+		//			bool savedAny = false;
+		//			TiXmlElement eFringeTiles("FringeTiles");
+		//			eFringeTiles.SetAttribute("set", (*i).GetName());
 
-					// save fringeTiles that belong to the set
-					for (std::list<FringeTile*>::iterator j = instance->fringeTiles.begin(); j != instance->fringeTiles.end(); ++j)
-					{
-						if ((*j)->GetFringeTileset() == &(*i))
-						{
-							savedAny = true;
+		//			// save fringeTiles that belong to the set
+		//			for (std::list<FringeTile*>::iterator j = instance->fringeTiles.begin(); j != instance->fringeTiles.end(); ++j)
+		//			{
+		//				if ((*j)->GetFringeTileset() == &(*i))
+		//				{
+		//					savedAny = true;
 
-							TiXmlElement eFringeTile("FringeTile");
+		//					TiXmlElement eFringeTile("FringeTile");
 
-							// TODO: use tags instead
-							eFringeTile.SetAttribute("id", (*j)->GetTileID());
-							eFringeTile.SetAttribute("layer", (*j)->GetLayer());
-							eFringeTile.SetAttribute("x", (*j)->position.x);
-							eFringeTile.SetAttribute("y", (*j)->position.y);
-							eFringeTile.SetAttribute("rotation", (*j)->rotation);
-							eFringeTile.SetDoubleAttribute("scaleX", (*j)->scale.x);
-							eFringeTile.SetDoubleAttribute("scaleY", (*j)->scale.y);
+		//					// TODO: use tags instead
+		//					eFringeTile.SetAttribute("id", (*j)->GetTileID());
+		//					eFringeTile.SetAttribute("layer", (*j)->GetLayer());
+		//					eFringeTile.SetAttribute("x", (*j)->position.x);
+		//					eFringeTile.SetAttribute("y", (*j)->position.y);
+		//					eFringeTile.SetAttribute("rotation", (*j)->rotation);
+		//					eFringeTile.SetDoubleAttribute("scaleX", (*j)->scale.x);
+		//					eFringeTile.SetDoubleAttribute("scaleY", (*j)->scale.y);
 
-							if ((*j)->color.a != 1.0f)
-							{
-								eFringeTile.SetDoubleAttribute("ca", (*j)->color.a);
-							}
+		//					if ((*j)->color.a != 1.0f)
+		//					{
+		//						eFringeTile.SetDoubleAttribute("ca", (*j)->color.a);
+		//					}
 
-							eFringeTiles.InsertEndChild(eFringeTile);
-						}
-					}
+		//					eFringeTiles.InsertEndChild(eFringeTile);
+		//				}
+		//			}
 
-					if (savedAny)
-					{
-						eLevel.InsertEndChild(eFringeTiles);
-					}
-				}
-				*/
+		//			if (savedAny)
+		//			{
+		//				eLevel.InsertEndChild(eFringeTiles);
+		//			}
+		//		}
+		//		*/
 
-				xml.InsertEndChild(eLevel);
+		//		xml.InsertEndChild(eLevel);
 
-				xml.SaveFile(Assets::GetContentPath() + instance->filename);  
+		//		xml.SaveFile(Assets::GetContentPath() + instance->filename);  
 
-				Debug::Log("...done");
-			}
-		}
+		//		Debug::Log("...done");
+		//	}
+		//}
 	}
 
 	void Level::SaveAs(const std::string &filename)

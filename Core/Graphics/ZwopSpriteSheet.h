@@ -1,9 +1,9 @@
 #pragma once
 
-#include "FileNode.h"
+#include "File/FileNode.h"
 #include "Vector2.h"
 #include "Rect.h"
-#include "Graphics/Sprite.h"
+#include "Component/Entity/Sprite.h"
 
 #include <map>
 #include <vector>

@@ -21,7 +21,7 @@ namespace Monocle
         {
             void DerivedAssets::init()
             {
-                Monocle::Assets::Init();
+                Monocle::Assets::Init(NULL);
             }
             
             void DerivedAssets::remove(Asset *asset)

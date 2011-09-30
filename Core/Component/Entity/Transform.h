@@ -17,7 +17,7 @@ namespace Monocle
 		Transform();
 		Transform(const Transform &transform);
 
-		Vector3 position;
+		Vector2 position;
 		float rotation;
 		Vector2 scale;
         
@@ -36,5 +36,8 @@ namespace Monocle
 
 		void ApplyMatrix();
 		Vector2 GetWorldPosition(const Vector2 &position = Vector2::zero);
+	protected:
+		void Save(FileNode *myNode);
+		void Load(FileNode *myNode);
 	};
 }

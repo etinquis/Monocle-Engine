@@ -11,7 +11,6 @@
 
 // temp, replace with generic file interface later
 #include <TinyXML/tinyxml.h>
-#include <XML/XMLFileNode.h>
 
 namespace Monocle
 {
@@ -57,7 +56,7 @@ namespace Monocle
 
 		std::string name;
 
-		std::list<Tilemap*> tilemaps;
+		//std::list<Tilemap*> tilemaps;
 		std::list<Tileset> tilesets;
 
 		std::list<FringeTileset> fringeTilesets;

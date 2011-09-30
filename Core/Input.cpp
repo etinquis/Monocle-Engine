@@ -159,7 +159,7 @@ namespace Monocle
 
 		Vector2 diff = (adjustedToCameraMousePosition * invResScale) - Graphics::GetScreenCenter();
 		Vector2 cameraZoom = ((Transform*)(*camera)["Transform"])->scale;
-		return ((Transform*)(*camera)["Transform"])->position.xy() + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
+		return ((Transform*)(*camera)["Transform"])->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
 	}
 
 	void Input::SetWorldMouseCamera(Camera *camera)

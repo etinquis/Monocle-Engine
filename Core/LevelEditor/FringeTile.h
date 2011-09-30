@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../Graphics/Sprite.h"
 #include "../Entity.h"
 #include "../Asset.h"
 #include <string>
@@ -54,7 +53,7 @@ namespace Monocle
 	public:
 		FringeTile();
 		FringeTile(const FringeTile &fringeTile);
-		Entity *Clone();
+		FringeTile *Clone();
 		//FringeTile(FringeTileset *fringeTileset, int tileID);
 		void SetTileID(int tileID);
 		int GetTileID();
@@ -64,7 +63,6 @@ namespace Monocle
 		void NextBlend();
 		void Update();
 		//FringeTileset *GetFringeTileset();
-		Sprite *sprite;
 
 		void Save(FileNode *fileNode);
 		void Load(FileNode *fileNode);

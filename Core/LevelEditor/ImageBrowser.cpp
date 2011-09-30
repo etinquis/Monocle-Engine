@@ -1,7 +1,7 @@
 #include "ImageBrowser.h"
 #include "../Input.h"
 #include "../MonocleToolkit.h"
-#include "../Graphics/Sprite.h"
+#include "Component/Entity/Sprite.h"
 #include "../Game.h"
 #include "Component/Entity/Transform.h"
 #include "Camera.h"
@@ -11,17 +11,16 @@ namespace Monocle
 	SelectionImage::SelectionImage(const std::string &image, int size)
 		: Entity()
 	{
-		Sprite *sprite = NULL;
-		SetGraphic(sprite = new Sprite(image));
-		if (sprite->width > sprite->height)
+		((Sprite*)(*this)["Sprite"])->Load(image);
+		if (((Sprite*)(*this)["Sprite"])->width > ((Sprite*)(*this)["Sprite"])->height)
 		{
-			sprite->height = (sprite->height/sprite->width) * size;
-			sprite->width = size;
+			((Sprite*)(*this)["Sprite"])->height = (((Sprite*)(*this)["Sprite"])->height/((Sprite*)(*this)["Sprite"])->width) * size;
+			((Sprite*)(*this)["Sprite"])->width = size;
 		}
 		else
 		{
-			sprite->width = (sprite->width/sprite->height) * size;
-			sprite->height = size;
+			((Sprite*)(*this)["Sprite"])->width = (((Sprite*)(*this)["Sprite"])->width/((Sprite*)(*this)["Sprite"])->height) * size;
+			((Sprite*)(*this)["Sprite"])->height = size;
 		}
 	}
 
@@ -42,7 +41,7 @@ namespace Monocle
 		: Entity(), selectionImageSize(128), hasContent(false)
 	{
 		SetLayer(-85);
-		followCamera = Vector2::one;
+		//followCamera = Vector2::one;
 	}
 
 	void ImageBrowser::Update()
@@ -64,7 +63,7 @@ namespace Monocle
 				}
 			}
 
-			((Transform*)(*grid)["Transform"])->position = Vector3( ((Transform*)(*grid)["Transform"])->position.xy() + (Platform::mouseScroll * Vector2::down * 0.25f));
+			((Transform*)(*grid)["Transform"])->position = ((Transform*)(*grid)["Transform"])->position + (Platform::mouseScroll * Vector2::down * 0.25f);
 			printf("position %f, %f\n", ((Transform*)(*grid)["Transform"])->position.x, ((Transform*)(*grid)["Transform"])->position.y);
 		}
 	}
@@ -75,12 +74,11 @@ namespace Monocle
 		//DestroyChildren();
 		selectionImages.clear();
 
-		Entity *bg = new Entity();
+		/*Entity *bg = new Entity();
 		scene->Add(bg);
 		bg->SetParent(this);
-		bg->SetGraphic(new Sprite("", 128, 600));
 		bg->color = Color::black;
-		bg->color.a = 0.75f;
+		bg->color.a = 0.75f;*/
 		
 
 		grid = new Entity();
