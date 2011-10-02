@@ -67,6 +67,8 @@ namespace Monocle
 	class Entity
 	{
 	public:
+		typedef std::unordered_map<std::string, EntityComponent*> ComponentList;
+
 		Entity();
 		virtual ~Entity();
 		virtual Entity *Clone() const;
@@ -137,11 +139,7 @@ namespace Monocle
 		template <class t_component>
 		t_component* AddComponent()
 		{
-			t_component* comp = new t_component();
-
-			// TODO : Replace this, it's stupid and ugly.
-			if(components[comp->GetName()])
-				delete components[comp->GetName()];
+			t_component *comp = new t_component();
 
 			components[comp->GetName()] = comp;
 			comp->Init(this);
@@ -161,6 +159,12 @@ namespace Monocle
 		//Vector2 followCamera;
 
 		//Color color;
+		
+		template <typename T>
+		T* GetComponent(std::string component_name)
+		{
+			return (T*)(*this)[component_name];
+		}
 
 		EntityComponent* operator[](std::string component_name);
 	protected:
@@ -197,7 +201,7 @@ namespace Monocle
         Vector2 cachedWorldPosition;
         Vector2 lastPositionWhenCached;
 
-		std::map<std::string, EntityComponent*> components;
+		ComponentList components;
 
 	public:
 		//Entity* GetChildEntityAtPosition(const Vector2 &position);

@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "Entities.h"
 
 ///TODO: Replace with xml wrapper
@@ -16,6 +17,7 @@ namespace Monocle
 	class Entity;
 	class Camera;
 	class FileNode;
+	class SceneComponent;
 
 	//enum SearchType
 	//{
@@ -33,6 +35,8 @@ namespace Monocle
 	class Scene
 	{
 	public:
+		typedef std::unordered_map<std::string, SceneComponent*> ComponentList;
+
 		Scene();
 		~Scene();
 
@@ -117,12 +121,32 @@ namespace Monocle
 		Camera *GetActiveCamera();
 		void SetMainCamera(Camera *camera);
 
+		Game* GetGame();
+
 		///TODO: replace TiXml with wrapper
 		virtual Entity *CreateEntity(const std::string &entityTypeName);
 		virtual void SaveEntities(TiXmlElement *element);
 		virtual void LoadEntities(TiXmlElement *element);
 		virtual void SaveLevel(FileNode *fileNode);
 		virtual void LoadLevel(FileNode *fileNode);
+
+		template <class t_component>
+		t_component* AddComponent()
+		{
+			t_component *comp = new t_component();
+
+			components[comp->GetName()] = comp;
+			comp->Init(this);
+			return comp;
+		}
+
+		template <typename T>
+		T* GetComponent(std::string component_name)
+		{
+			return (T*)(*this)[component_name];
+		}
+
+		SceneComponent* operator[](std::string component_name);
 
 	protected:
 		// scene has a game pointer
@@ -133,8 +157,7 @@ namespace Monocle
 		friend class Level;
 		//Resolves all entities to be added or removed
 		void ResolveEntityChanges();
-
-
+		
 	private:
 
 		//Holds all the entities currently in the scene
@@ -147,7 +170,9 @@ namespace Monocle
 		std::list<Entity*> toRemove;
 
 		//The map of entities sorted by tag
-		std::map<std::string, std::list<Entity*> > tagMap;
+		//std::map<std::string, std::list<Entity*> > tagMap;
+
+		ComponentList components;
 
 		//Entities entities;
 

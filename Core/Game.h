@@ -7,6 +7,8 @@
 #include "Audio/Audio.h"
 #include "Level/Level.h"
 
+#include <unordered_map>
+
 namespace Monocle
 {
 	class Scene;
@@ -17,6 +19,8 @@ namespace Monocle
 	class Game
 	{
 	public:
+		typedef std::unordered_map<std::string, GameComponent*> ComponentList;
+
 		//! Initializes all the default sub-systems. Platform, Input, Graphics, Debug, Assets, Tween, Collision, Random, Audio, Level
 		Game(const std::string &name="MonoclePowered.org", int w=1024, int h=768, int bits = MONOCLE_DETECT_COLOR_DEPTH, bool fullscreen=false);
 		~Game();
@@ -54,7 +58,7 @@ namespace Monocle
 		template <class t_component>
 		t_component* AddComponent()
 		{
-			t_component* comp = new t_component();
+			t_component *comp = new t_component();
 
 			components[comp->GetName()] = comp;
 			comp->Init(this);
@@ -68,7 +72,7 @@ namespace Monocle
 		Graphics graphics;
 		Audio audio;
 
-		std::map<std::string, GameComponent*> components;
+		ComponentList components;
 
 	private:
 		static Game *instance;

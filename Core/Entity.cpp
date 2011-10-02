@@ -150,6 +150,11 @@ namespace Monocle
 			delete (*i);
 			(*i) = NULL;
 		}
+
+		for (ComponentList::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->Update();
+		}
 	}
 
 	void Entity::RemoveSelf()
@@ -177,7 +182,7 @@ namespace Monocle
 	{
         Graphics::PushMatrix();
 
-		for(std::map< std::string, EntityComponent* >::iterator it = components.begin(); it != components.end(); it++)
+		for(ComponentList::iterator it = components.begin(); it != components.end(); it++)
 		{
 			it->second->Render();
 		}
@@ -502,7 +507,7 @@ namespace Monocle
 
 		FileNode *node = fileNode->InsertEndChildNode("entity");
 
-		for(std::map<std::string, EntityComponent*>::iterator it = components.begin(); it != components.end(); it++)
+		for(ComponentList::iterator it = components.begin(); it != components.end(); it++)
 		{
 			it->second->SaveTo(node);
 		}
@@ -514,7 +519,7 @@ namespace Monocle
 
 		//FileNode *node = fileNode->GetChild("entity");
 
-		for(std::map<std::string, EntityComponent*>::iterator it = components.begin(); it != components.end(); it++)
+		for(ComponentList::iterator it = components.begin(); it != components.end(); it++)
 		{
 			it->second->LoadFrom(myNode);
 		}
@@ -631,7 +636,7 @@ namespace Monocle
 
 	EntityComponent* Entity::operator[](std::string component_name)
 	{
-		for(std::map<std::string, EntityComponent*>::iterator i = components.begin(); i != components.end(); i++)
+		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
 		{
 			if(i->second->GetName() == component_name) return i->second;
 		}

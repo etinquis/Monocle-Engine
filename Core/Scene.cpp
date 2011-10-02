@@ -4,6 +4,7 @@
 #include "MonocleToolkit.h"
 #include "Platform.h"
 #include "Component/Entity/Transform.h"
+#include "Component/SceneComponent.h"
 #include "Camera.h"
 
 namespace Monocle
@@ -39,6 +40,11 @@ namespace Monocle
 	{
 		if (!isPaused)
 		{
+			for (ComponentList::iterator it = components.begin(); it != components.end(); it++)
+			{
+				it->second->Update();
+			}
+
 			//Update all the entities
 			for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 			{
@@ -174,6 +180,11 @@ namespace Monocle
 		toRemove.push_back(entity);
 	}
 
+	Game *Scene::GetGame()
+	{
+		return game;
+	}
+
 	void Scene::RemoveAll()
 	{
 		toRemove.clear();
@@ -272,7 +283,7 @@ namespace Monocle
 		cameras.clear();
 	}
 
-	void Scene::EntityAddTag(Entity* entity, const std::string& tag)
+	/*void Scene::EntityAddTag(Entity* entity, const std::string& tag)
 	{
 		tagMap[tag].push_back(entity);
 	}
@@ -280,7 +291,7 @@ namespace Monocle
 	void Scene::EntityRemoveTag(Entity* entity, const std::string& tag)
 	{
 		tagMap[tag].remove(entity);
-	}
+	}*/
 
 	Entity *Scene::CreateEntity(const std::string &entityTypeName)
 	{
@@ -448,7 +459,15 @@ namespace Monocle
 		return NULL;
 	}
 
+	SceneComponent* Scene::operator[](std::string component_name)
+	{
+		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
+		{
+			if(i->second->GetName() == component_name) return i->second;
+		}
 
+		return NULL;
+	}
 
 	/*
 	Entity *Scene::GetFirstEntity()

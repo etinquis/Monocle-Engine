@@ -42,7 +42,7 @@ namespace Monocle
 
 	Game::~Game()
 	{
-		for(std::map<std::string, GameComponent*>::iterator i = components.begin(); i != components.end(); i++)
+		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
 		{
 			delete (i->second);
 		}
@@ -145,7 +145,7 @@ namespace Monocle
         lastTick = tick;
 #endif
 
-		for(std::map<std::string, GameComponent*>::iterator i = components.begin(); i != components.end(); i++)
+		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
 		{
 			i->second->Update();
 		}
@@ -224,7 +224,7 @@ namespace Monocle
 
 	GameComponent* Game::operator[](std::string component_name)
 	{
-		for(std::map<std::string, GameComponent*>::iterator i = components.begin(); i != components.end(); i++)
+		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
 		{
 			if(i->second->GetName() == component_name) return i->second;
 		}
