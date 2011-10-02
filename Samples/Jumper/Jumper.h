@@ -5,19 +5,15 @@
 // by @NoelFB
 using namespace Monocle;
 
+namespace Monocle
+{
+	class Transform;
+	class Collidable;
+	class Sprite;
+}
+
 namespace Jumper
 {
-	/*
-	class Mover : public Sprite
-	{
-	public:
-		Mover(int layer, std::string graphic, Vector2 pos, float scale);
-		void Update();
-
-		Vector2 velocity;
-	};
-	*/
-
 	class Player : public Entity
 	{
 	public:
@@ -39,6 +35,9 @@ namespace Jumper
 
 		float leanAmount; // how much does he lean into his left/right movement?
 
+	private:
+		Transform *transform;
+		Collidable *collidable;
 		Sprite *sprite;
 	};
 

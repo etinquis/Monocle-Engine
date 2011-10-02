@@ -3,6 +3,8 @@
 #include <Level/Level.h>
 #include <Colliders/RectangleCollider.h>
 #include <Component/Entity/Collidable.h>
+#include <Component/Entity/Transform.h>
+#include <Component/Entity/Sprite.h>
 
 namespace Jumper
 {
@@ -10,15 +12,21 @@ namespace Jumper
 	Player::Player(Vector2 pos) 
 		: Entity()
 	{
-		position = pos;
+		AddComponent<Transform>();
+		AddComponent<Collidable>();
+		AddComponent<Sprite>();
+
+		transform = (Transform*)(*this)["Transform"];
+		collidable = (Collidable*)(*this)["Collidable"];
+		sprite = (Sprite*)(*this)["Sprite"];
+
+		transform->position = pos;
 		SetLayer(-10);
 
-		((Collidable *)(*this)["Collidable"])->AddTag("Player");
+		collidable->AddTag("Player");
+		collidable->SetCollider(new RectangleCollider(40, 64));
 
-		((Collidable *)((*this)["Collidable"]))->SetCollider(new RectangleCollider(40, 64));
-
-		sprite = new Sprite("Graphics/Player.png", FILTER_NONE, 64, 64);
-		SetGraphic(sprite);
+		sprite->Load("Graphics/Player.png", FILTER_NONE, 64, 64);
 
 		speed = 4000.0f;
 		gravity = 2000.0f;

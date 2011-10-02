@@ -62,7 +62,9 @@ namespace Monocle
 		Graphics::PushMatrix();
 		Graphics::IdentityMatrix();
         
-        Graphics::Translate(position);
+		// TODO : reimplement MatrixChain
+        Graphics::Translate(this->position);
+		Graphics::Translate(position);
 
 		returnPos = Graphics::GetMatrixPosition();
 

@@ -1,6 +1,5 @@
 #include <Monocle.h>
 #include <LevelEditor/LevelEditor.h>
-#include <Puppet/PuppetEditor.h>
 
 using namespace Monocle;
 

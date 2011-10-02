@@ -139,6 +139,10 @@ namespace Monocle
 		{
 			t_component* comp = new t_component();
 
+			// TODO : Replace this, it's stupid and ugly.
+			if(components[comp->GetName()])
+				delete components[comp->GetName()];
+
 			components[comp->GetName()] = comp;
 			comp->Init(this);
 			return comp;

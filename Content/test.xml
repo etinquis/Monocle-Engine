@@ -1,6 +1,0 @@
-<Computer>
-    <Output debug="1">
-        <Monitor age="2" bezelcolor="0 0 0 1" dimensions="1900 1080" model="Widget Co. T86" />
-    </Output>
-</Computer>
-<Cat color="0 0 0 1" />
