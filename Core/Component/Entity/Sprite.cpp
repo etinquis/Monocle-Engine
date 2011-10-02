@@ -2,7 +2,9 @@
 #include "../../Assets.h"
 #include "../../Entity.h"
 #include "../../Graphics.h"
+#include "../../TextureAsset.h"
 #include "Transform.h"
+#include "../../File/FileNode.h"
 
 namespace Monocle
 {
@@ -22,7 +24,7 @@ namespace Monocle
 	{
 	}
 
-	void Sprite::Load(const std::string &filename, FilterType filter, float width, float height)
+	/*void Sprite::Load(const std::string &filename, FilterType filter, float width, float height)
 	{
 		texture = Assets::RequestTexture(filename, filter);
 		if (texture != NULL)
@@ -47,7 +49,7 @@ namespace Monocle
 				this->height = texture->height;
 			}
 		}
-	}
+	}*/
 
 	Sprite::~Sprite()
 	{
@@ -103,7 +105,6 @@ namespace Monocle
 		Graphics::RenderQuad(width, height, textureOffset, textureScale);
 
 		Graphics::PopMatrix();
-		Shader::UseNone();
 	}
 	
     /**
@@ -120,11 +121,25 @@ namespace Monocle
 
 	void Sprite::Load(FileNode *myNode)
 	{
-
+		Color color = Color::white;
+		//FilterType filter = FILTER_LINEAR;
+		std::string filename;
+		//myNode->Read("filtertype", filter);
+		myNode->Read("filename", filename);
+		myNode->Read("color", color);
+		myNode->Read("tint", color);
+		myNode->Read("offset", textureOffset);
+		myNode->Read("scale", textureScale);
+		myNode->Read("width", width);
+		myNode->Read("height", height);
 	}
 	
 	void Sprite::Save(FileNode *myNode)
 	{
-
+		myNode->Write("tint", color);
+		myNode->Write("offset", textureOffset);
+		myNode->Write("scale", textureScale);
+		myNode->Write("width", width);
+		myNode->Write("height", height);
 	}
 }

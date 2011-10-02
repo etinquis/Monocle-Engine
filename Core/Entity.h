@@ -87,7 +87,6 @@ namespace Monocle
 		//! Called by the scene when the entity should render
 		virtual void Render();
 
-		//!  from Transform:: used to save/load properties
 		void Save(FileNode *fileNode);
 		void Load(FileNode *fileNode);
 
@@ -144,6 +143,8 @@ namespace Monocle
 			comp->Init(this);
 			return comp;
 		}
+
+		bool HasComponent(const std::string &name);
 
 		// used by editors
 		//bool IsPositionInGraphic(const Vector2 &position);

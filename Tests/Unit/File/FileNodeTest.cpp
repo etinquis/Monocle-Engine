@@ -17,6 +17,7 @@ namespace Monocle
 				TEST_ADD(FileNodeTest::Constructor);
 				TEST_ADD(FileNodeTest::BuildTree);
 				TEST_ADD(FileNodeTest::GetChild);
+				TEST_ADD(FileNodeTest::GetChildren);
 				TEST_ADD(FileNodeTest::WriteAttributes);
 				TEST_ADD(FileNodeTest::ReadAttributes);
 			}
@@ -72,6 +73,27 @@ namespace Monocle
 				TEST_ASSERT(comp->GetChild("Input")->GetChild("Keyboard"))
 
 				TEST_ASSERT(comp->GetChild("Nonexistant") == NULL)
+			}
+
+			void FileNodeTest::GetChildren()
+			{
+				FileNode *comp = node->InsertEndChildNode("Computer");
+				
+				FileNode *output = comp->InsertEndChildNode("Output");
+				FileNode *input = comp->InsertEndChildNode("Input");
+
+				input->InsertEndChildNode("Mouse");
+				input->InsertEndChildNode("Keyboard");
+
+				output->InsertEndChildNode("Printer");
+				output->InsertEndChildNode("Monitor");
+
+				node->InsertEndChildNode("Computer");
+
+				std::list<FileNode*> children = node->GetChildren("Computer");
+				TEST_ASSERT(children.size() == 2);
+
+				TEST_ASSERT(children.front()->GetChild("Output") != children.back()->GetChild("Output"));
 			}
 
 			void FileNodeTest::WriteAttributes()

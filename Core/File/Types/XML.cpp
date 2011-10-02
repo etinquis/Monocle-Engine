@@ -18,8 +18,8 @@ namespace Monocle
 
 			for(FileNode::ChildList::iterator it = node->children.begin(); it != node->children.end(); it++)
 			{
-				TiXmlElement *child = new TiXmlElement(it->first);
-				WriteNode(child, &it->second);
+				TiXmlElement *child = new TiXmlElement(it->GetName());
+				WriteNode(child, &(*it));
 				doc.LinkEndChild(child);
 			}
 
@@ -35,8 +35,8 @@ namespace Monocle
 
 			for(FileNode::ChildList::iterator it = node->children.begin(); it != node->children.end(); it++)
 			{
-				TiXmlElement *child = new TiXmlElement(it->first);
-				WriteNode(child, &it->second);
+				TiXmlElement *child = new TiXmlElement(it->GetName());
+				WriteNode(child, &(*it));
 				element->LinkEndChild(child);
 			}
 		}

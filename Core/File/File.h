@@ -55,6 +55,11 @@ namespace Monocle
 			ftype.WriteToFile(filename, &rootNode);
 		}
 
+		bool operator==(const File& other)
+		{
+			return rootNode == other.rootNode;
+		}
+
 	protected:
 		FileNode rootNode;
 	private:

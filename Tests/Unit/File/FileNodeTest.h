@@ -23,6 +23,7 @@ namespace Monocle
                 void Constructor();
                 void BuildTree();
                 void GetChild();
+				void GetChildren();
 				void InsertChild();
                 void WriteAttributes();
                 void ReadAttributes();

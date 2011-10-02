@@ -1,16 +1,16 @@
 #pragma once
 
 #include <list>
-#include "../Entity.h"
-#include "../Tween.h"
-#include "Component/Entity/Sprite.h"
+#include "../../Entity.h"
+//#include "../Tween.h"
+//#include "Component/Entity/Sprite.h"
 
-class TiXmlElement;
+#define MONOCLE_ENTITYCOMPONENT_PUPPET "Puppet"
 
 namespace Monocle
 {
-	
 	class Puppet;
+	enum EaseType;
     
 	class Part : public Entity
 	{
@@ -21,23 +21,19 @@ namespace Monocle
 		Part *Clone() const;
 
 		int GetID();
-		bool IsName(const std::string &name);
 		std::string GetName();
-		bool IsID(int id);
-
-		void SetPuppet(Puppet *puppet);
-
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
-
-		std::list<Part*> parts;
-
+		
 	private:
 		friend class Puppet;
 		int id;
 		std::string atlasEntry;
 		std::string name;
 		Puppet *puppet;
+
+		std::list<Part*> parts;
+
+		virtual void Load(FileNode *node);
+		virtual void Save(FileNode *node);
 	};
 
 	class KeyFrame : public Entity
@@ -82,7 +78,7 @@ namespace Monocle
 		//int id;
 	};
 
-	class Animation
+	/*class Animation
 	{
 	public:
 		Animation();
@@ -111,13 +107,7 @@ namespace Monocle
 		float duration;
 		std::string name;
 		std::list<PartKeyFrames> partKeyFrames;
-	};
-
-	///TODO: Add layers, so multiple animations can be blended at once
-	class AnimationLayer
-	{
-	public:
-	};
+	};*/
 
 	class TextureAtlas;
 	
@@ -127,7 +117,7 @@ namespace Monocle
 		Puppet();
 		~Puppet();
 
-		std::string GetName() { return "Puppet"; }
+		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_PUPPET; }
 		Puppet *Clone() const { return new Puppet(*this); }
 
 		void Save();
@@ -139,9 +129,6 @@ namespace Monocle
 		void Pause();
 		void Resume();
 
-		virtual void Save(FileNode *myNode);
-		virtual void Load(FileNode *myNode);
-
 		void TogglePause();
 
 		void Update();
@@ -152,22 +139,25 @@ namespace Monocle
 		Part *GetPartByName(const std::string &name);
 		Part *GetPartByID(int id);
 
-		Animation *GetCurrentAnimation();
 		TextureAtlas *GetTextureAtlas();
 
 		void AdjustTime(float time);
 		
-	private:
-		Entity *entity;
+	protected:
+		virtual void Save(FileNode *myNode);
+		virtual void Load(FileNode *myNode);
 
-		Animation *GetAnimationByName(const std::string &animName);
+	private:
+		Puppet(const Puppet &p);
+
+		//Animation *GetAnimationByName(const std::string &animName);
 		bool isPlaying;
 		bool isPaused;
 		bool isLooping;
 	
-		Animation *currentAnimation;
+		//Animation *currentAnimation;
 	
-		std::list<Animation> animations;
+		//std::list<Animation> animations;
 		std::list<Part*> parts;
 		
 		TextureAtlas *textureAtlas;
@@ -176,9 +166,6 @@ namespace Monocle
 
 		void SavePart(TiXmlElement *parentElement, Part *part);
 		void LoadParts(TiXmlElement *element, Part *intoPart);
-
-	private:
-
 	};
 
 }

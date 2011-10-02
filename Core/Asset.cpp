@@ -2,6 +2,8 @@
 #include "Debug.h"
 #include "Assets.h"
 
+#include "File/FileNode.h"
+
 namespace Monocle
 {
 	Asset::Asset(AssetType type)

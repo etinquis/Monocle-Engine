@@ -16,7 +16,8 @@ namespace Monocle
 	{
 	public:
 		typedef std::map<std::string, std::string> AttributeList;
-		typedef std::unordered_map<std::string, FileNode> ChildList;
+		typedef std::unordered_map<std::string, std::list<FileNode*> > ChildLookupList;
+		typedef std::list<FileNode> ChildList;
 
 		//! Creates an unnamed root node
 		FileNode();
@@ -72,18 +73,25 @@ namespace Monocle
 		//virtual FileNode* FirstChildNode(const std::string &name)=0;
 		//virtual FileNode* NextChildNode(const std::string &name)=0;
 		
-		std::string GetName();
-
+		const std::string GetName() const;
+		
 		//virtual void SaveChildNode(const std::string &name, Entity *entity)=0;
 		//virtual FileNode* NewNode(const std::string &name)=0;
 		virtual FileNode *InsertEndChildNode(const std::string &name);
 		virtual FileNode *GetChild(const std::string &name);
+		virtual std::list<FileNode*> GetChildren(const std::string &name);
+		virtual void RemoveChildren(const std::string &name);
+
+		bool operator==(const FileNode &other) const;
 
 		bool HasChildren();
 
 		AttributeList attributes;
+		ChildLookupList lookup;
 		ChildList children;
 	private:
+		FileNode *AddChild(const std::string &name);
+
 		std::string name;
 	};
 }

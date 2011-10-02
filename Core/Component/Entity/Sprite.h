@@ -1,29 +1,31 @@
 #pragma once
 
 #include "Graphic.h"
-
+#include "../../Vector2.h"
 #include "../../Color.h"
-#include "../../TextureAsset.h"
-#include "../../Shader.h"
 
 #include <string>
+
+#define MONOCLE_ENTITYCOMPONENT_SPRITE "Sprite"
 
 namespace Monocle
 {
 	class Entity;
-	class ZwopSprite;
 	enum BlendType;
-
+	enum FilterType;
+	class TextureAsset;
+	class Color;
+	
 	class Sprite : public Graphic
 	{
 	public:
 		Sprite();
 		~Sprite();
 
-		void Load(const std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0);
-		void Load(const Color& color, float w=-1.0, float h=-1.0);
+		//void Load(const std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0);
+		//void Load(const Color& color, float w=-1.0, float h=-1.0);
 
-		std::string GetName() { return "Sprite"; }
+		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_SPRITE; }
 		Sprite * Clone () const { return new Sprite(*this); }
 
 		void Update();
@@ -48,6 +50,8 @@ namespace Monocle
         Vector2 trimScale;
 
 		BlendType blend;
+
+		Color color;
 
 	protected:
 		virtual void Save(FileNode *myNode);

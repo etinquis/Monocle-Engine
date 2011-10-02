@@ -7,6 +7,8 @@
 #include <Monocle.h>
 #include <TextureAtlas.h>
 
+#include "../../Tween.h"
+
 #include <sstream>
 
 namespace Monocle
@@ -17,7 +19,7 @@ namespace Monocle
 		: Entity(), id(id), name(name), puppet(NULL)
 	{
 		AddComponent<Sprite>();
-		((Sprite*)(*this)["Sprite"])->Load(imageFilename);
+		//((Sprite*)(*this)["Sprite"])->Load(imageFilename);
 	}
 
 	Part::Part()
@@ -36,24 +38,9 @@ namespace Monocle
 		return id;
 	}
 
-	bool Part::IsName(const std::string &name)
-	{
-		return this->name == name;
-	}
-
 	std::string Part::GetName()
 	{
 		return this->name;
-	}
-
-	bool Part::IsID(int id)
-	{
-		return this->id == id;
-	}
-
-	void Part::SetPuppet(Puppet *puppet)
-	{
-		this->puppet = puppet;
 	}
 
 	void Part::Save(FileNode *fileNode)
@@ -103,7 +90,7 @@ namespace Monocle
 				textureAtlasEntry = textureAtlas->GetEntryByName(atlasEntry);
 				if (textureAtlasEntry)
 				{
-					((Sprite*)(*this)["Sprite"])->Load(textureAtlas->GetImageName());
+					//((Sprite*)(*this)["Sprite"])->Load(textureAtlas->GetImageName());
 					((Sprite*)(*this)["Sprite"])->textureOffset = textureAtlasEntry->GetTextureOffset();
 					((Sprite*)(*this)["Sprite"])->textureScale = textureAtlasEntry->GetTextureScale();
 					printf("textureOffset: (%f, %f) textureScale: (%f, %f)\n", ((Sprite*)(*this)["Sprite"])->textureOffset.x, ((Sprite*)(*this)["Sprite"])->textureOffset.y, ((Sprite*)(*this)["Sprite"])->textureScale.x, ((Sprite*)(*this)["Sprite"])->textureScale.y);
@@ -118,7 +105,7 @@ namespace Monocle
 			std::string image;
 			fileNode->Read("image", image);
 
-			((Sprite*)(*this)["Sprite"])->Load(image);
+			//((Sprite*)(*this)["Sprite"])->Load(image);
 		}
 		
 		if (((Sprite*)(*this)["Sprite"])->texture != NULL)
@@ -301,154 +288,154 @@ namespace Monocle
     }
 
 
-	Animation::Animation()
-		: currentTime(0.0f), duration(0.0f)
-	{
-	}
+	//Animation::Animation()
+	//	: currentTime(0.0f), duration(0.0f)
+	//{
+	//}
 
-	void Animation::Update()
-	{
-		currentTime += Monocle::deltaTime;
+	//void Animation::Update()
+	//{
+	//	currentTime += Monocle::deltaTime;
 
-        ApplyTimeChange();
-	}
-    
-    void Animation::ApplyTimeChange(bool loop)
-    {
-		if (currentTime >= duration)
-		{
-			if (!loop)
-				currentTime = duration;
-			else
-				currentTime -= int(currentTime/duration) * duration;
-		} 
-		else if (currentTime < 0)
-		{
-			if (!loop)
-				currentTime = 0;
-			else
-				currentTime += (int(-1*currentTime/duration)+1) * duration;
-		}
+ //       ApplyTimeChange();
+	//}
+ //   
+ //   void Animation::ApplyTimeChange(bool loop)
+ //   {
+	//	if (currentTime >= duration)
+	//	{
+	//		if (!loop)
+	//			currentTime = duration;
+	//		else
+	//			currentTime -= int(currentTime/duration) * duration;
+	//	} 
+	//	else if (currentTime < 0)
+	//	{
+	//		if (!loop)
+	//			currentTime = 0;
+	//		else
+	//			currentTime += (int(-1*currentTime/duration)+1) * duration;
+	//	}
 
-		for (std::list<PartKeyFrames>::iterator i = partKeyFrames.begin(); i != partKeyFrames.end(); ++i)
-		{
-			PartKeyFrames *currentPartKeyFrames = &(*i);
-			if (currentPartKeyFrames)
-			{
-				KeyFrame *prev=NULL, *next=NULL;
-				currentPartKeyFrames->GetKeyFrameForTime(currentTime, &prev, &next);
-				if (prev && !next)
-				{
-					((Transform*)((*currentPartKeyFrames->GetPart())[MONOCLE_ENTITYCOMPONENT_TRANSFORM]))->LerpTransform( (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], 1.0f);
-				}
-				else if (prev && next)
-				{
-					float diff = next->GetTime() - prev->GetTime();
-					float p = (currentTime - prev->GetTime()) / diff;
-                    
-					//printf("LerpTransform %f\n", p);
-					// adjust p by ease
-					((Transform*)((*currentPartKeyFrames->GetPart())[MONOCLE_ENTITYCOMPONENT_TRANSFORM]))->LerpTransform( (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], (Transform*)(*next)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], Tween::Ease(p, EASE_INOUTSIN));
-				}
-			}
-		}
-    }
+	//	for (std::list<PartKeyFrames>::iterator i = partKeyFrames.begin(); i != partKeyFrames.end(); ++i)
+	//	{
+	//		PartKeyFrames *currentPartKeyFrames = &(*i);
+	//		if (currentPartKeyFrames)
+	//		{
+	//			KeyFrame *prev=NULL, *next=NULL;
+	//			currentPartKeyFrames->GetKeyFrameForTime(currentTime, &prev, &next);
+	//			if (prev && !next)
+	//			{
+	//				((Transform*)((*currentPartKeyFrames->GetPart())[MONOCLE_ENTITYCOMPONENT_TRANSFORM]))->LerpTransform( (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], 1.0f);
+	//			}
+	//			else if (prev && next)
+	//			{
+	//				float diff = next->GetTime() - prev->GetTime();
+	//				float p = (currentTime - prev->GetTime()) / diff;
+ //                   
+	//				//printf("LerpTransform %f\n", p);
+	//				// adjust p by ease
+	//				((Transform*)((*currentPartKeyFrames->GetPart())[MONOCLE_ENTITYCOMPONENT_TRANSFORM]))->LerpTransform( (Transform*)(*prev)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], (Transform*)(*next)[MONOCLE_ENTITYCOMPONENT_TRANSFORM], Tween::Ease(p, EASE_INOUTSIN));
+	//			}
+	//		}
+	//	}
+ //   }
 
-	std::string Animation::GetName()
-	{
-		return name;
-	}
-    
-    float Animation::GetDuration()
-    {
-        return duration;
-    }
+	//std::string Animation::GetName()
+	//{
+	//	return name;
+	//}
+ //   
+ //   float Animation::GetDuration()
+ //   {
+ //       return duration;
+ //   }
 
-    float Animation::GetCurrentTime()
-    {
-        return currentTime;
-    }
-    
-    PartKeyFrames *Animation::GetPartKeyFrames(Part *part)
-    {
-        for(std::list<PartKeyFrames>::iterator i = partKeyFrames.begin(); i != partKeyFrames.end(); ++i)
-        {
-            if ((*i).GetPart() == part)
-            {
-                return &(*i);
-            }
-        }
-        return NULL;
-    }
-    
-    void Animation::SetPartKeyFrame(Part *part, const KeyFrame &keyFrame)
-    {
-        PartKeyFrames *partKeyFrames = GetPartKeyFrames(part);
-        if (!partKeyFrames)
-        {
-            AddPartKeyFrames(PartKeyFrames(part));
-            partKeyFrames = GetPartKeyFrames(part);
-        }
-        if (partKeyFrames)
-        {
-            partKeyFrames->InsertKeyFrame(keyFrame);
-        }
-    }
+ //   float Animation::GetCurrentTime()
+ //   {
+ //       return currentTime;
+ //   }
+ //   
+ //   PartKeyFrames *Animation::GetPartKeyFrames(Part *part)
+ //   {
+ //       for(std::list<PartKeyFrames>::iterator i = partKeyFrames.begin(); i != partKeyFrames.end(); ++i)
+ //       {
+ //           if ((*i).GetPart() == part)
+ //           {
+ //               return &(*i);
+ //           }
+ //       }
+ //       return NULL;
+ //   }
+ //   
+ //   void Animation::SetPartKeyFrame(Part *part, const KeyFrame &keyFrame)
+ //   {
+ //       PartKeyFrames *partKeyFrames = GetPartKeyFrames(part);
+ //       if (!partKeyFrames)
+ //       {
+ //           AddPartKeyFrames(PartKeyFrames(part));
+ //           partKeyFrames = GetPartKeyFrames(part);
+ //       }
+ //       if (partKeyFrames)
+ //       {
+ //           partKeyFrames->InsertKeyFrame(keyFrame);
+ //       }
+ //   }
 
-	bool Animation::IsName(const std::string &name)
-	{
-		return (this->name == name);
-	}
+	//bool Animation::IsName(const std::string &name)
+	//{
+	//	return (this->name == name);
+	//}
 
-	void Animation::AddPartKeyFrames(const PartKeyFrames &partKeyFrames)
-	{
-		this->partKeyFrames.push_back(partKeyFrames);
-	}
-	
-	void Animation::SetDuration(float duration)
-	{
-		this->duration = duration;
-	}
+	//void Animation::AddPartKeyFrames(const PartKeyFrames &partKeyFrames)
+	//{
+	//	this->partKeyFrames.push_back(partKeyFrames);
+	//}
+	//
+	//void Animation::SetDuration(float duration)
+	//{
+	//	this->duration = duration;
+	//}
 
-	void Animation::SetCurrentTime(float currentTime)
-	{
-		this->currentTime = currentTime;
-		ApplyTimeChange();
-	}
-    
-    void Animation::AdjustCurrentTime(float timeOffset, bool loop)
-    {
-        currentTime += timeOffset;
-        ApplyTimeChange(loop);
-    }
+	//void Animation::SetCurrentTime(float currentTime)
+	//{
+	//	this->currentTime = currentTime;
+	//	ApplyTimeChange();
+	//}
+ //   
+ //   void Animation::AdjustCurrentTime(float timeOffset, bool loop)
+ //   {
+ //       currentTime += timeOffset;
+ //       ApplyTimeChange(loop);
+ //   }
 
-	void Animation::RefreshDuration()
-	{
-		duration = -1.0f;
-		for (std::list<PartKeyFrames>::iterator i = partKeyFrames.begin(); i != partKeyFrames.end(); ++i)
-		{
-			KeyFrame *keyFrame = (*i).GetLastKeyFrame();
-			if (keyFrame)
-			{
-				float t = keyFrame->GetTime();
-				if (t > duration)
-					duration = t;
-			}
-		}
-	}
+	//void Animation::RefreshDuration()
+	//{
+	//	duration = -1.0f;
+	//	for (std::list<PartKeyFrames>::iterator i = partKeyFrames.begin(); i != partKeyFrames.end(); ++i)
+	//	{
+	//		KeyFrame *keyFrame = (*i).GetLastKeyFrame();
+	//		if (keyFrame)
+	//		{
+	//			float t = keyFrame->GetTime();
+	//			if (t > duration)
+	//				duration = t;
+	//		}
+	//	}
+	//}
 
-	void Animation::Save(FileNode *fileNode)
-	{
-		fileNode->Write("name", name);
-	}
+	//void Animation::Save(FileNode *fileNode)
+	//{
+	//	fileNode->Write("name", name);
+	//}
 
-	void Animation::Load(FileNode *fileNode)
-	{
-		fileNode->Read("name", name);
-	}
+	//void Animation::Load(FileNode *fileNode)
+	//{
+	//	fileNode->Read("name", name);
+	//}
 
 	Puppet::Puppet()
-		: isPlaying(false), isPaused(false), textureAtlas(NULL), currentAnimation(NULL)
+		: isPlaying(false), isPaused(false), textureAtlas(NULL)
 	{
 	}
 	
@@ -684,25 +671,25 @@ namespace Monocle
 
 	void Puppet::Play(const std::string &animationName, bool isLooping)
 	{
-		currentAnimation = GetAnimationByName(animationName);
+		//currentAnimation = GetAnimationByName(animationName);
 
-		if (currentAnimation)
+		/*if (currentAnimation)
 		{
 			this->isPlaying = true;
 			this->isLooping = isLooping;
-		}
+		}*/
 
 	}
 
 	void Puppet::Update()
 	{
-		if (currentAnimation)
+		/*if (currentAnimation)
 		{
 			if (isPlaying && !isPaused)
 			{
 				currentAnimation->Update();
 			}
-		}
+		}*/
 	}
 
 	void Puppet::Stop()
@@ -736,30 +723,30 @@ namespace Monocle
 		return isPaused;
 	}
     
-    Animation *Puppet::GetCurrentAnimation()
+    /*Animation *Puppet::GetCurrentAnimation()
     {
         return currentAnimation;
-    }
+    }*/
 	
 	TextureAtlas *Puppet::GetTextureAtlas()
 	{
 		return textureAtlas;
 	}
 
-	Animation *Puppet::GetAnimationByName(const std::string &name)
+	/*Animation *Puppet::GetAnimationByName(const std::string &name)
 	{
 		for (std::list<Animation>::iterator i = animations.begin(); i != animations.end(); ++i)
 		{
 			return &(*i);
 		}
 		return NULL;
-	}
+	}*/
 
 	Part *Puppet::GetPartByName(const std::string &name)
 	{
 		for (std::list<Part*>::iterator i = parts.begin(); i != parts.end(); ++i)
 		{
-			if ((*i)->IsName(name))
+			if ((*i)->GetName() == name)
 			{
 				return *i;
 			}
@@ -771,11 +758,21 @@ namespace Monocle
 	{
 		for (std::list<Part*>::iterator i = parts.begin(); i != parts.end(); ++i)
 		{
-			if ((*i)->IsID(id))
+			if ((*i)->GetID() == id)
 			{
 				return *i;
 			}
 		}
 		return NULL;
+	}
+
+	void Puppet::Save(FileNode *myNode)
+	{
+
+	}
+
+	void Puppet::Load(FileNode *myNode)
+	{
+
 	}
 }

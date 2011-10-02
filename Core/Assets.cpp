@@ -208,5 +208,4 @@ namespace Monocle
 	{
 		return new Assets(*this);
 	}
-
 }

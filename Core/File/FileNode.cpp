@@ -17,21 +17,25 @@ namespace Monocle
 
 	FileNode *FileNode::InsertEndChildNode(const std::string &name)
 	{
-		children.insert(std::pair<std::string, FileNode>(name, FileNode(name)));
-		return &children[name];
+		return AddChild(name);
 	}
 
 	FileNode *FileNode::GetChild(const std::string &name)
 	{
-		if(children.find(name) != children.end())
+		if(lookup.find(name) != lookup.end())
 		{
-			return &children[name];
+			return lookup[name].front();
 		}
 		
 		return NULL;
 	}
 
-	std::string FileNode::GetName()
+	std::list<FileNode*> FileNode::GetChildren(const std::string &name)
+	{
+		return lookup[name];
+	}
+
+	const std::string FileNode::GetName() const
 	{
 		return name;
 	}
@@ -39,5 +43,36 @@ namespace Monocle
 	bool FileNode::HasChildren()
 	{
 		return children.size() > 0;
+	}
+
+	FileNode *FileNode::AddChild(const std::string &name)
+	{
+		children.push_back(FileNode(name));
+		if(lookup.find(name) != lookup.end())
+		{
+			lookup.insert( std::pair<std::string, std::list<FileNode*> >(name, std::list<FileNode*>()) );
+		}
+		ChildList::pointer ptr = &children.back();
+		lookup[name].push_back(ptr);
+
+		return ptr;
+	}
+
+	void FileNode::RemoveChildren(const std::string &name)
+	{
+		for(ChildList::const_iterator it = children.begin(); it != children.end(); it++)
+		{
+			if(it->GetName() == name)
+			{
+				children.erase(it);
+			}
+		}
+
+		lookup.erase(name);
+	}
+
+	bool FileNode::operator==(const FileNode &other) const
+	{
+		return children == other.children; //(attributes == other.attributes) && (children == other.children);
 	}
 }

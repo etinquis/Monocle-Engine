@@ -1,19 +1,15 @@
 #pragma once
 
-#include "File/FileNode.h"
-#include "Vector2.h"
-#include "Rect.h"
-#include "Component/Entity/Sprite.h"
+#include <File/FileNode.h>
+#include <Vector2.h>
+#include <Rect.h>
+#include <Component/Entity/Sprite.h>
 
 #include <map>
 #include <vector>
 
-class TiXmlDocument;
-class TiXmlElement;
-
 namespace Monocle
 {
-    class XMLFileNode;
     class ZwopSpriteSheet;
     class TextureAsset;
     
@@ -25,7 +21,7 @@ namespace Monocle
         ZwopSprite( ZwopSpriteSheet *sheet, int index );
         ~ZwopSprite();
         
-        virtual void Load(TiXmlElement *element);
+        //virtual void Load(TiXmlElement *element);
         
         Vector2 GetSize();
         Vector2 GetSourceSize();
@@ -73,14 +69,14 @@ namespace Monocle
         
         Vector2 GetSize();
         
-        static Vector2 XMLToVector( XMLFileNode *node, std::string key );
-        static Rect XMLToRect( XMLFileNode *node, std::string key );
+        //static Vector2 XMLToVector( XMLFileNode *node, std::string key );
+        //static Rect XMLToRect( XMLFileNode *node, std::string key );
         
         static ZwopSpriteSheet *GetSheet( const std::string &sheetFilename, const std::string &textureFilename );
         
 	private:
         ZwopSpriteSheet();
-        void Load(TiXmlElement *element, const std::string &textureName);
+        //void Load(TiXmlElement *element, const std::string &textureName);
         
 		friend class ZwopSprite;
 		std::string image;

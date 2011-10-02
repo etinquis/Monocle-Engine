@@ -18,8 +18,7 @@ namespace Monocle
                 virtual void tear_down();
                 
             private:
-                void Read();
-                void Write();
+				void WriteAndRead();
             };
 
         }

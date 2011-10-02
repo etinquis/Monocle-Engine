@@ -470,6 +470,11 @@ namespace Monocle
 	//	return NULL;
 	//}
 
+	bool Entity::HasComponent(const std::string &name)
+	{
+		return ( components.find(name) != components.end() );
+	}
+
 	void Entity::Save(FileNode *fileNode)
 	{
 		//Transform::Save(fileNode);
@@ -503,15 +508,15 @@ namespace Monocle
 		}
 	}
 
-	void Entity::Load(FileNode *fileNode)
+	void Entity::Load(FileNode *myNode)
 	{
 		//Transform::Load(fileNode);
 
-		FileNode *node = fileNode->GetChild("entity");
+		//FileNode *node = fileNode->GetChild("entity");
 
 		for(std::map<std::string, EntityComponent*>::iterator it = components.begin(); it != components.end(); it++)
 		{
-			it->second->LoadFrom(node);
+			it->second->LoadFrom(myNode);
 		}
 
 		/*fileNode->Read("color", color);*/

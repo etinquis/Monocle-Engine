@@ -2,7 +2,7 @@
 
 #include "../Editor.h"
 #include "../Input.h"
-#include "Puppet.h"
+#include "../Component/Entity/Puppet.h"
 
 namespace Monocle
 {

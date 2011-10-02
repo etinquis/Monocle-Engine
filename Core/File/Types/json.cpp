@@ -29,18 +29,16 @@ namespace Monocle
 			{
 				//Json::Value attrib(it->first);
 				//attrib.append(it->second);
-				Json::StaticString name(it->first.c_str());
 				Json::Value value = Json::Value(it->second);
 
-				(*element)[name] = value;
+				(*element)[it->first] = value;
 			}
 
 			for(FileNode::ChildList::iterator it = node->children.begin(); it != node->children.end(); it++)
 			{
 				Json::Value *child = new Json::Value();
-				WriteNode(child, &it->second);
-				Json::StaticString name(it->first.c_str());
-				(*element)[name] = *child;
+				WriteNode(child, &(*it));
+				(*element)[it->GetName()] = *child;
 			}
 		}
 
