@@ -2,7 +2,7 @@
 
 #include "../Editor.h"
 #include "../Input.h"
-#include "Puppet.h"
+#include "../Component/Entity/Puppet.h"
 
 namespace Monocle
 {
@@ -12,7 +12,21 @@ namespace Monocle
         Timeline();
         Animation *currentAnimation;
         void Render();
+
+		//virtual Timeline *Clone() const;
     };
+    
+	class PuppetEntity : public Entity
+	{
+	public:
+		PuppetEntity();
+		void Load(const std::string &filename);
+		void Update();
+		
+		virtual PuppetEntity *Clone() const;
+
+		Puppet puppet;
+	};
 
 	class PuppetEditor : public Editor, public CameraEditor
 	{

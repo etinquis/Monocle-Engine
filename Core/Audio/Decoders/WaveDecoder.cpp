@@ -86,6 +86,7 @@ namespace Monocle
     WaveDecoder::~WaveDecoder()
     {
         delete reader;
+		reader = NULL;
     }
 }
 

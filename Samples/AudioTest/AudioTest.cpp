@@ -1,5 +1,7 @@
 #include "AudioTest.h"
 
+#include <Input.h>
+
 #include <stdlib.h>
 #include <sstream>
 #include <math.h>

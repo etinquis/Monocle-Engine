@@ -3,11 +3,11 @@
 #include "Vector2.h"
 #include "Scene.h"
 #include "Color.h"
-#include "FileNode.h"
-#include "Transform.h"
+
+#include "Component/EntityComponent.h"
 
 #include <string>
-#include <vector>
+#include <map>
 #include <list>
 
 namespace Monocle
@@ -22,7 +22,7 @@ namespace Monocle
 	class Graphics;
 	class Graphic;
 	class CollisionData;
-    class Camera;
+	class FileNode;
 
 	class InvokeData
 	{
@@ -64,13 +64,14 @@ namespace Monocle
 	//!
 	//!		Add(new Player)
 	//!
-	class Entity : public Transform
+	class Entity
 	{
 	public:
-		Entity(const Entity &entity);
+		typedef std::unordered_map<std::string, EntityComponent*> ComponentList;
+
 		Entity();
 		virtual ~Entity();
-		virtual Entity *Clone();
+		virtual Entity *Clone() const;
 
 		//! Enable this object. Set isEnabled to true. Each derived Entity may decide how to handle isEnabled.
 		virtual void Enable();
@@ -88,7 +89,6 @@ namespace Monocle
 		//! Called by the scene when the entity should render
 		virtual void Render();
 
-		//!  from Transform:: used to save/load properties
 		void Save(FileNode *fileNode);
 		void Load(FileNode *fileNode);
 
@@ -100,25 +100,18 @@ namespace Monocle
 		virtual void Destroyed();
         
         //! Called to determine if the entity should be drawn
-        virtual bool IsOnCamera( Camera *camera );
-
-		//! Check our collider against all entities that have "tag"
-		Collider* Collide(const std::string &tag, CollisionData *collisionData=NULL);
-		//! Check our collider against all entities that have "tag" - warping us to atPosition first, then back to our original position after
-		Collider* CollideAt(const std::string &tag, const Vector2& atPosition, CollisionData *collisionData=NULL);
-		//! Do a circle collision
-		Collider *CollideWith(Collider *collider, const std::string &tag, CollisionData *collisionData=NULL);
+        //virtual bool IsOnCamera( Camera *camera );
 
 		//! Associates this entity with the given tag
-		void AddTag(const std::string& tag, bool save=false);
+		//void AddTag(const std::string& tag, bool save=false);
 		//! Checks whether this entity is associated with a given tag
-		bool HasTag(const std::string& tag);
+		//bool HasTag(const std::string& tag);
 		//! Removes a tag from this Entity
-		void RemoveTag(const std::string& tag);
+		//void RemoveTag(const std::string& tag);
 		//! Gets the tag at the given offset from the list of tags
-		const std::string& GetTag(int index);
+		//const std::string& GetTag(int index);
 		//! Gets the number of tags associated with this entity
-		int GetNumberOfTags();
+		//int GetNumberOfTags();
 
 		//! Checks if this entity is on the given layer
 		bool IsLayer(int layer);
@@ -134,8 +127,7 @@ namespace Monocle
 		//! is our layer number in the debug render range?
 		bool IsDebugLayer();
 
-		void SetCollider(Collider *collider);
-		void SetGraphic(Graphic *graphic);
+		//void SetGraphic(Graphic *graphic);
 
 		//! set parent entity
 		void SetParent(Entity *parent);
@@ -144,22 +136,39 @@ namespace Monocle
 		//! return pointer to the Scene we are currently in
 		Scene *GetScene();
 
+		template <class t_component>
+		t_component* AddComponent()
+		{
+			t_component *comp = new t_component();
+
+			components[comp->GetName()] = comp;
+			comp->Init(this);
+			return comp;
+		}
+
+		bool HasComponent(const std::string &name);
+
 		// used by editors
-		bool IsPositionInGraphic(const Vector2 &position);
+		//bool IsPositionInGraphic(const Vector2 &position);
 		
-		Vector2 GetWorldPosition(const Vector2 &position=Vector2::zero);
 		Vector2 GetWorldScale(const Vector2 &scale);
 		Vector2 GetLocalPosition(const Vector2 &worldPosition);
-		void Invoke(void (*functionPointer)(void*), float delay);
+		//void Invoke(void (*functionPointer)(void*), float delay);
 
-		float depth;
-		bool isVisible;
-		Vector2 followCamera;
+		//bool isVisible;
+		//Vector2 followCamera;
 
-		Color color;
+		//Color color;
+		
+		template <typename T>
+		T* GetComponent(std::string component_name)
+		{
+			return (T*)(*this)[component_name];
+		}
 
+		EntityComponent* operator[](std::string component_name);
 	protected:
-		//void DestroyChildren();
+		Entity(const Entity &entity);
 
 		friend class Scene;
 
@@ -168,18 +177,12 @@ namespace Monocle
 
 		bool isEnabled;
 
-		void ApplyMatrix();
-		void MatrixChain();
+		//void MatrixChain();
 
 	private:
 		int id;
 
 		Entity *parent;
-
-		// only for use by Collision class
-		friend class Collision;
-		Collider* GetCollider();
-		Collider* collider;
 
 		// only for use by graphics
 		friend class Graphics;
@@ -197,6 +200,9 @@ namespace Monocle
 
         Vector2 cachedWorldPosition;
         Vector2 lastPositionWhenCached;
+
+		ComponentList components;
+
 	public:
 		//Entity* GetChildEntityAtPosition(const Vector2 &position);
 		//template <class T>

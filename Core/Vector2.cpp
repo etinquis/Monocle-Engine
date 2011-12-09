@@ -2,6 +2,7 @@
 #include "Random.h"
 #include "MonocleToolkit.h"
 #include <cmath>
+#include <iostream>
 
 namespace Monocle
 {
@@ -219,6 +220,18 @@ namespace Monocle
 		x = x / rhs;
 		y = y / rhs;
 		return *this;
+	}
+
+	std::ostream &operator<<(std::ostream &os, Vector2 vec)
+	{
+		os << vec.x << " " << vec.y;
+		return os;
+	}
+
+	std::istream &operator>>(std::istream &is, Vector2 &vec)
+	{
+		is >> vec.x >> vec.y;
+		return is;
 	}
 
 	Vector2 operator+(const Vector2& lhs, const Vector2& rhs)

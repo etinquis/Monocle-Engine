@@ -3,7 +3,6 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Color.h"
-#include "Tween.h"
 #include <vector>
 #include <string>
 
@@ -13,7 +12,7 @@ namespace Monocle
 	class Entity;
     class TextureAsset;
     class FontAsset;
-    
+
 	//! The type of blending to use between layers when a layer is drawn over another.
 	enum BlendType
 	{
@@ -38,19 +37,6 @@ namespace Monocle
         TEXTALIGN_CENTER,
         TEXTALIGN_RIGHT,
     };
-
-	//! Base class for graphic types that may be attached to and rendered with entities.
-	class Graphic
-	{
-	public:
-		Graphic() : rotation(0.0f)
-		{}
-		Vector2 position;
-		float rotation;
-		virtual void Update()=0;
-		virtual void Render(Entity *entity)=0;
-		virtual void GetWidthHeight(float *width, float *height)=0;
-	};
 
 	//! \brief Static class responsble for rendering to the screen.
 	//! \remark This class is meant to be generic enough so as to allow it to serve as

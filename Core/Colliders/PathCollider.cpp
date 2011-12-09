@@ -1,5 +1,6 @@
 #include "PathCollider.h"
 #include "CollisionData.h"
+#include "Component/Entity/Transform.h"
 
 namespace Monocle
 {
@@ -34,7 +35,7 @@ namespace Monocle
 			{
 				if (node->variant != -1)
 				{
-					if (LinesIntersect(node->GetWorldPosition(), next->GetWorldPosition(), start, end, collisionData))
+					if (LinesIntersect(((Transform*)(*node)["Transform"])->GetWorldPosition(), ((Transform*)(*next)["Transform"])->GetWorldPosition(), start, end, collisionData))
 					{
 						collisionData->collider = this;
 						return true;

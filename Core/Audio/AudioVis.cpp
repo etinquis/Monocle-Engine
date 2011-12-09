@@ -257,6 +257,7 @@ namespace Monocle {
     
     AudioVis::~AudioVis(){
         delete this->data;
+		this->data = NULL;
     }
 
     void AudioVis::PrepData()

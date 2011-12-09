@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Transform.h"
+#include "Entity.h"
 
 namespace Monocle
 {
@@ -18,14 +19,14 @@ namespace Monocle
 	//! \brief Manages the details of a view through which items in a scene are rendered.
 	//! Cameras are the eyes of the engine, their position, rotation, and depth of vision determine what is rendered
 	//! onto the screen.
-	class Camera : public Transform
+	class Camera : public Entity
 	{
 	public:
 		Camera();
 		Camera(const Camera& camera);
 
         //! Applies the position translation, scale, and rotation of this camera to the graphics context.
-		void ApplyMatrix();
+		//void ApplyMatrix();
 
         //! Sets the layers that this camera can see.
         //! \param backLayer The deepest layer in this camera's vision

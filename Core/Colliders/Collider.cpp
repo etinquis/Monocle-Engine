@@ -7,28 +7,33 @@
 #include <stdio.h> // for NULL
 #include "../CollisionData.h"
 #include "../Macros.h"
+#include "../Component/Entity/Collidable.h"
+#include "../Component/Entity/Transform.h"
 
 namespace Monocle
 {
 	Collider::Collider()
-		: entity(NULL)
+		: collidable(NULL)
 	{
 	}
 
-	void Collider::SetEntity(Entity* entity)
+	/*void Collider::SetEntity(Entity* entity)
 	{
 		this->entity = entity;
-	}
+	}*/
 
 	Entity* Collider::GetEntity()
 	{
-		return entity;
+		if(collidable)
+			return collidable->GetEntity();
+		return NULL;
 	}
 
 	Vector2 Collider::GetEntityPosition()
 	{
-		if (entity != NULL)
-			return entity->GetWorldPosition();
+		Entity *entity = GetEntity();
+		if (entity)
+			return ((Transform*)(*entity)["Transform"])->GetWorldPosition();
 		else
 			return Vector2();
 	}
@@ -328,8 +333,8 @@ namespace Monocle
 		{
 			if (prevNode && prevNode->variant != -1)
 			{
-				start = prevNode->GetWorldPosition();
-				end = node->GetWorldPosition();
+				start = ((Transform*)(*node)["Transform"])->GetWorldPosition();
+				end = ((Transform*)(*node)["Transform"])->GetWorldPosition();
 				if (a->IntersectsLine(start, end, b->radius, collisionData))
 				{
 					if (collisionData)
@@ -357,5 +362,15 @@ namespace Monocle
 		}
 
 		return false;
+	}
+
+	void Collider::SetCollidable(Collidable *coll)
+	{
+		this->collidable = coll;
+	}
+
+	Collidable *Collider::GetCollidable()
+	{
+		return this->collidable;
 	}
 }

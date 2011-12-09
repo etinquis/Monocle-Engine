@@ -21,7 +21,7 @@ namespace Monocle
         {
             void DerivedAssets::init()
             {
-                Monocle::Assets::Init();
+                Monocle::Assets::Init(NULL);
             }
             
             void DerivedAssets::remove(Asset *asset)
@@ -56,7 +56,7 @@ namespace Monocle
             
             void Assets::RequestAudio()
             {
-                assets->SetContentPath( CONTENT_PATH );
+                assets->SetContentPath( Platform::GetDefaultContentPath() );
                 AudioAsset *audio = assets->RequestAudio("doesntexist.wav", false);
                 //File does not exist, return value should be null
                 TEST_ASSERT( audio == NULL );
@@ -78,7 +78,7 @@ namespace Monocle
             
             void Assets::RequestFont()
             {
-                assets->SetContentPath( "../../../Content/" );
+                assets->SetContentPath( Platform::GetDefaultContentPath() );
                 FontAsset *font = assets->RequestFont("doesntexist.ttf", 12);
                 TEST_ASSERT( font == NULL );
                 font = assets->RequestFont("AudioTest/LiberationSans-Regular.ttf", 12);
@@ -102,7 +102,7 @@ namespace Monocle
             {
                 Game *g = new Game();
                 
-                Monocle::Assets::SetContentPath( "../../../Content/" );
+                //Monocle::Assets::SetContentPath( Platform::GetDefaultContentPath() );
                 
                 TextureAsset *tex = Monocle::Assets::RequestTexture("doesntexist.png");
                 TEST_ASSERT( tex == NULL );

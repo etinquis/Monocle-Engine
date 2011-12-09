@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vector2.h"
+
 namespace Monocle
 {
 	//!
@@ -18,7 +20,8 @@ namespace Monocle
 		static Vector3 right;
 
 		Vector3();
-		Vector3(float x, float y, float z);
+		Vector3(float x, float y, float z = 0.0f);
+		Vector3(Vector2 xy, float z = 0.0f);
 
 		/*
 		float GetSquaredMagnitude();
@@ -39,5 +42,6 @@ namespace Monocle
 		static Vector2 Scale(Vector2 a, float s);
 		*/
 
+		Vector2 xy() const;
 	};
 }

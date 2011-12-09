@@ -11,6 +11,11 @@ namespace Monocle
 	{
 	}
 
+	Tween::~Tween()
+	{
+
+	}
+
 	template <typename T, typename N>
 	void Tween::To(T *value, const T &end, float time, EaseType easeType)
 	{
@@ -71,6 +76,7 @@ namespace Monocle
 		{
 			tweeners.remove(*i);
 			delete *i;
+			*i = NULL;
 		}
 		tweenersToRemove.clear();
 	}
@@ -86,6 +92,7 @@ namespace Monocle
 		for (std::list<Tweener*>::iterator i = tweeners.begin(); i != tweeners.end(); ++i)
 		{
 			delete *i;
+			*i = NULL;
 		}
 
 		tweeners.clear();
@@ -198,5 +205,10 @@ namespace Monocle
 	void ColorTweener::SetValue(float p)
 	{
 		(*value) = ((end - start) * p) + start;
+	}
+
+	Tween *Tween::Clone() const
+	{
+		return new Tween(*this);
 	}
 }

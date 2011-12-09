@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "Game.h"
+#include "Component/Entity/Transform.h"
 
 namespace Monocle
 {
@@ -20,8 +21,10 @@ namespace Monocle
 		instance = this;
 	}
 
-	void Input::Init()
+	void Input::Init(Game* game)
 	{
+		GameComponent::Init(game);
+
 		worldMouseCamera = NULL;
 
 		for (int i = 0; i < (int)KEY_MAX; i++)
@@ -155,8 +158,8 @@ namespace Monocle
 		adjustedToCameraMousePosition += adjust;
 
 		Vector2 diff = (adjustedToCameraMousePosition * invResScale) - Graphics::GetScreenCenter();
-		Vector2 cameraZoom = camera->scale;
-		return camera->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
+		Vector2 cameraZoom = ((Transform*)(*camera)["Transform"])->scale;
+		return ((Transform*)(*camera)["Transform"])->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
 	}
 
 	void Input::SetWorldMouseCamera(Camera *camera)
@@ -352,4 +355,9 @@ namespace Monocle
     {
         return Platform::numTouches;
     }
+
+	Input *Input::Clone() const
+	{
+		return new Input(*this);
+	}
 }

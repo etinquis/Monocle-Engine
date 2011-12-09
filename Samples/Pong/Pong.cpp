@@ -1,6 +1,10 @@
 #include "Pong.h"
 #include <Input.h>
 #include <Collision.h>
+#include <Component/Entity/Collidable.h>
+#include <Colliders/RectangleCollider.h>
+
+#include <Component/Entity/Transform.h>
 
 #include <stdlib.h>
 #include <sstream>
@@ -12,12 +16,12 @@ namespace Pong
 	Text::Text(const std::string& text, FontAsset* font)
 		: Entity(), font(font), text(text)
 	{
+		transform = AddComponent<Transform>();
 	}
-
 	void Text::Render()
 	{
 		Graphics::PushMatrix();
-		Graphics::Translate(position);
+		Graphics::Translate(transform->position);
 		Graphics::SetBlend(BLEND_ALPHA);
 		Graphics::SetColor(Color::white);
 		Graphics::BindFont(font);
@@ -40,8 +44,10 @@ namespace Pong
 
 	Ball::Ball() : Entity(), texture(NULL)
 	{
-		AddTag("Ball");
-		SetCollider(new RectangleCollider(25.0f, 25.0f));
+		transform = AddComponent<Transform>();
+		collidable = AddComponent<Collidable>();
+		collidable->AddTag("Ball");
+		collidable->SetCollider(new RectangleCollider(25.0f, 25.0f));
 		//Collision::AddRectangleCollider(this, 25.0f, 25.0f);
 		velocity = Vector2::right * 200.0f;
 	}
@@ -49,38 +55,40 @@ namespace Pong
 	void Ball::Update()
 	{
 		// store our last position
-		Vector2 lastPosition = position;
+		Vector2 lastPosition = transform->position;
 
 		// update our current position using velocity
-		position += velocity * Monocle::deltaTime;
+		transform->position += velocity * Monocle::deltaTime;
 
 		// check collisions against the paddles
-		Collider* collider = Collide("Paddle");
+		Collider* collider = collidable->Collide("Paddle");
 		if (collider)
 		{
 			Debug::Log("Ball hit an entity tagged with 'Paddle'");
-			position = lastPosition;
+			transform->position = lastPosition;
 			
-			Vector2 diff = position - collider->GetEntity()->position;
+			Vector2 otherPos = ((Transform*)(*collider->GetEntity())[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position;
+
+			Vector2 diff = transform->position - otherPos;
 			diff.Normalize();
 			diff *= velocity.GetMagnitude();
 			velocity = diff;
             
             // Calculate panning
-            float pan = ((collider->GetEntity()->position.x / Graphics::GetVirtualWidth()) - 0.5) * 2.0;
+            float pan = ((otherPos.x / Graphics::GetVirtualWidth()) - 0.5) * 2.0;
 
             if (sfxWall)
                 sfxWall->Play(1,1.0,pan); // Play it with panning! (STEREO, baby :D)
 		}
 
 		// if we hit the top or bottom of the screen
-		if (position.y < 0 || position.y > 600)
+		if (transform->position.y < 0 || transform->position.y > 600)
 		{
-			position = lastPosition;
+			transform->position = lastPosition;
 			velocity.y *= -1;
             
             // Calculate panning
-            float pan = ((position.x / Graphics::GetVirtualWidth()) - 0.5) * 2.0;
+            float pan = ((transform->position.x / Graphics::GetVirtualWidth()) - 0.5) * 2.0;
             
             if (sfxWall)
                 sfxWall->Play(1,1.0,pan,2.0); // Play it higher, you won't even notice it's the same ;D
@@ -91,7 +99,7 @@ namespace Pong
 	{
 		Graphics::BindTexture(texture);
 		Graphics::PushMatrix();
-		Graphics::Translate(position);
+		Graphics::Translate(transform->position);
         Graphics::SetColor(Color::white);
 		Graphics::RenderQuad(25.0f, 25.0f);
 		Graphics::PopMatrix();
@@ -111,8 +119,11 @@ namespace Pong
 	Paddle::Paddle()
 		: Entity(), speed(0.0f)
 	{
-		AddTag("Paddle");
-		SetCollider(new RectangleCollider(25.0f, 100.0f));
+		collidable = AddComponent<Collidable>();
+		transform = AddComponent<Transform>();
+
+		collidable->AddTag("Paddle");
+		collidable->SetCollider(new RectangleCollider(25.0f, 100.0f));
 	}
 
 	void Paddle::Update()
@@ -122,14 +133,14 @@ namespace Pong
 		const float friction = 500.0f;
 		const float maxY = 600.0f;
 
-		if (Input::IsKeyHeld(keyUp) || Input::IsTouchInRect(Vector2(position.x-150,position.y-500),
-                                                            Vector2(position.x+150,position.y)))
+		if (Input::IsKeyHeld(keyUp) || Input::IsTouchInRect(Vector2(transform->position.x-150,transform->position.y-500),
+                                                            Vector2(transform->position.x+150,transform->position.y)))
 		{
 			speed += accel * Monocle::deltaTime;
 			if (speed > maxSpeed) speed = maxSpeed;
 		}
-		else if (Input::IsKeyHeld(keyDown) || Input::IsTouchInRect(Vector2(position.x-150,position.y+1),
-                                                                   Vector2(position.x+150,position.y+500)))
+		else if (Input::IsKeyHeld(keyDown) || Input::IsTouchInRect(Vector2(transform->position.x-150,transform->position.y+1),
+                                                                   Vector2(transform->position.x+150,transform->position.y+500)))
 		{
 			speed -= accel * Monocle::deltaTime;
 			if (speed < -maxSpeed) speed = -maxSpeed;
@@ -150,16 +161,16 @@ namespace Pong
 				speed = 0.0f;
 			}
 		}
-		position += Vector2::up * Monocle::deltaTime * speed;
+		transform->position += Vector2::up * Monocle::deltaTime * speed;
 		
-		if (position.y > maxY)
+		if (transform->position.y > maxY)
 		{
-			position.y = maxY;
+			transform->position.y = maxY;
 			speed = -1.0f;
 		}
-		else if (position.y < 0)
+		else if (transform->position.y < 0)
 		{
-			position.y = 0;
+			transform->position.y = 0;
 			speed = 1.0f;
 		}
 	}
@@ -167,7 +178,7 @@ namespace Pong
 	void Paddle::Render()
 	{
 		Graphics::PushMatrix();
-		Graphics::Translate(position);
+		Graphics::Translate(transform->position);
         Graphics::SetColor(Color::white);
 		Graphics::RenderQuad(25, 100.0f);
 		Graphics::PopMatrix();
@@ -200,30 +211,30 @@ namespace Pong
 		p1Score = p2Score = 0;
 
 		ball = new Ball();
-		ball->position = Vector2(400, 300);
+		ResetBall();
 		Add(ball);
 
 		paddle1 = new Paddle();
-		paddle1->position = Vector2(100, 300);
+		((Transform*)(*paddle1)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(100, 300);
 		paddle1->keyUp = KEY_W;
 		paddle1->keyDown = KEY_S;
 		Add(paddle1);
 
 		paddle2 = new Paddle();
-		paddle2->position = Vector2(700, 300);
+		((Transform*)(*paddle2)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(700, 300);
 		paddle2->keyUp = KEY_UP;
 		paddle2->keyDown = KEY_DOWN;
 		Add(paddle2);
 
 		FontAsset* font = Assets::RequestFont("Pong/LiberationSans-Regular.ttf", 25.0f);
         scoreText = new Text(GetScoreString(), font);
-        scoreText->position = Vector2(50, 50);
+        ((Transform*)(*scoreText)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(50, 50);
         Add(scoreText);
 	}
 
 	void GameScene::ResetBall()
 	{
-		ball->position = Vector2(400,300);
+		((Transform*)(*ball)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(400, 300);
 		ball->velocity = Vector2::Random() * 200.0f;
 	}
     
@@ -239,13 +250,13 @@ namespace Pong
 		Scene::Update();
 
 		// do pong specific update
-		if (ball->position.x < 0)
+		if (((Transform*)(*ball)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position.x < 0)
 		{
             p2Score++;
             scoreText->SetText(GetScoreString());
 			ResetBall();
 		}
-		else if (ball->position.x > 800)
+		else if (((Transform*)(*ball)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position.x > 800)
 		{
             p1Score++;
             scoreText->SetText(GetScoreString());

@@ -29,5 +29,8 @@ namespace Monocle
 		return ((float) rand()) / (float) RAND_MAX;
 	}
 
-
+	Random *Random::Clone() const
+	{
+		return new Random(*this);
+	}
 }

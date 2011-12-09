@@ -3,6 +3,9 @@
 #include "Graphics.h"
 #include "MonocleToolkit.h"
 #include "Platform.h"
+#include "Component/Entity/Transform.h"
+#include "Component/SceneComponent.h"
+#include "Camera.h"
 
 namespace Monocle
 {
@@ -10,7 +13,7 @@ namespace Monocle
 		: isVisible(true), isPaused(false), activeCamera(NULL), mainCamera(NULL)
 	{
 		Camera *camera = new Camera();
-		camera->position = Graphics::GetScreenCenter();
+		((Transform*)(*camera)["Transform"])->position = Graphics::GetScreenCenter();
 		AddCamera(camera);
 		SetMainCamera(camera);
 	}
@@ -37,6 +40,11 @@ namespace Monocle
 	{
 		if (!isPaused)
 		{
+			for (ComponentList::iterator it = components.begin(); it != components.end(); it++)
+			{
+				it->second->Update();
+			}
+
 			//Update all the entities
 			for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 			{
@@ -81,7 +89,7 @@ namespace Monocle
 				{
 					// set viewport
 
-					activeCamera->ApplyMatrix();
+					//activeCamera->ApplyMatrix();
 
 					///HACK: optimize later so we don't run through all the layers
 					// TODO sort entities into layer buckets? or one big sorted list?
@@ -90,13 +98,13 @@ namespace Monocle
 					{
 						for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 						{
-							if ((*i)->isVisible && (*i)->IsLayer(layer))
-							{
+							/*if ((*i)->isVisible && (*i)->IsLayer(layer))
+							{*/
 //                                if ((*i)->IsOnCamera(activeCamera)){
                                     (*i)->Render();
                                     entitiesDrawn++;
 //                                }
-							}
+							//}
 						}
 					}
 				}
@@ -172,6 +180,11 @@ namespace Monocle
 		toRemove.push_back(entity);
 	}
 
+	Game *Scene::GetGame()
+	{
+		return game;
+	}
+
 	void Scene::RemoveAll()
 	{
 		toRemove.clear();
@@ -193,13 +206,14 @@ namespace Monocle
 			entities.remove(*i);
 
 			//If the tag is set, remove the entity from the tag map
-			for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
-				EntityRemoveTag(*i, (*i)->GetTag(j));
+			//for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
+				//EntityRemoveTag(*i, (*i)->GetTag(j));
 
 			(*i)->scene = NULL;
 			(*i)->Removed();
 
 			delete (*i);
+			*i = NULL;
 		}
 		toRemove.clear();
 
@@ -209,8 +223,8 @@ namespace Monocle
 			entities.push_back(*i);
 
 			//If the tag is set, add the entity to the tag map
-			for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
-				EntityAddTag(*i, (*i)->GetTag(j));
+			//for (int j = 0; j < (*i)->GetNumberOfTags(); ++j)
+				//EntityAddTag(*i, (*i)->GetTag(j));
 
 			(*i)->scene = this;
 			(*i)->Added();
@@ -263,12 +277,13 @@ namespace Monocle
 	{
 		for (std::list<Camera*>::iterator i = cameras.begin(); i != cameras.end(); i++)
 		{
-			delete *i;
+			delete (*i);
+			(*i) = NULL;
 		}
 		cameras.clear();
 	}
 
-	void Scene::EntityAddTag(Entity* entity, const std::string& tag)
+	/*void Scene::EntityAddTag(Entity* entity, const std::string& tag)
 	{
 		tagMap[tag].push_back(entity);
 	}
@@ -276,7 +291,7 @@ namespace Monocle
 	void Scene::EntityRemoveTag(Entity* entity, const std::string& tag)
 	{
 		tagMap[tag].remove(entity);
-	}
+	}*/
 
 	Entity *Scene::CreateEntity(const std::string &entityTypeName)
 	{
@@ -291,7 +306,7 @@ namespace Monocle
 	{
 	}
 
-	Entity* Scene::GetFirstEntityWithTag(const std::string &tag)
+	/*Entity* Scene::GetFirstEntityWithTag(const std::string &tag)
 	{
 		for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 		{
@@ -301,7 +316,7 @@ namespace Monocle
 			}
 		}
 		return NULL;
-	}
+	}*/
 
 	Entity* Scene::GetNearestEntity(const Vector2 &position, Entity *ignoreEntity)
 	{
@@ -313,7 +328,7 @@ namespace Monocle
 		{
 			if ((*i) != ignoreEntity)
 			{
-				Vector2 diff = (*i)->position - position;
+				Vector2 diff = ((Transform *)(**i)["Transform"])->position - position;
 				float sqrMag = diff.GetSquaredMagnitude();
 				if (smallestSqrMag <= -1 || sqrMag < smallestSqrMag)
 				{
@@ -325,7 +340,7 @@ namespace Monocle
 		return nearestEntity;
 	}
 
-	Entity* Scene::GetNearestEntityWithTag(const Vector2 &position, const std::string &tag)
+	/*Entity* Scene::GetNearestEntityWithTag(const Vector2 &position, const std::string &tag)
 	{
 		float smallestSqrMag = -1.0f;
 
@@ -342,7 +357,7 @@ namespace Monocle
 		}
 
 		return nearestEntity;
-	}
+	}*/
 
 	Entity* Scene::GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity)
 	{
@@ -352,10 +367,10 @@ namespace Monocle
 
 		std::list<Entity*> *entities = &this->entities;
 
-		if (tag != "")
+		/*if (tag != "")
 		{
 			entities = GetAllTag(tag);
-		}
+		}*/
 
 		if (entities != NULL)
 		{
@@ -363,7 +378,7 @@ namespace Monocle
 			{
 				if ((*i) != ignoreEntity)
 				{
-					Vector2 diff = (*i)->GetWorldPosition() - position;
+					Vector2 diff = ((Transform *)(**i)["Transform"])->GetWorldPosition() - position;
 					if (diff.IsInRange(ENTITY_CONTROLPOINT_SIZE))
 					{
 						float sqrMag = diff.GetSquaredMagnitude();
@@ -387,7 +402,7 @@ namespace Monocle
 		return nearestEntity;
 	}
 
-	Entity* Scene::GetFirstTag(const std::string& tag)
+	/*Entity* Scene::GetFirstTag(const std::string& tag)
 	{
 		if (tagMap.count(tag) == 0 || tagMap[tag].size() == 0)
 			return NULL;
@@ -409,7 +424,7 @@ namespace Monocle
 			return 0;
 		
 		return static_cast<int>(tagMap[tag].size());
-	}
+	}*/
 
 	const std::list<Entity*>* Scene::GetEntities()
 	{
@@ -420,10 +435,10 @@ namespace Monocle
 	{
 		for (std::list<Entity*>::iterator i = entities.begin(); i != entities.end(); ++i)
 		{
-			if ((*i)->IsPositionInGraphic(position))
+			/*if ((*i)->IsPositionInGraphic(position))
 			{
 				return *i;
-			}
+			}*/
 		}
 		//if (searchType == SEARCH_TOP)
 		//{
@@ -444,7 +459,15 @@ namespace Monocle
 		return NULL;
 	}
 
+	SceneComponent* Scene::operator[](std::string component_name)
+	{
+		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
+		{
+			if(i->second->GetName() == component_name) return i->second;
+		}
 
+		return NULL;
+	}
 
 	/*
 	Entity *Scene::GetFirstEntity()

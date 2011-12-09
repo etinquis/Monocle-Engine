@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Asset.h"
+#include "Component/GameComponent.h"
 #include <list>
 #include <string>
 
@@ -10,6 +11,7 @@ namespace Monocle
     class FontAsset;
     class AudioAsset;
     class AudioDecoder;
+	class Color;
 
 	//!
 	//! \brief Loads and manages TextureAsset, FontAsset, AudioAsset
@@ -18,7 +20,7 @@ namespace Monocle
 	//!
 	//! Call Assets::RequestTexture, Assets::RequestFont, Assets::RequestAudio to load different each type of Asset.
 	//!
-	class Assets
+	class Assets : public GameComponent
 	{
 	public:
 		//! \brief Requests a texture asset
@@ -28,8 +30,14 @@ namespace Monocle
 		//! \param FilterType The image filter type to use on the generated texture.
 		//! \param repeatX Whether the texture should be repeated horizontally if necessary when rendered.
 		//! \param repeatY Whether the texture should be repeated vertically if necessary when rendered.
-		//! \sa RequestAudio, RequestFont, FilterType
+		//! \sa RequestColorTexture, RequestAudio, RequestFont, FilterType
 		static TextureAsset *RequestTexture(const std::string &filename, FilterType filter = FILTER_LINEAR, bool repeatX = false, bool repeatY = false, bool premultiply = true);
+		//! \brief Requests a texture asset
+		//! Returns a pointer to a Texture Asset filled with the given color, NULL on failure.  Calling this function multiple times with the same color will return
+		//! a pointer to the same Texture.  Pointers returned from this function should not be deleted by the caller.
+		//! \param color The color of the texture to generate.
+		//! \sa RequestTexture, RequestAudio, RequestFont, FilterType
+		static TextureAsset *RequestColorTexture(const Color &color);
 		//! \brief Requests a font asset
 		//! Returns a pointer to the requested Font Asset, NULL on failure.  Calling this function multiple times with the same filename will return
 		//! a pointer to the same Font.  Pointers returned from this function should not be deleted by the caller.
@@ -58,13 +66,22 @@ namespace Monocle
         //! \return The current content path.
         //! \sa SetContentPath
 		static const std::string &GetContentPath();
+		
+		Assets();
+
+		std::string GetName() { return "Assets"; }
+
+		void Init(Game* game);
+		void Update() { }
+		void Unload() { }
+
+		Assets *Clone() const;
 
 	protected:
 		friend class Asset;
 		friend class Game;
 		
-		Assets();
-		void Init();
+		
 		
 		static void RemoveAsset(Asset *asset);
 

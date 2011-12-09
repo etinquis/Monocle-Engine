@@ -3,6 +3,7 @@
 
 ///HACK:
 #include "PathMesh.h"
+#include "Component/Entity/Transform.h"
 
 namespace Monocle
 {
@@ -21,7 +22,7 @@ namespace Monocle
 	Node::Node(const Vector2 &position)
 		: Entity(),next(NULL), prev(NULL), variant(0)//, isIgnored(false)
 	{
-		this->position = position;
+		((Transform*)(*this)["Transform"])->position = position;
 	}
 
 	Entity* Node::Clone()
@@ -95,28 +96,28 @@ namespace Monocle
 			PathMesh *pathMesh = dynamic_cast<PathMesh*>(GetParent());
 			if (pathMesh)
 			{
-				Color color = pathMesh->color;
-				color.a = 1;
-				if (variant == -1)
-				{
-					Graphics::SetColor(color * 0.5f);
-				}
-				else
-				{
-					Graphics::SetColor(pathMesh->color);
-				}
+				//Color color = pathMesh->color;
+				//color.a = 1;
+				//if (variant == -1)
+				//{
+				//	Graphics::SetColor(color * 0.5f);
+				//}
+				//else
+				//{
+				//	//Graphics::SetColor(pathMesh->color);
+				//}
 			}
 
 
-			Vector2 pos = GetWorldPosition();
+			Vector2 pos = ((Transform*)(*this)["Transform"])->GetWorldPosition();
 			Graphics::RenderLineRect(pos.x, pos.y, 64, 64);
 			if (next)
 			{
-				Vector2 nextPos = next->GetWorldPosition();
+				Vector2 nextPos = ((Transform*)(*next)["Transform"])->GetWorldPosition();
 				Vector2 diff = (nextPos - pos);
 				Vector2 halfPos = diff * 0.5f + pos;
 				Vector2 dir = diff.GetNormalized();
-				Graphics::RenderLine(pos, next->GetWorldPosition());
+				Graphics::RenderLine(pos, ((Transform*)(*next)["Transform"])->GetWorldPosition());
 				Graphics::RenderLine(halfPos, halfPos + dir.GetPerpendicularLeft() * 10.0f - dir * 10.0f);
 				Graphics::RenderLine(halfPos, halfPos + dir.GetPerpendicularRight() * 10.0f - dir * 10.0f);
 			}
@@ -153,8 +154,8 @@ namespace Monocle
 	{
 		Entity::Save(fileNode);
 
-		if (variant != 0)
-			fileNode->Write("variant", variant);
+		//if (variant != 0)
+		//	fileNode->Write("variant", variant);
 		/*
 		if (radius != 0)
 			fileNode->Write("radius", radius);
@@ -165,7 +166,7 @@ namespace Monocle
 	{
 		Entity::Load(fileNode);
 
-		fileNode->Read("variant", variant);
+		//fileNode->Read("variant", variant);
 		//fileNode->Read("radius", radius);
 	}
 

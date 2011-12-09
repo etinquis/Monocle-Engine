@@ -3,6 +3,12 @@
 
 using namespace Monocle;
 
+namespace Monocle
+{
+	class Transform;
+	class Collidable;
+}
+
 namespace Pong
 {
 	class Text: public Entity
@@ -18,6 +24,8 @@ namespace Pong
 	protected:
 		FontAsset* font;
 		std::string text;
+
+		Transform *transform;
 	};
     
 	class Paddle : public Entity
@@ -31,6 +39,10 @@ namespace Pong
 		KeyCode keyDown;
 
 		float speed;
+
+	private:
+		Transform *transform;
+		Collidable *collidable;
 	};
 
 	class Ball : public Entity
@@ -41,6 +53,10 @@ namespace Pong
 		void Render();
 		TextureAsset *texture;
 		Vector2 velocity;
+
+	private:
+		Collidable *collidable;
+		Transform *transform;
 	};
 
 	class GameScene : public Scene

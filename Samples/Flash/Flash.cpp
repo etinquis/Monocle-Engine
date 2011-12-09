@@ -1,4 +1,5 @@
 #include "Flash.h"
+#include <Input.h>
 #include <TinyXML/tinyxml.h>
 #include <math.h>
 #include <algorithm>
@@ -428,7 +429,7 @@ namespace Flash
 					editEntity->position = Input::GetMousePosition() + offset;
 				}
 
-				Debug::selectedEntity = editEntity;
+				//Debug::selectedEntity = editEntity;
 				
 				if (Input::IsKeyPressed(KEY_LEFT))
 				{

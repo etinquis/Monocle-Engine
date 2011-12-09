@@ -148,7 +148,7 @@ namespace Monocle
 				TEST_ASSERT( vec2->GetAngleDegrees() == 45.0f );
 				TEST_ASSERT( vec2->GetAngleRadians() == 0.785398163397448309615660845f );
 				
-				vec2->Set(1,std::tan(1));
+				vec2->Set(1,std::tan(1.f));
 				std::cout << vec2->GetAngleDegrees() << std::endl;
 				TEST_ASSERT( vec2->GetAngleRadians() == 1.0f );
 			}

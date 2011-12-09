@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Component/GameComponent.h"
 #include "Vector2.h"
 #include "Vector3.h"
 #include <string>
@@ -11,10 +12,15 @@ namespace Monocle
 	//!
 	//! \brief Holds debug log functions, stores data that controls debug output throughout Monocle
 	//!
-	class Debug
+	class Debug : public GameComponent
 	{
 	public:
-		void Init();
+		virtual std::string GetName() { return "Debug"; }
+
+		virtual void Init(Game* game);
+		virtual void Update();
+		virtual void Unload();
+
 		static void Log(const char *string);
 		static void Log(bool boolean);
 		static void Log(int num);
@@ -25,14 +31,16 @@ namespace Monocle
 		static void Log(const Vector3& vec);
 		static void Log(const std::string& string);
 
-		static bool render;
-		static bool showBounds;
+		Debug *Clone() const;
+
+		bool render;
+		bool showBounds;
 
 		//! used by LevelEditor and PuppetEditor, as well as Entity for rendering selection effects
-		static Entity *selectedEntity;
+		Entity *selectedEntity;
 
 		//! Entities in layers outside of this range won't be subject to Debug::render or Debug::showBounds
-		static int layerMin;
-		static int layerMax;
+		int layerMin;
+		int layerMax;
 	};
 }

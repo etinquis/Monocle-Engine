@@ -1,6 +1,10 @@
 #include "Jumper.h"
 #include <Input.h>
-#include <Level.h>
+#include <Level/Level.h>
+#include <Colliders/RectangleCollider.h>
+#include <Component/Entity/Collidable.h>
+#include <Component/Entity/Transform.h>
+#include <Component/Entity/Sprite.h>
 
 namespace Jumper
 {
@@ -8,15 +12,21 @@ namespace Jumper
 	Player::Player(Vector2 pos) 
 		: Entity()
 	{
-		position = pos;
+		AddComponent<Transform>();
+		AddComponent<Collidable>();
+		AddComponent<Sprite>();
+
+		transform = (Transform*)(*this)["Transform"];
+		collidable = (Collidable*)(*this)["Collidable"];
+		sprite = (Sprite*)(*this)["Sprite"];
+
+		transform->position = pos;
 		SetLayer(-10);
 
-		AddTag("Player");
+		collidable->AddTag("Player");
+		collidable->SetCollider(new RectangleCollider(40, 64));
 
-		SetCollider(new RectangleCollider(40, 64));
-
-		sprite = new Sprite("Graphics/Player.png", FILTER_NONE, 64, 64);
-		SetGraphic(sprite);
+		sprite->Load("Graphics/Player.png", FILTER_NONE, 64, 64);
 
 		speed = 4000.0f;
 		gravity = 2000.0f;
@@ -68,7 +78,7 @@ namespace Jumper
 		float temp = 0.001f;
 
 		position.x += velocity.x * Monocle::deltaTime;
-		if(Collide("Wall") || Collide("Player"))
+		if(((Collidable *)((*this)["Collidable"]))->Collide("Wall") || ((Collidable *)((*this)["Collidable"]))->Collide("Player"))
 		{
 			position.x = lastPosition.x;
 			velocity.x = 0.0f;
@@ -78,7 +88,7 @@ namespace Jumper
 
 		onGround = false;
 
-		if (Collide("Wall") || Collide("Player"))
+		if (((Collidable *)((*this)["Collidable"]))->Collide("Wall") || ((Collidable *)((*this)["Collidable"]))->Collide("Player"))
 		{
 			// small ground collision problem here if falling fast (warps back up too far)
 			// could do a line intersection with the collider we hit
@@ -111,8 +121,8 @@ namespace Jumper
 		: Entity()
 	{
 		position = pos;
-		AddTag("Wall");
-		SetCollider(new RectangleCollider(w, h));
+		((Collidable *)(*this)["Collidable"])->AddTag("Wall");
+		((Collidable *)((*this)["Collidable"]))->SetCollider(new RectangleCollider(w, h));
 		this->width = w;
 		this->height = h;
 	}

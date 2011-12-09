@@ -839,7 +839,9 @@ namespace Monocle
         }
         
         delete tmpline;
+		tmpline = NULL;
         delete data;
+		data = NULL;
     }
     
     void Graphics::CheckErrors()

@@ -6,6 +6,8 @@
 #include <TextureAsset.h>
 #include <GUI/Berkelium/BerkeliumPanel.h>
 
+#include <Component/Entity/Transform.h>
+
 #include <berkelium/Berkelium.hpp>
 #include <berkelium/Context.hpp>
 
@@ -72,7 +74,7 @@ namespace Monocle
         {
             Panel::Update();
 
-            Vector2 localMousePos = Input::GetMousePosition() - position;
+            Vector2 localMousePos = Input::GetMousePosition() - ((Transform*)(*this)["Transform"])->position;
 			Vector2 scale = Vector2( Platform::GetWidth() / (float)Graphics::GetVirtualWidth(), Platform::GetHeight() / (float)Graphics::GetVirtualHeight() );
 			Vector2 scaled = localMousePos * scale;
 
@@ -201,7 +203,7 @@ namespace Monocle
 
         void BerkeliumPanel::setUrl(const std::string url) const
         {
-            win->navigateTo(url.data(), url.length());
+            win->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
         }
 
 		void BerkeliumPanel::OnKeyPress(Monocle::KeyCode key)

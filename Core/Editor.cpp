@@ -4,6 +4,9 @@
 #include "Entity.h"
 #include "MonocleToolkit.h"
 #include "Game.h"
+#include "Camera.h"
+#include "Component/Entity/Transform.h"
+
 #include <cstdio>
 
 namespace Monocle
@@ -12,7 +15,7 @@ namespace Monocle
 	Editor::Editor() : Entity()
 	{
 		// set layer on top of foreground selectable layer (i.e. avoid having this entity be considered for selection)
-		SetLayer(Debug::layerMin - 1);
+		//SetLayer(Debug::layerMin - 1);
 	}
 
 	// update the camera controls
@@ -34,12 +37,12 @@ namespace Monocle
 			if (Platform::mouseScroll != 0)
 			{
 				const float minZoom = 0.01f;
-				mainCamera->scale += (Platform::mouseScroll * Vector2::one * 0.00025f);
-				if (mainCamera->scale.x < minZoom)
+				((Transform*)(*mainCamera)["Transform"])->scale += (Platform::mouseScroll * Vector2::one * 0.00025f);
+				if (((Transform*)(*mainCamera)["Transform"])->scale.x < minZoom)
 				{
-					mainCamera->scale = Vector2::one * minZoom;
+					((Transform*)(*mainCamera)["Transform"])->scale = Vector2::one * minZoom;
 				}
-				Vector2 camZoom = mainCamera->scale;
+				Vector2 camZoom = ((Transform*)(*mainCamera)["Transform"])->scale;
 				printf("camZoom (%f, %f)\n", camZoom.x, camZoom.y);
 			}
 
@@ -50,7 +53,7 @@ namespace Monocle
 			else if (Input::IsKeyHeld(KEY_LALT))
 			{
 				Vector2 diff = Input::GetWorldMousePosition() - lastWorldMousePosition;
-				mainCamera->scale += Vector2::one * diff.y * Monocle::deltaTime * 0.05f;
+				((Transform*)(*mainCamera)["Transform"])->scale += Vector2::one * diff.y * Monocle::deltaTime * 0.05f;
 				lastWorldMousePosition = Input::GetWorldMousePosition();
 			}
 
@@ -61,10 +64,10 @@ namespace Monocle
 			else if (Input::IsMouseButtonHeld(MOUSE_BUTTON_MIDDLE) || Input::IsKeyHeld(KEY_LSHIFT))
 			{
 				Vector2 diff = Input::GetWorldMousePosition() - lastWorldMousePosition;
-				mainCamera->position += (-1*diff);
+				((Transform*)(*mainCamera)["Transform"])->position = ((Transform*)(*mainCamera)["Transform"])->position + (-1*diff);
 				lastWorldMousePosition = Input::GetWorldMousePosition();
 
-				Vector2 camPos = mainCamera->position;
+				Vector2 camPos = ((Transform*)(*mainCamera)["Transform"])->position;
 				printf("camPos (%d, %d)\n", (int)camPos.x, (int)camPos.y);
 			}
 
@@ -73,11 +76,11 @@ namespace Monocle
 
 			const float cameraMoveSpeed = 800.0f; // replace with virtualWidth
 			moveDiff *= Monocle::deltaTime * cameraMoveSpeed;
-			mainCamera->position += moveDiff;
+			((Transform*)(*mainCamera)["Transform"])->position = ((Transform*)(*mainCamera)["Transform"])->position + moveDiff;
 
 			float zoomDiff = (Input::IsKeyHeld(KEY_KP7) ? -1.0f : 0.0f) + (Input::IsKeyHeld(KEY_KP9) ? 1.0f : 0.0f);
 			const float cameraZoomSpeed = 1.0f;
-			mainCamera->scale += zoomDiff * cameraZoomSpeed * Vector2::one * Monocle::deltaTime;
+			((Transform*)(*mainCamera)["Transform"])->scale += zoomDiff * cameraZoomSpeed * Vector2::one * Monocle::deltaTime;
 		}
 	}
 }

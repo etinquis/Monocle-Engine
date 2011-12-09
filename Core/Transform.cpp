@@ -1,23 +1,23 @@
-#include "Transform.h"
-#include "FileNode.h"
+//#include "Transform.h"
+//#include "FileNode.h"
+//
+//#include "MonocleToolkit.h"
+//#include <math.h>
+//#include <stdio.h>
+//
+//namespace Monocle
+//{
+	//Transform::Transform()
+	//	/*: position(Vector2::zero), rotation(0.0f), scale(Vector2::one)*/
+	//{
+	//}
 
-#include "MonocleToolkit.h"
-#include <math.h>
-#include <stdio.h>
+	//Transform::Transform(const Transform &transform)
+	//	/*: position(transform.position), rotation(transform.rotation), scale(transform.scale)*/
+	//{
+	//}
 
-namespace Monocle
-{
-	Transform::Transform()
-		: position(Vector2::zero), rotation(0.0f), scale(Vector2::one)
-	{
-	}
-
-	Transform::Transform(const Transform &transform)
-		: position(transform.position), rotation(transform.rotation), scale(transform.scale)
-	{
-	}
-
-	void Transform::LerpTransform(Transform *prev, Transform *next, float percent)
+	/*void Transform::LerpTransform(Transform *prev, Transform *next, float percent)
 	{
 		position = next->position*percent + prev->position*(1.0f - percent);
 		rotation = next->rotation*percent + prev->rotation*(1.0f - percent);
@@ -44,5 +44,5 @@ namespace Monocle
     Vector2 Transform::GetDirectionVector()
     {
         return Vector2(sin(rotation*pi / 180.0),cos(rotation*pi / 180.0)*-1.0);
-    }
-}
+    }*/
+//}

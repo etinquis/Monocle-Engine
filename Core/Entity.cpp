@@ -2,9 +2,13 @@
 #include "Entity.h"
 #include "Collision.h"
 #include "Graphics.h"
-#include "FileNode.h"
+#include "File/FileNode.h"
 #include "MonocleToolkit.h"
 #include <sstream>
+#include <iostream>
+
+#include "Component/Entity/Collidable.h"
+#include "Component/Entity/Transform.h"
 
 namespace Monocle
 {
@@ -46,34 +50,36 @@ namespace Monocle
 	///=====
 
 	Entity::Entity(const Entity &entity)
-		: Transform(entity), isEnabled(true), followCamera(entity.followCamera), scene(NULL), collider(NULL), graphic(NULL), parent(NULL), depth(entity.depth), isVisible(entity.isVisible), color(entity.color), layer(entity.layer)//, tags(entity.tags)
+		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(entity.layer)//, tags(entity.tags)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
         
 		EntityTags copyTags = entity.tags;
-		for (EntityTags::iterator i = copyTags.begin(); i != copyTags.end(); ++i)
+		/*for (EntityTags::iterator i = copyTags.begin(); i != copyTags.end(); ++i)
 		{
 			AddTag((*i).name, (*i).save);
-		}
+		}*/
+
+		/*for (std::map<std::string, EntityComponent*>::iterator i = copyTags.begin(); i != copyTags.end(); ++i)
+		{
+			AddTag((*i).second.name, (*i).second.save);
+		}*/
 	}
 
 	Entity::Entity()
-		: Transform(), isEnabled(true), scene(NULL), collider(NULL), graphic(NULL), parent(NULL), layer(0), depth(0.0f), color(Color::white), isVisible(true)
+		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(0)
 		//, willDie(false)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
+		
+		AddComponent<Transform>();
+		AddComponent<Collidable>();
 	}
 
 	Entity::~Entity()
 	{
-	}
-
-	Entity *Entity::Clone()
-	{
-		Debug::Log("Entity::Clone()");
-		return new Entity(*this);
 	}
 
 	void Entity::Added()
@@ -86,12 +92,6 @@ namespace Monocle
 
 	void Entity::Destroyed()
 	{
-		if (collider)
-		{
-			Collision::RemoveCollider(collider);
-			delete collider;
-			collider = NULL;
-		}
 		if (graphic)
 		{
 			delete graphic;
@@ -104,6 +104,7 @@ namespace Monocle
 		for (std::list<InvokeData*>::iterator i = invokes.begin(); i != invokes.end(); ++i)
 		{
 			delete (*i);
+			(*i) = NULL;
 		}
 		invokes.clear();
 	}
@@ -138,15 +139,21 @@ namespace Monocle
 			}
 		}
 
-		if (graphic)
+		/*if (graphic)
 		{
 			graphic->Update();
-		}
+		}*/
 
 		for (std::list<InvokeData*>::iterator i = removeInvokes.begin(); i != removeInvokes.end(); ++i)
 		{
-			delete *i;
 			invokes.remove(*i);
+			delete (*i);
+			(*i) = NULL;
+		}
+
+		for (ComponentList::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->Update();
 		}
 	}
 
@@ -171,138 +178,123 @@ namespace Monocle
 		return isEnabled;
 	}
 
-	void Entity::ApplyMatrix()
-	{
-		if (followCamera == Vector2::zero || (Debug::render && Debug::selectedEntity != this && IsDebugLayer()))
-			Graphics::Translate(position.x, position.y, depth);
-		else
-		{
-			Camera *camera = scene->GetActiveCamera();
-			if (!camera)
-				camera = scene->GetMainCamera();
-			if (camera != NULL)
-				Graphics::Translate(camera->position * followCamera + position * (Vector2::one - followCamera));
-		}
-        
-		if (rotation != 0.0f)
-			Graphics::Rotate(rotation, 0, 0, 1);
-        
-        if (scale != Vector2::one)
-            Graphics::Scale(scale);
-	}
-
 	void Entity::Render()
 	{
         Graphics::PushMatrix();
 
-		MatrixChain();
+		for(ComponentList::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->Render();
+		}
 
-		if (graphic != NULL)
+		//MatrixChain();
+
+		/*if (graphic != NULL)
 		{
 			Graphics::SetColor(color);
 			graphic->Render(this);
-		}
+		}*/
         
         Graphics::PopMatrix();
 		
-		if (Debug::showBounds && IsDebugLayer())
-		{
-			Vector2 offset;
-			if (parent)
-				offset = Vector2::one * 2;
-            
-			Graphics::BindTexture(NULL);
-            
-			Graphics::PushMatrix();
+		//if (Debug::showBounds && IsDebugLayer())
+		//{
+		//	Vector2 offset;
+		//	if (parent)
+		//		offset = Vector2::one * 2;
+  //          
+		//	Graphics::BindTexture(NULL);
+  //          
+		//	Graphics::PushMatrix();
 
-			MatrixChain();
+		//	MatrixChain();
 
-			Graphics::PopMatrix();
-            
-			if (Debug::selectedEntity == this)
-			{
-				Graphics::SetColor(Color::orange);
-			}
-			else
-			{
-				Graphics::SetColor(Color(0.9f,0.9f,1.0f,0.8f));
-			}
-            
-			// use world position, so we don't have to render with the matrix scale on
-			Vector2 worldPosition = GetWorldPosition();
+		//	Graphics::PopMatrix();
+  //          
+		//	if (Debug::selectedEntity == this)
+		//	{
+		//		Graphics::SetColor(Color::orange);
+		//	}
+		//	else
+		//	{
+		//		Graphics::SetColor(Color(0.9f,0.9f,1.0f,0.8f));
+		//	}
+  //          
+		//	// use world position, so we don't have to render with the matrix scale on
+		//	Vector2 worldPosition = GetWorldPosition();
 
-			//draw the control point
-			Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE, ENTITY_CONTROLPOINT_SIZE);
-            
-			if (Debug::selectedEntity != this)
-				Graphics::SetColor(Color(0.0f,0.0f,0.25f,0.8f));
-            
-			// draw the control point center
-			Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE * 0.75f, ENTITY_CONTROLPOINT_SIZE * 0.75f);
-            
-			Graphics::PopMatrix();
-		}
+		//	//draw the control point
+		//	Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE, ENTITY_CONTROLPOINT_SIZE);
+  //          
+		//	if (Debug::selectedEntity != this)
+		//		Graphics::SetColor(Color(0.0f,0.0f,0.25f,0.8f));
+  //          
+		//	// draw the control point center
+		//	Graphics::RenderLineRect(worldPosition.x, worldPosition.y, ENTITY_CONTROLPOINT_SIZE * 0.75f, ENTITY_CONTROLPOINT_SIZE * 0.75f);
+  //          
+		//	Graphics::PopMatrix();
+		//}
 	}
 
-	const std::string& Entity::GetTag(int index)
-	{
-#ifdef DEBUG
-		//Error: If the tag index to get is out of bounds
-		if (index >= tags.size())
-			Debug::Log("ERROR: Tag index out of bounds.");
-#endif
-		return tags[index].name;
-	}
+//	const std::string& Entity::GetTag(int index)
+//	{
+//#ifdef DEBUG
+//		//Error: If the tag index to get is out of bounds
+//		if (index >= tags.size())
+//			Debug::Log("ERROR: Tag index out of bounds.");
+//#endif
+//		return tags[index].name;
+//	}
 
-	void Entity::AddTag(const std::string& tag, bool save)
-	{
-#ifdef DEBUG
-		//Error: If the entity already has that tag
-		if (HasTag(tag))
-			Debug::Log("ERROR: Duplicate tag added to entity.");
-#endif
-		if (!HasTag(tag))
-		{
-			tags.push_back(EntityTagData(tag, save));
-			if (scene != NULL)
-				scene->EntityAddTag(this, tag);
-		}
-	}
-
-	void Entity::RemoveTag(const std::string& tag)
-	{
-#ifdef DEBUG
-		//Error: If the entity doesn't have that tag
-		if (!HasTag(tag))
-			Debug::Log("ERROR: Removing tag from an entity that doesn't have that tag.");
-#endif
-		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
-		{
-			if ((*i).name.compare(tag) == 0)
-			{
-				tags.erase(i);
-				break;
-			}
-		}
-		if (scene != NULL)
-			scene->EntityRemoveTag(this, tag);
-	}
-
-	bool Entity::HasTag(const std::string& tag)
-	{
-		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
-		{
-			if ((*i).name.compare(tag) == 0)
-				return true;
-		}
-
-		return false;
-	}
-
-	int Entity::GetNumberOfTags()
-	{
-		return static_cast<int>(tags.size());
-	}
+//	void Entity::AddTag(const std::string& tag, bool save)
+//	{
+//#ifdef DEBUG
+//		//Error: If the entity already has that tag
+//		if (HasTag(tag))
+//			Debug::Log("ERROR: Duplicate tag added to entity.");
+//#endif
+//		if (!HasTag(tag))
+//		{
+//			tags.push_back(EntityTagData(tag, save));
+//			if (scene != NULL)
+//				scene->EntityAddTag(this, tag);
+//		}
+//	}
+//
+//	void Entity::RemoveTag(const std::string& tag)
+//	{
+//#ifdef DEBUG
+//		//Error: If the entity doesn't have that tag
+//		if (!HasTag(tag))
+//			Debug::Log("ERROR: Removing tag from an entity that doesn't have that tag.");
+//#endif
+//		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
+//		{
+//			if ((*i).name.compare(tag) == 0)
+//			{
+//				tags.erase(i);
+//				break;
+//			}
+//		}
+//		if (scene != NULL)
+//			scene->EntityRemoveTag(this, tag);
+//	}
+//
+//	bool Entity::HasTag(const std::string& tag)
+//	{
+//		for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
+//		{
+//			if ((*i).name.compare(tag) == 0)
+//				return true;
+//		}
+//
+//		return false;
+//	}
+//
+//	int Entity::GetNumberOfTags()
+//	{
+//		return static_cast<int>(tags.size());
+//	}
 
 	int Entity::GetLayer()
 	{
@@ -328,10 +320,11 @@ namespace Monocle
 
 	bool Entity::IsDebugLayer()
 	{
-		if (parent)
+		/*if (parent)
 			return parent->IsDebugLayer();
 
-		return layer > Debug::layerMin && layer < Debug::layerMax;
+		return layer > Debug::layerMin && layer < Debug::layerMax;*/
+		return false;
 	}
 
 	/////TODO: enqueue for safety
@@ -349,56 +342,6 @@ namespace Monocle
 	//	children.remove(entity);
 	//}
 
-	void Entity::SetCollider(Collider *setCollider)
-	{
-		if (setCollider == NULL && this->collider != NULL)
-		{
-			// if we want to set null, and we already have a collider
-			// remove the collider that we had
-			Collision::RemoveCollider(this->collider);
-			// set it to null
-			this->collider = NULL;
-			// note the code doesn't delete it
-		}
-		else if (this->collider != NULL)
-		{
-			// we could change this so that it auto-removes the existing collider instead
-			Debug::Log("Error: Entity already has a collider.");
-		}
-		else
-		{
-			// set our collider pointer to the passed in collider
-			this->collider = setCollider;
-			// register the collider with the Collision manager
-			Collision::RegisterColliderWithEntity(setCollider, this);
-		}
-	}
-
-	Collider* Entity::GetCollider()
-	{
-		return collider;
-	}
-
-	Collider* Entity::Collide(const std::string &tag, CollisionData *collisionData)
-	{
-		return Collision::Collide(this, tag, collisionData);
-	}
-
-	Collider* Entity::CollideAt(const std::string &tag, const Vector2 &atPosition, CollisionData *collisionData)
-	{
-		Vector2 oldPosition = position;
-		position = atPosition;
-		Collider *collider = Collision::Collide(this, tag, collisionData);
-		position = oldPosition;
-		return collider;
-	}
-
-	Collider* Entity::CollideWith(Collider *pCollider, const std::string &tag, CollisionData *collisionData)
-	{
-		Collider *collider = Collision::Collide(pCollider, tag, collisionData);
-		return collider;
-	}
-
 	/*
 	RectangleCollider* Entity::AddRectangleCollider(float width, float height, const Vector2 &offset)
 	{
@@ -406,124 +349,83 @@ namespace Monocle
 	}
 	*/
 
-	void Entity::SetGraphic(Graphic *graphic)
-	{
-		// not sure if we want this yet, sets our graphic's entity pointer to NULL
-		// if we're about to set the graphic pointer to NULL
-		if (graphic == NULL && this->graphic != NULL)
-		{
-			//this->graphic->entity = NULL;
-		}
-
-		if (this->graphic != NULL)
-		{
-			Debug::Log("Note: Entity already has a graphic.");
-		}
-
-		this->graphic = graphic;
-	}
-
 	Graphic* Entity::GetGraphic()
 	{
 		return graphic;
 	}
     
-    bool Entity::IsOnCamera( Camera *camera )
-    {
-        Graphic* graphic = GetGraphic();
-		if (graphic != NULL)
-		{
-			float biggersize, h, w;
-            
-            graphic->GetWidthHeight(&w, &h);
-            
-            // We use the greatest possible rectangle in case of rotations
-            biggersize = MAX(w,h);
-            
-			Vector2 ul = position - (Vector2(biggersize,biggersize)*0.5f*scale);
-			Vector2 lr = position + (Vector2(biggersize,biggersize)*0.5f*scale);
-            
-            float vw = Graphics::GetVirtualWidth()*camera->scale.x;
-            float vh = Graphics::GetVirtualHeight()*camera->scale.x;
-            float cx = (camera->position.x);
-            float cy = (camera->position.y);
-            
-            // As long as any one of the corners could be on screen we draw
-            return !(
-                    // What it means to be off screen:
-                     (ul.x > cx+vw) || (lr.x < cx-vw) ||
-                     (ul.y > cy+vh) || (lr.y < cy-vh)
-                    );
-            
-//            printf("%.2f < %.2f && %.2f > %.2f && %.2f < %.2f && %.2f > %.2f\n",cx-vw,ul.x,cx+vw,lr.x,cy-vh,ul.y,cy+vh,lr.y);
-            
-//			return (cx-vw < ul.x && cx+vw > lr.x && cy-vh < ul.y && cy+vh > lr.y);
-            
-//            return (ul.x < cx+vw && ul.x > cx-vw && ul.y > cy-vh && ul.y < cy+vh) ||
-//                    (lr.x > cx-vw && lr.x < cx+vw && lr.y > cy-vh && lr.y < cy+vh);
-		}
-		return true;
-    }
+//    bool Entity::IsOnCamera( Camera *camera )
+//    {
+//        Graphic* graphic = GetGraphic();
+//		if (graphic != NULL)
+//		{
+//			float biggersize, h, w;
+//            
+//            graphic->GetWidthHeight(&w, &h);
+//            
+//            // We use the greatest possible rectangle in case of rotations
+//            biggersize = MAX(w,h);
+//            
+//			Vector2 ul = ((Transform*)(*this)["Transform"])->position - (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
+//			Vector2 lr = ((Transform*)(*this)["Transform"])->position + (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
+//            
+//            float vw = Graphics::GetVirtualWidth()* ((Transform*)(*camera)["Transform"])->scale.x;
+//            float vh = Graphics::GetVirtualHeight()* ((Transform*)(*camera)["Transform"])->scale.x;
+//            float cx = (((Transform*)(*camera)["Transform"])->position.x);
+//            float cy = (((Transform*)(*camera)["Transform"])->position.y);
+//            
+//            // As long as any one of the corners could be on screen we draw
+//            return !(
+//                    // What it means to be off screen:
+//                     (ul.x > cx+vw) || (lr.x < cx-vw) ||
+//                     (ul.y > cy+vh) || (lr.y < cy-vh)
+//                    );
+//            
+////            printf("%.2f < %.2f && %.2f > %.2f && %.2f < %.2f && %.2f > %.2f\n",cx-vw,ul.x,cx+vw,lr.x,cy-vh,ul.y,cy+vh,lr.y);
+//            
+////			return (cx-vw < ul.x && cx+vw > lr.x && cy-vh < ul.y && cy+vh > lr.y);
+//            
+////            return (ul.x < cx+vw && ul.x > cx-vw && ul.y > cy-vh && ul.y < cy+vh) ||
+////                    (lr.x > cx-vw && lr.x < cx+vw && lr.y > cy-vh && lr.y < cy+vh);
+//		}
+//		return true;
+//    }
 
-	bool Entity::IsPositionInGraphic(const Vector2 &point)
+	/*bool Entity::IsPositionInGraphic(const Vector2 &point)
 	{
 		Graphic* graphic = GetGraphic();
 		if (graphic != NULL)
 		{
 			float width, height;
 			graphic->GetWidthHeight(&width, &height);
-			Vector2 ul = GetWorldPosition(Vector2( - width * 0.5f, - height * 0.5f));
-			Vector2 lr = GetWorldPosition(Vector2( + width * 0.5f, + height * 0.5f));
+			Vector2 ul = ((Transform *)(*this)["Transform"])->GetWorldPosition(Vector2( - width * 0.5f, - height * 0.5f));
+			Vector2 lr = ((Transform *)(*this)["Transform"])->GetWorldPosition(Vector2( + width * 0.5f, + height * 0.5f));
 			printf("p(%d, %d) ul(%d, %d) lr(%d, %d)\n", (int)point.x, (int)point.y, (int)ul.x, (int)ul.y, (int)lr.x, (int)lr.y);
 			return (point.x > ul.x && point.x < lr.x && point.y > ul.y && point.y < lr.y);
 		}
 		return false;
-	}
+	}*/
 
-    /// TODO: write our own matrix functions to replace this stuff
-	Vector2 Entity::GetWorldPosition(const Vector2 &position)
-	{
-		Vector2 returnPos;
-        
-        if (this->position == lastPositionWhenCached)
-            return this->cachedWorldPosition;
+	//void Entity::MatrixChain()
+	//{
+	//	std::list<Entity*> entityChain;
 
-		Graphics::PushMatrix();
-		Graphics::IdentityMatrix();
+	//	Entity *current = this;
+	//	//std::cout << typeid(*this).name() << std::endl;
+	//	while (current)
+	//	{
+	//		entityChain.push_back(current);
+	//		current = current->parent;
+	//	}
 
-		MatrixChain();
-        
-        Graphics::Translate(position);
-
-		returnPos = Graphics::GetMatrixPosition();
-
-		Graphics::PopMatrix();
-
-        this->cachedWorldPosition = returnPos;
-        this->lastPositionWhenCached = this->position;
-        
-		return returnPos;
-	}
-
-	void Entity::MatrixChain()
-	{
-		std::list<Entity*> entityChain;
-
-		Entity *current = this;
-		while (current)
-		{
-			entityChain.push_back(current);
-			current = current->parent;
-		}
-
-		for (std::list<Entity*>::reverse_iterator i = entityChain.rbegin(); i != entityChain.rend(); ++i)
-		{
-			(*i)->ApplyMatrix();
-			//Graphics::Translate(scene->GetCamera()->position * (*i)->followCamera + (*i)->position * (Vector2::one - (*i)->followCamera));
-			//Graphics::Rotate((*i)->rotation, 0, 0, 1);
-			//Graphics::Scale((*i)->scale);
-		}
-	}
+	//	for (std::list<Entity*>::reverse_iterator i = entityChain.rbegin(); i != entityChain.rend(); ++i)
+	//	{
+	//		(*i)->ApplyMatrix();
+	//		//Graphics::Translate(scene->GetCamera()->position * (*i)->followCamera + (*i)->position * (Vector2::one - (*i)->followCamera));
+	//		//Graphics::Rotate((*i)->rotation, 0, 0, 1);
+	//		//Graphics::Scale((*i)->scale);
+	//	}
+	//}
 
 	/// TODO: write our own matrix functions to replace this stuff
 	Vector2 Entity::GetLocalPosition(const Vector2 &worldPosition)
@@ -545,9 +447,9 @@ namespace Monocle
 
 		for (std::list<Entity*>::iterator i = entityChain.begin(); i != entityChain.end(); ++i)
 		{
-			Graphics::Scale(1.0f/(*i)->scale);
-			Graphics::Rotate(-(*i)->rotation, 0, 0, 1);
-			Graphics::Translate(-(*i)->position);
+			Graphics::Scale(1.0f/((Transform*)(**i)["Transform"])->scale);
+			Graphics::Rotate(-((Transform*)(**i)["Transform"])->rotation, 0, 0, 1);
+			Graphics::Translate(-((Transform*)(**i)["Transform"])->position);
 		}
 
 		returnPos = Graphics::GetMatrixPosition();
@@ -573,15 +475,20 @@ namespace Monocle
 	//	return NULL;
 	//}
 
+	bool Entity::HasComponent(const std::string &name)
+	{
+		return ( components.find(name) != components.end() );
+	}
+
 	void Entity::Save(FileNode *fileNode)
 	{
-		Transform::Save(fileNode);
+		//Transform::Save(fileNode);
 
-		if (layer != 0)
-			fileNode->Write("layer", layer);
-		if (color != Color::white)
-			fileNode->Write("color", color);
-		if (tags.size() != 0)
+		//if (layer != 0)
+		//	fileNode->Write("layer", layer);
+		/*if (color != Color::white)
+			fileNode->Write("color", color);*/
+		/*if (tags.size() != 0)
 		{
 			std::ostringstream os;
 			for (EntityTags::iterator i = tags.begin(); i != tags.end(); ++i)
@@ -594,20 +501,31 @@ namespace Monocle
 			{
 				fileNode->Write("tags", os.str());
 			}
+		}*/
+		/*if (followCamera != Vector2::zero)
+			fileNode->Write("followCamera", followCamera);*/
+
+		FileNode *node = fileNode->InsertEndChildNode("entity");
+
+		for(ComponentList::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->SaveTo(node);
 		}
-		if (followCamera != Vector2::zero)
-			fileNode->Write("followCamera", followCamera);
 	}
 
-	void Entity::Load(FileNode *fileNode)
+	void Entity::Load(FileNode *myNode)
 	{
-		Transform::Load(fileNode);
+		//Transform::Load(fileNode);
 
-		int newLayer =0;
-		fileNode->Read("layer", newLayer);
-		SetLayer(newLayer);
-		fileNode->Read("color", color);
-		std::string tags;
+		//FileNode *node = fileNode->GetChild("entity");
+
+		for(ComponentList::iterator it = components.begin(); it != components.end(); it++)
+		{
+			it->second->LoadFrom(myNode);
+		}
+
+		/*fileNode->Read("color", color);*/
+		/*std::string tags;
 		fileNode->Read("tags", tags);
 		if (tags.size() > 0)
 		{
@@ -617,8 +535,8 @@ namespace Monocle
 			{
 				AddTag(tag, true);
 			}
-		}
-		fileNode->Read("followCamera", followCamera);
+		}*/
+		/*fileNode->Read("followCamera", followCamera);*/
 	}
 
 	void Entity::SetParent(Entity *parent)
@@ -676,10 +594,10 @@ namespace Monocle
 	//}
 
 	
-	void Entity::Invoke(void (*functionPointer)(void*), float delay)
+	/*void Entity::Invoke(void (*functionPointer)(void*), float delay)
 	{
 		invokes.push_back(new InvokeData((void*)this, functionPointer, delay));
-	}
+	}*/
 
 	/*
 	void Entity::Die()
@@ -715,4 +633,19 @@ namespace Monocle
 		}
 	}
 	*/
+
+	EntityComponent* Entity::operator[](std::string component_name)
+	{
+		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
+		{
+			if(i->second->GetName() == component_name) return i->second;
+		}
+
+		return NULL;
+	}
+
+	Entity *Entity::Clone() const
+	{
+		return new Entity(*this);
+	}
 }

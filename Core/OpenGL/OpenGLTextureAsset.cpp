@@ -34,7 +34,8 @@ namespace Monocle
 		this->repeatY = repeatY;
         this->premultiplied = premultiply;
         
-        if (premultiply)
+
+        if (data && premultiply)
             PremultiplyAlpha((unsigned char*)data,w,h);
  
 		glGenTextures(1, &texID);
@@ -126,12 +127,12 @@ namespace Monocle
  
 		int w,h,n;
 		unsigned char* data = stbi_load(filename.c_str(), &w, &h, &n, STBI_rgb_alpha);
-        
-        if (premultiply)
-            PremultiplyAlpha(data,w,h);
- 
+  
 		if (data)
 		{
+			if (premultiply)
+				PremultiplyAlpha(data,w,h);
+
 			width = (unsigned int)w;
 			height = (unsigned int)h;
  
@@ -173,6 +174,7 @@ namespace Monocle
 		unsigned char *cpyrect = ReadRect(srcPos, copysize);
 		UpdateRect(cpyrect, dstPos, copysize);
 		delete cpyrect;
+		cpyrect = NULL;
 	}
  
 	unsigned char *TextureAsset::ReadRect(Monocle::Vector2 srcPos, Monocle::Vector2 size)

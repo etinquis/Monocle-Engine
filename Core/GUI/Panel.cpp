@@ -2,6 +2,7 @@
 
 #include <Input.h>
 #include <Graphics.h>
+#include <Component/Entity/Transform.h>
 
 namespace Monocle
 {
@@ -9,9 +10,9 @@ namespace Monocle
 
     Panel::Panel(Vector2 pos, Vector2 sz) : size(sz)
     {
-        position = pos;
-        this->followCamera = Vector2::one;
-        SetLayer(Debug::layerMin - 1);
+		AddComponent<Transform>();
+
+        ((Transform*)(*this)["Transform"])->position = pos;
     }
 
     void Panel::SetSize(int x, int y)
@@ -33,7 +34,7 @@ namespace Monocle
     {
         Entity::Update();
 
-        Vector2 localMousePos = Input::GetWorldMousePosition() - position;
+        Vector2 localMousePos = Input::GetWorldMousePosition() - ((Transform*)(*this)["Transform"])->position;
         if(   localMousePos.x < size.x && localMousePos.y < size.y
            && Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT)
            && currentFocus != this)
