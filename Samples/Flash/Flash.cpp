@@ -4,6 +4,9 @@
 #include <math.h>
 #include <algorithm>
 
+#include <Component/Entity/Transform.h>
+#include <Component/Entity/Sprite.h>
+
 // this puppy will be cleaned up and refactored to the max later
 
 namespace Flash
@@ -52,19 +55,13 @@ namespace Flash
 		if (texture != NULL)
 		{
 			Entity *entity = new Entity();
-			Sprite *sprite = new Sprite(textureSheet.name + "/" + name + ".png");
-			sprite->position = (texture->registrationPoint * -1) + Vector2(sprite->width, sprite->height)*0.5f;
-			//sprite->position = texture->registrationPoint * -1;
-			entity->SetGraphic(sprite);
+			Sprite::InitParams spriteParams(textureSheet.name + "/" + name + ".png");
+
+			entity->AddComponent<Sprite>(spriteParams);
+			entity->GetComponent<Transform>(MONOCLE_ENTITYCOMPONENT_TRANSFORM)->position = 
+				(texture->registrationPoint * -1) + Vector2(entity->GetComponent<Sprite>(MONOCLE_ENTITYCOMPONENT_SPRITE)->width, 
+															entity->GetComponent<Sprite>(MONOCLE_ENTITYCOMPONENT_SPRITE)->height)*0.5f;
 			entity->SetLayer(-texture->zIndex); // layers are reversed compared to zIndex
-
-			//printf("size (%d, %d)", (int)sprite->width, (int)sprite->height);
-
-			//hackish
-			if (this->sprite == NULL)
-			{
-				this->sprite = sprite;
-			}
 
 			return entity;
 		}
@@ -87,10 +84,12 @@ namespace Flash
 
 				//printf("frame: %d\nf: %f\n p: %f\n", frame, f, p);
 
-				entity->position = frames[frame].pos + (p * (frames[frame+1].pos - frames[frame].pos));
-				entity->scale = frames[frame].scale + (p * (frames[frame+1].scale - frames[frame].scale));
-				entity->rotation = frames[frame].rotation + (p * (frames[frame+1].rotation - frames[frame].rotation));
-				entity->color.a = frames[frame].alpha + (p * (frames[frame+1].alpha - frames[frame].alpha));
+				Transform *transform = entity->GetComponent<Transform>(MONOCLE_ENTITYCOMPONENT_TRANSFORM);
+				transform->position = frames[frame].pos + (p * (frames[frame+1].pos - frames[frame].pos));
+				transform->scale = frames[frame].scale + (p * (frames[frame+1].scale - frames[frame].scale));
+				transform->rotation = frames[frame].rotation + (p * (frames[frame+1].rotation - frames[frame].rotation));
+				
+				entity->GetComponent<Sprite>(MONOCLE_ENTITYCOMPONENT_SPRITE)->color.a = frames[frame].alpha + (p * (frames[frame+1].alpha - frames[frame].alpha));
 
 				//printf("part: %s frame: %d pos(%d, %d) size(%d, %d) a: %f\n", name.c_str(), frame, (int)entity->position.x, (int)entity->position.y, (int)sprite->width, (int)sprite->height, entity->color.a);
 			}
@@ -112,10 +111,11 @@ namespace Flash
 
 		if (passed != NULL)
 		{
-			passed->position = frames[frame].pos;
-			passed->scale = frames[frame].scale;
-			passed->color.a = frames[frame].alpha;
-			passed->rotation = frames[frame].rotation;
+			passed->GetComponent<Transform>(MONOCLE_ENTITYCOMPONENT_TRANSFORM)->position = frames[frame].pos;
+			passed->GetComponent<Transform>(MONOCLE_ENTITYCOMPONENT_TRANSFORM)->scale = frames[frame].scale;
+			passed->GetComponent<Transform>(MONOCLE_ENTITYCOMPONENT_TRANSFORM)->rotation = frames[frame].rotation;
+
+			passed->GetComponent<Sprite>(MONOCLE_ENTITYCOMPONENT_SPRITE)->color.a = frames[frame].alpha;
 		}
 		else
 		{
@@ -279,7 +279,8 @@ namespace Flash
 
 
 		eAnimation = new Entity();
-		eAnimation->position = Vector2(400,300);
+		Transform::InitParams transParams(Vector2(400,300));
+		eAnimation->AddComponent<Transform>(transParams);
 		Add(eAnimation);
 
 		InitAnimation(&animations[0], eAnimation);
@@ -287,7 +288,7 @@ namespace Flash
 
 		// fudging:
 		//eAnimation->position.x += 40;
-		eAnimation->scale = Vector2(800.0f/640.0f, 600.0f/480.0f);
+		eAnimation->GetComponent<Transform>(MONOCLE_ENTITYCOMPONENT_TRANSFORM)->scale = Vector2(800.0f/640.0f, 600.0f/480.0f);
 
 		//editor
 		//Pause();
@@ -410,23 +411,23 @@ namespace Flash
 					editSprite = editPart->sprite;
 				}
 
-				if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				/*if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
 					if (editEntity)
 					{
 						state = "moving";
 						offset = editEntity->position - Input::GetMousePosition();
 					}
-				}
+				}*/
 				if (Input::IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 				{
 					state = "";
 				}
 
-				if (state == "moving")
+				/*if (state == "moving")
 				{
 					editEntity->position = Input::GetMousePosition() + offset;
-				}
+				}*/
 
 				//Debug::selectedEntity = editEntity;
 				
@@ -465,52 +466,52 @@ namespace Flash
 					scaleAmount *= 4.0f;
 				}
 				
-				if (editEntity)
-				{
-					if (Input::IsKeyHeld(KEY_A))
-					{
-						editEntity->position.x -= moveAmount;
-					}
-					if (Input::IsKeyHeld(KEY_D))
-					{
-						editEntity->position.x += moveAmount;
-					}
-					if (Input::IsKeyHeld(KEY_W))
-					{
-						editEntity->position.y -= moveAmount;
-					}
-					if (Input::IsKeyHeld(KEY_S))
-					{
-						editEntity->position.y += moveAmount;
-					}
+				//if (editEntity)
+				//{
+				//	if (Input::IsKeyHeld(KEY_A))
+				//	{
+				//		editEntity->position.x -= moveAmount;
+				//	}
+				//	if (Input::IsKeyHeld(KEY_D))
+				//	{
+				//		editEntity->position.x += moveAmount;
+				//	}
+				//	if (Input::IsKeyHeld(KEY_W))
+				//	{
+				//		editEntity->position.y -= moveAmount;
+				//	}
+				//	if (Input::IsKeyHeld(KEY_S))
+				//	{
+				//		editEntity->position.y += moveAmount;
+				//	}
 
-					if (Input::IsKeyHeld(KEY_Q))
-					{
-						editEntity->rotation -= rotateAmount;
-					}
-					if (Input::IsKeyHeld(KEY_E))
-					{
-						editEntity->rotation += rotateAmount;
-					}
+				//	if (Input::IsKeyHeld(KEY_Q))
+				//	{
+				//		editEntity->rotation -= rotateAmount;
+				//	}
+				//	if (Input::IsKeyHeld(KEY_E))
+				//	{
+				//		editEntity->rotation += rotateAmount;
+				//	}
 
-					// flip when rotation is in certain quadrants
-					if (Input::IsKeyHeld(KEY_J))
-					{
-						editEntity->scale.x -= scaleAmount;
-					}
-					if (Input::IsKeyHeld(KEY_L))
-					{
-						editEntity->scale.x += scaleAmount;
-					}
-					if (Input::IsKeyHeld(KEY_I))
-					{
-						editEntity->scale.y += scaleAmount;
-					}
-					if (Input::IsKeyHeld(KEY_K))
-					{
-						editEntity->scale.y -= scaleAmount;
-					}
-				}
+				//	// flip when rotation is in certain quadrants
+				//	if (Input::IsKeyHeld(KEY_J))
+				//	{
+				//		editEntity->scale.x -= scaleAmount;
+				//	}
+				//	if (Input::IsKeyHeld(KEY_L))
+				//	{
+				//		editEntity->scale.x += scaleAmount;
+				//	}
+				//	if (Input::IsKeyHeld(KEY_I))
+				//	{
+				//		editEntity->scale.y += scaleAmount;
+				//	}
+				//	if (Input::IsKeyHeld(KEY_K))
+				//	{
+				//		editEntity->scale.y -= scaleAmount;
+				//	}
+				//}
 
 
 
@@ -747,7 +748,7 @@ namespace Flash
 					entity->SetParent(eAnimation);
 					editPart->ApplyFrameToEntity(prevFrame, entity);
 					onionSkins.push_back(entity);
-					float oldA = entity->color.a;
+					float oldA = entity->GetComponent<Transform>()->color.a;
 					entity->color = entity->color * (1.0f-dyeP) + Color::blue * dyeP;
 					entity->color.a = oldA * (0.25f - 0.05f*i);
 				}

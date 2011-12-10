@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "Entities.h"
 
 ///TODO: Replace with xml wrapper
 class TiXmlElement;
@@ -141,9 +140,9 @@ namespace Monocle
 		}
 
 		template <typename T>
-		T* GetComponent(std::string component_name)
+		T* GetComponent()
 		{
-			return (T*)(*this)[component_name];
+			return (T*)(*this)[T::ComponentName];
 		}
 
 		SceneComponent* operator[](std::string component_name);

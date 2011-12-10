@@ -137,6 +137,16 @@ namespace Monocle
 		Scene *GetScene();
 
 		template <class t_component>
+		t_component* AddComponent(typename t_component::InitParams params)
+		{
+			t_component *comp = new t_component();
+
+			components[comp->GetName()] = comp;
+			comp->ParamInit(this, params);
+			return comp;
+		}
+
+		template <class t_component>
 		t_component* AddComponent()
 		{
 			t_component *comp = new t_component();
@@ -161,9 +171,9 @@ namespace Monocle
 		//Color color;
 		
 		template <typename T>
-		T* GetComponent(std::string component_name)
+		T* GetComponent()
 		{
-			return (T*)(*this)[component_name];
+			return (T*)(*this)[T::ComponentName];
 		}
 
 		EntityComponent* operator[](std::string component_name);

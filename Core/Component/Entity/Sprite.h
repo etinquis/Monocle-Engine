@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphic.h"
+#include "../../Asset.h"
 #include "../../Vector2.h"
 #include "../../Color.h"
 
@@ -15,18 +16,35 @@ namespace Monocle
 	enum FilterType;
 	class TextureAsset;
 	class Color;
-	
+
 	class Sprite : public Graphic
 	{
 	public:
+		typedef class SpriteInitParams
+		{
+		private:
+			std::string filename;
+			FilterType filter;
+			float width;
+			float height;
+		public:
+			SpriteInitParams(std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0)
+			{
+				this->filename = filename;
+				this->filter = filter;
+				this->width = width;
+				this->height = height;
+			}
+
+		} InitParams;
+
 		Sprite();
 		~Sprite();
 
-		//void Load(const std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0);
-		//void Load(const Color& color, float w=-1.0, float h=-1.0);
-
 		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_SPRITE; }
 		Sprite * Clone () const { return new Sprite(*this); }
+
+		void ParamInit(InitParams params);
 
 		void Update();
 		void Render(Entity *entity);

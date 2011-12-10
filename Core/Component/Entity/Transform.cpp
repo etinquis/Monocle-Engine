@@ -5,6 +5,8 @@
 
 namespace Monocle
 {
+	const std::string Transform::ComponentName = "Transform";
+
 	Transform::Transform() 
 		: EntityComponent(), position(Vector2::zero), rotation(0.0f), scale(Vector2::one)
 	{
@@ -27,17 +29,8 @@ namespace Monocle
 
 	void Transform::ApplyMatrix()
 	{
-		//if (followCamera == Vector2::zero /*|| (Debug::render && Debug::selectedEntity != this && IsDebugLayer())*/)
-			Graphics::Translate(position.x, position.y, 0);
-		//else
-		//{
-			/*Camera *camera = scene->GetActiveCamera();
-			if (!camera)
-				camera = scene->GetMainCamera();
-			if (camera != NULL)
-				Graphics::Translate(camera->position * followCamera + position * (Vector2::one - followCamera));*/
-		//}
-        
+		Graphics::Translate(position.x, position.y, 0);
+		
 		if (rotation != 0.0f)
 			Graphics::Rotate(rotation, 0, 0, 1);
         

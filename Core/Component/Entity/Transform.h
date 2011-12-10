@@ -4,8 +4,6 @@
 #include "../../Vector2.h"
 #include "../../Vector3.h"
 
-#define MONOCLE_ENTITYCOMPONENT_TRANSFORM "Transform"
-
 namespace Monocle
 {
 	//!
@@ -14,6 +12,18 @@ namespace Monocle
 	class Transform : public EntityComponent
 	{
 	public:
+		typedef class TransformInitParams
+		{
+		private:
+			Vector2 position;
+			float rotation;
+			Vector2 scale;
+		public:
+			TransformInitParams(Vector2 &position = Vector2::zero, float rotation = 0, Vector2 &scale = Vector2::zero);
+		} InitParams;
+
+		static const std::string ComponentName;
+
 		Transform();
 		Transform(const Transform &transform);
 
@@ -21,7 +31,9 @@ namespace Monocle
 		float rotation;
 		Vector2 scale;
         
-		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_TRANSFORM; }
+		std::string GetName() { return Transform::ComponentName; }
+
+		void ParamInit(InitParams params);
 
 		void Update();
 		Transform* Clone() const { return new Transform(*this); }
