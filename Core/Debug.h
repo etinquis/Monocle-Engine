@@ -15,7 +15,8 @@ namespace Monocle
 	class Debug : public GameComponent
 	{
 	public:
-		virtual std::string GetName() { return "Debug"; }
+		static const std::string ComponentName;
+		virtual const std::string& GetName() { return Debug::ComponentName; }
 
 		virtual void Init(Game* game);
 		virtual void Update();

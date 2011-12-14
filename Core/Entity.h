@@ -137,11 +137,11 @@ namespace Monocle
 		Scene *GetScene();
 
 		template <class t_component>
-		t_component* AddComponent(typename t_component::InitParams params)
+		t_component* AddComponent(const typename t_component::InitParams& params)
 		{
 			t_component *comp = new t_component();
 
-			components[comp->GetName()] = comp;
+			components[t_component::ComponentName] = comp;
 			comp->ParamInit(this, params);
 			return comp;
 		}
@@ -151,7 +151,7 @@ namespace Monocle
 		{
 			t_component *comp = new t_component();
 
-			components[comp->GetName()] = comp;
+			components[t_component::ComponentName] = comp;
 			comp->Init(this);
 			return comp;
 		}
@@ -173,10 +173,8 @@ namespace Monocle
 		template <typename T>
 		T* GetComponent()
 		{
-			return (T*)(*this)[T::ComponentName];
+			return (T*)components[T::ComponentName];
 		}
-
-		EntityComponent* operator[](std::string component_name);
 	protected:
 		Entity(const Entity &entity);
 

@@ -117,7 +117,7 @@ namespace Monocle
 		Puppet();
 		~Puppet();
 
-		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_PUPPET; }
+		const std::string& GetName() { return MONOCLE_ENTITYCOMPONENT_PUPPET; }
 		Puppet *Clone() const { return new Puppet(*this); }
 
 		void Save();

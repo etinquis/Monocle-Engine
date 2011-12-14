@@ -33,7 +33,7 @@ namespace Monocle
 	{
 		Entity *entity = GetEntity();
 		if (entity)
-			return ((Transform*)(*entity)["Transform"])->GetWorldPosition();
+			return GetEntity()->GetComponent<Transform>()->GetWorldPosition();
 		else
 			return Vector2();
 	}
@@ -158,7 +158,6 @@ namespace Monocle
 	{
 		//TODO: store data in collisionData!
         
-
 		if (a->GetBottom() < b->GetTop())
 			return false;
 
@@ -333,8 +332,8 @@ namespace Monocle
 		{
 			if (prevNode && prevNode->variant != -1)
 			{
-				start = ((Transform*)(*node)["Transform"])->GetWorldPosition();
-				end = ((Transform*)(*node)["Transform"])->GetWorldPosition();
+				start = node->GetComponent<Transform>()->GetWorldPosition();
+				end = node->GetComponent<Transform>()->GetWorldPosition();
 				if (a->IntersectsLine(start, end, b->radius, collisionData))
 				{
 					if (collisionData)

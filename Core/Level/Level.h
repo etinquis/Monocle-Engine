@@ -37,8 +37,9 @@ namespace Monocle
 	{
 	public:
 		Level();
-
-		std::string GetName() { return "Level"; }
+		
+		static const std::string ComponentName;
+		const std::string& GetName() { return Level::ComponentName; }
 		void Init(Game* game);
 		void Update() { }
 		void Unload() { }

@@ -35,7 +35,7 @@ namespace Monocle
 			{
 				if (node->variant != -1)
 				{
-					if (LinesIntersect(((Transform*)(*node)["Transform"])->GetWorldPosition(), ((Transform*)(*next)["Transform"])->GetWorldPosition(), start, end, collisionData))
+					if (LinesIntersect(node->GetComponent<Transform>()->GetWorldPosition(), next->GetComponent<Transform>()->GetWorldPosition(), start, end, collisionData))
 					{
 						collisionData->collider = this;
 						return true;

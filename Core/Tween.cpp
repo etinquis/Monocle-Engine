@@ -7,6 +7,8 @@ namespace Monocle
 	std::list<Tweener*> Tween::tweeners;
 	std::list<Tweener*> Tween::tweenersToRemove;
 
+	const std::string Tween::ComponentName = "Tween";
+
 	Tween::Tween()
 	{
 	}

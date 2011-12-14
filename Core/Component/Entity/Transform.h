@@ -32,9 +32,9 @@ namespace Monocle
 		float rotation;
 		Vector2 scale;
         
-		std::string GetName() { return Transform::ComponentName; }
+		const std::string& GetName() { return Transform::ComponentName; }
 
-		void ParamInit(Entity* entity, InitParams params);
+		void ParamInit(Entity* entity, const InitParams& params);
 
 		void Update();
 		Transform* Clone() const { return new Transform(*this); }

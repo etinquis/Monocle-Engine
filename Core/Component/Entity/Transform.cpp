@@ -24,7 +24,7 @@ namespace Monocle
 
 	}
 
-	void Transform::ParamInit(Entity *entity, InitParams params)
+	void Transform::ParamInit(Entity *entity, const InitParams& params)
 	{
 		Init(entity);
 

@@ -58,12 +58,10 @@ namespace Monocle
 		{
 			t_component *comp = new t_component();
 
-			components[comp->GetName()] = comp;
+			components[t_component::ComponentName] = comp;
 			comp->Init(this);
 			return comp;
 		}
-
-		GameComponent* operator[](std::string component_name);
 
 	protected:
 		Platform platform;

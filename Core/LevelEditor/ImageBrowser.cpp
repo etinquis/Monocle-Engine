@@ -11,16 +11,16 @@
 //	SelectionImage::SelectionImage(const std::string &image, int size)
 //		: Entity()
 //	{
-//		((Sprite*)(*this)["Sprite"])->Load(image);
-//		if (((Sprite*)(*this)["Sprite"])->width > ((Sprite*)(*this)["Sprite"])->height)
+//		GetComponent<Sprite>()->Load(image);
+//		if (GetComponent<Sprite>()->width > GetComponent<Sprite>()->height)
 //		{
-//			((Sprite*)(*this)["Sprite"])->height = (((Sprite*)(*this)["Sprite"])->height/((Sprite*)(*this)["Sprite"])->width) * size;
-//			((Sprite*)(*this)["Sprite"])->width = size;
+//			GetComponent<Sprite>()->height = (GetComponent<Sprite>()->height/GetComponent<Sprite>()->width) * size;
+//			GetComponent<Sprite>()->width = size;
 //		}
 //		else
 //		{
-//			((Sprite*)(*this)["Sprite"])->width = (((Sprite*)(*this)["Sprite"])->width/((Sprite*)(*this)["Sprite"])->height) * size;
-//			((Sprite*)(*this)["Sprite"])->height = size;
+//			GetComponent<Sprite>()->width = (GetComponent<Sprite>()->width/GetComponent<Sprite>()->height) * size;
+//			GetComponent<Sprite>()->height = size;
 //		}
 //	}
 //
@@ -28,12 +28,12 @@
 //	{
 //		Entity::Update();
 //
-//		Vector2 diff = Input::GetWorldMousePosition() - ((Transform*)(*this)["Transform"])->GetWorldPosition();//position - Graphics::GetScreenCenter();
+//		Vector2 diff = Input::GetWorldMousePosition() - GetComponent<Transform>()->GetWorldPosition();//position - Graphics::GetScreenCenter();
 //		float mag = (1.0f-(diff.GetMagnitude()/256.0f)) * 1.0f;
 //		if (mag < 0.5f) mag = 0.5f;
 //		if (mag > 1.25f) mag = 1.25f;
-//		((Transform*)(*this)["Transform"])->scale = Vector2::one * mag;
-//		printf("scale %f, %f\n", ((Transform*)(*this)["Transform"])->scale.x, ((Transform*)(*this)["Transform"])->scale.y);
+//		GetComponent<Transform>()->scale = Vector2::one * mag;
+//		printf("scale %f, %f\n", GetComponent<Transform>()->scale.x, GetComponent<Transform>()->scale.y);
 //	}
 //
 //	/// IMAGE BROWSER
@@ -46,8 +46,8 @@
 //
 //	void ImageBrowser::Update()
 //	{
-//		((Transform*)(*this)["Transform"])->scale = ((Transform*)(*Game::GetScene()->GetCamera())["Transform"])->scale;
-//		((Transform*)(*this)["Transform"])->scale = Vector2(1/((Transform*)(*this)["Transform"])->scale.x, 1/((Transform*)(*this)["Transform"])->scale.y);
+//		GetComponent<Transform>()->scale = ((Transform*)(*Game::GetScene()->GetCamera())["Transform"])->scale;
+//		GetComponent<Transform>()->scale = Vector2(1/GetComponent<Transform>()->scale.x, 1/GetComponent<Transform>()->scale.y);
 //
 //		Entity::Update();
 //

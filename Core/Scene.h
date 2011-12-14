@@ -76,7 +76,7 @@ namespace Monocle
 		template<class T>
 		void AddEntity()
 		{
-			entities.AddEntity<T>();
+			entities.push_back( new T() );
 		}
 
 		//! Remove an entity from the scene
@@ -144,8 +144,6 @@ namespace Monocle
 		{
 			return (T*)(*this)[T::ComponentName];
 		}
-
-		SceneComponent* operator[](std::string component_name);
 
 	protected:
 		// scene has a game pointer

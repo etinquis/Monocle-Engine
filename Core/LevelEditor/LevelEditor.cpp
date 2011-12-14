@@ -285,7 +285,7 @@
 //		if (entity != NULL)
 //		{
 ////			printf("entity type: %s and %s\n", typeid(entity).name(), typeid(entity).raw_name());
-//			printf("entity selected: p(%f, %f) s(%f, %f) r(%f)\n", ((Transform*)(*entity)["Transform"])->position.x, ((Transform*)(*entity)["Transform"])->position.y, ((Transform*)(*entity)["Transform"])->scale.x, ((Transform*)(*entity)["Transform"])->scale.y, ((Transform*)(*entity)["Transform"])->rotation);
+//			printf("entity selected: p(%f, %f) s(%f, %f) r(%f)\n", GetEntity()->GetComponent<Transform>()->position.x, GetEntity()->GetComponent<Transform>()->position.y, GetEntity()->GetComponent<Transform>()->scale.x, GetEntity()->GetComponent<Transform>()->scale.y, GetEntity()->GetComponent<Collidable>()->rotation);
 //
 //			printf("(Q) move (W) rotate (E) scale\n");
 //		}
@@ -293,12 +293,12 @@
 //
 //	void LevelEditor::ApplyGrid(Entity *entity, int gridSize)
 //	{
-//		int x = (((Transform*)(*entity)["Transform"])->position.x / gridSize);
-//		((Transform*)(*entity)["Transform"])->position.x = (x * gridSize) + gridSize*0.5f;
-//		int y = (((Transform*)(*entity)["Transform"])->position.y / gridSize);
-//		((Transform*)(*entity)["Transform"])->position.y = (y * gridSize) + gridSize*0.5f;
+//		int x = (GetEntity()->GetComponent<Transform>()->position.x / gridSize);
+//		GetEntity()->GetComponent<Transform>()->position.x = (x * gridSize) + gridSize*0.5f;
+//		int y = (GetEntity()->GetComponent<Transform>()->position.y / gridSize);
+//		GetEntity()->GetComponent<Transform>()->position.y = (y * gridSize) + gridSize*0.5f;
 //
-//		printf("applied grid %d now (%d, %d)\n", gridSize, (int)((Transform*)(*entity)["Transform"])->position.x, (int)((Transform*)(*entity)["Transform"])->position.y);
+//		printf("applied grid %d now (%d, %d)\n", gridSize, (int)GetEntity()->GetComponent<Transform>()->position.x, (int)GetEntity()->GetComponent<Transform>()->position.y);
 //	}
 //
 //	void LevelEditor::UpdateOpportunity()

@@ -1,5 +1,5 @@
 #include <Monocle.h>
-#include <Graphics/Sprite.h>
+#include <Component/Entity/Sprite.h>
 #include <Level/Level.h>
 
 // by @NoelFB
@@ -51,6 +51,10 @@ namespace Jumper
 
 		//temporary, replace base class with Sprite eventually
 		float width, height;
+
+	private:
+		Transform *transform;
+		Collidable *collidable;
 	};
 
 	class GameScene : public Scene

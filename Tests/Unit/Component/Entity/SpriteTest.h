@@ -5,6 +5,7 @@
 
 namespace Monocle
 {
+	class Game;
     namespace Test
     {
         namespace Unit
@@ -21,10 +22,10 @@ namespace Monocle
 				InvalidEntity();
 			};
 
-            class SpriteSuite: public ::Test::Suite
+            class SpriteTest: public ::Test::Suite
             {
             public:
-                SpriteSuite();
+                SpriteTest();
                 
             protected:
                 virtual void setup();
@@ -33,6 +34,7 @@ namespace Monocle
             private:
                 void Init();
                 
+				Game *game;
 				ValidEntity *valid;
 				InvalidEntity *invalid;
             };

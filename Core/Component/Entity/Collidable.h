@@ -16,14 +16,21 @@ namespace Monocle
 	class Collidable : public Tag
 	{
 	public:
+		typedef struct CollidableInitParams
+		{
+		public:
+			std::string tag;
+		} InitParams;
+
 		Collidable();
 		Collidable(const Collidable& tag);
 		virtual ~Collidable();
 
 		void Update();
 		void Unload();
-
-		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_COLLIDABLE; }
+		
+		static const std::string ComponentName;
+		const std::string& GetName() { return Collidable::ComponentName; }
 
 		//! Check our collider against all entities that have "tag"
 		Collider* Collide(const std::string &tag, CollisionData *collisionData=NULL);

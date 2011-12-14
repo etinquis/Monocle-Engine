@@ -43,7 +43,7 @@ namespace Monocle
 		virtual void Update();
 		virtual void Unload();
 
-		std::string GetName() { return Animation::ComponentName; }
+		const std::string& GetName() { return Animation::ComponentName; }
 
 		Animation *Clone() const;
 	protected:

@@ -10,6 +10,7 @@ namespace Monocle
 	//Entity *Debug::selectedEntity;
 	//int Debug::layerMin = -50;
 	//int Debug::layerMax = 50;
+	const std::string Debug::ComponentName = "Debug";
 	
 	void Debug::Init(Game* game)
 	{

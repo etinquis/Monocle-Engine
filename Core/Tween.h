@@ -34,7 +34,9 @@ namespace Monocle
 		virtual void Init(Game* game) { GameComponent::Init(game); }
 		virtual void Unload() { GameComponent::Unload(); }
 
-		virtual std::string GetName() { return "Tween"; }
+		static const std::string ComponentName;
+
+		virtual const std::string& GetName() { return Tween::ComponentName; }
 
 		// float
 		void To(float *value, const float &end, float time, EaseType easeType);

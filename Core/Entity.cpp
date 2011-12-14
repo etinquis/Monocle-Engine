@@ -366,13 +366,13 @@ namespace Monocle
 //            // We use the greatest possible rectangle in case of rotations
 //            biggersize = MAX(w,h);
 //            
-//			Vector2 ul = ((Transform*)(*this)["Transform"])->position - (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
-//			Vector2 lr = ((Transform*)(*this)["Transform"])->position + (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
+//			Vector2 ul = GetComponent<Transform>()->position - (Vector2(biggersize,biggersize)*0.5f* GetComponent<Transform>()->scale);
+//			Vector2 lr = GetComponent<Transform>()->position + (Vector2(biggersize,biggersize)*0.5f* GetComponent<Transform>()->scale);
 //            
-//            float vw = Graphics::GetVirtualWidth()* ((Transform*)(*camera)["Transform"])->scale.x;
-//            float vh = Graphics::GetVirtualHeight()* ((Transform*)(*camera)["Transform"])->scale.x;
-//            float cx = (((Transform*)(*camera)["Transform"])->position.x);
-//            float cy = (((Transform*)(*camera)["Transform"])->position.y);
+//            float vw = Graphics::GetVirtualWidth()* camera->GetComponent<Transform>()->scale.x;
+//            float vh = Graphics::GetVirtualHeight()* camera->GetComponent<Transform>()->scale.x;
+//            float cx = (camera->GetComponent<Transform>()->position.x);
+//            float cy = (camera->GetComponent<Transform>()->position.y);
 //            
 //            // As long as any one of the corners could be on screen we draw
 //            return !(
@@ -447,9 +447,9 @@ namespace Monocle
 
 		for (std::list<Entity*>::iterator i = entityChain.begin(); i != entityChain.end(); ++i)
 		{
-			Graphics::Scale(1.0f/((Transform*)(**i)["Transform"])->scale);
-			Graphics::Rotate(-((Transform*)(**i)["Transform"])->rotation, 0, 0, 1);
-			Graphics::Translate(-((Transform*)(**i)["Transform"])->position);
+			Graphics::Scale(1.0f/(*i)->GetComponent<Transform>()->scale);
+			Graphics::Rotate(-(*i)->GetComponent<Transform>()->rotation, 0, 0, 1);
+			Graphics::Translate(-(*i)->GetComponent<Transform>()->position);
 		}
 
 		returnPos = Graphics::GetMatrixPosition();
@@ -633,16 +633,6 @@ namespace Monocle
 		}
 	}
 	*/
-
-	EntityComponent* Entity::operator[](std::string component_name)
-	{
-		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
-		{
-			if(i->second->GetName() == component_name) return i->second;
-		}
-
-		return NULL;
-	}
 
 	Entity *Entity::Clone() const
 	{

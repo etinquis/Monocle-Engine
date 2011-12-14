@@ -4,6 +4,8 @@
 
 namespace Monocle
 {
+	const std::string Random::ComponentName = "Random";
+
 	Random::Random()
 	{
 		srand(static_cast<unsigned int>(time(NULL)));

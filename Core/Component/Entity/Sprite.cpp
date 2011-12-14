@@ -8,11 +8,12 @@
 
 namespace Monocle
 {
+	const std::string Sprite::ComponentName = MONOCLE_ENTITYCOMPONENT_SPRITE;
+
 	Sprite::Sprite()
-		: Graphic(),
-		texture(NULL),
-		width(1.0f),
-		height(1.0f),
+		: texture(NULL),
+		width(-1.0f),
+		height(-1.0f),
 		textureOffset(Vector2::zero),
         textureScale(Vector2::one),
         textureOffsetModifier(Vector2::zero),
@@ -22,34 +23,30 @@ namespace Monocle
         renderOffset(Vector2::zero),
 		blend(BLEND_ALPHA)
 	{
+		AddDependency<Transform>();
 	}
 
-	/*void Sprite::Load(const std::string &filename, FilterType filter, float width, float height)
+	void Sprite::LoadGraphic(const std::string &filename, FilterType filter, float width, float height)
 	{
 		texture = Assets::RequestTexture(filename, filter);
 		if (texture != NULL)
 		{
+			
 			if (width == -1.0 || height == -1.0)
 			{
 				this->width = texture->width;
 				this->height = texture->height;
+			}
+			else
+			{
+				if(this->width == -1.0 || this->height == -1.0)
+				{
+					this->width = texture->width;
+					this->height = texture->height;
+				}
 			}
 		}
 	}
-
-	void Sprite::Load(const Color& color, float width, float height)
-	{
-		texture = Assets::RequestColorTexture(color);
-		
-		if (texture != NULL)
-		{
-			if (width == -1.0 || height == -1.0)
-			{
-				this->width = texture->width;
-				this->height = texture->height;
-			}
-		}
-	}*/
 
 	Sprite::~Sprite()
 	{
@@ -58,6 +55,18 @@ namespace Monocle
 			texture->RemoveReference();
 			texture = NULL;
 		}
+	}
+
+	void Sprite::Init(Entity *entity)
+	{
+		EntityComponent::Init(entity);
+		transform = entity->GetComponent<Transform>();
+	}
+
+	void Sprite::ParamInit(Entity *entity, const Sprite::InitParams& params)
+	{
+		Init(entity);
+		LoadGraphic(params.filename, params.filter, params.width, params.height);
 	}
 
 	void Sprite::Update()
@@ -72,15 +81,15 @@ namespace Monocle
 	// store color info in entity?
 	// that would bloat entity... hmm.
 	// or make materials system...
-	void Sprite::Render(Entity *entity)
+	void Sprite::Render()
 	{        
 		Graphics::PushMatrix();
         
         // Calculate proper offset
         Vector2 offset = trimOffset;
 
-		Graphics::Translate( ((Transform*)(*GetEntity())["Transform"])->position.x+offset.x, ((Transform*)(*GetEntity())["Transform"])->position.y-offset.y, 0.0f);
-		Graphics::Rotate( ((Transform*)(*GetEntity())["Transform"])->rotation, 0, 0, 1);
+		Graphics::Translate( transform->position.x+offset.x, transform->position.y-offset.y, 0.0f);
+		Graphics::Rotate( transform->rotation, 0, 0, 1);
         Graphics::Scale( trimScale );
 		Graphics::BindTexture(texture);
 		Graphics::SetBlend(blend);

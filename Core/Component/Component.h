@@ -15,7 +15,7 @@ namespace Monocle
 		Component(const Component& comp);
 		virtual ~Component();
 
-		virtual std::string GetName() = 0;
+		virtual const std::string& GetName() = 0;
 		std::vector<std::string> GetDependencies();
 
 		/*virtual void Init() = 0;*/
@@ -24,7 +24,11 @@ namespace Monocle
 
 		virtual Component* Clone() const = 0;
 	protected:
-		void AddDependency(std::string component_name);
+		template <typename T>
+		void AddDependency()
+		{
+			dependencies.push_back(T::ComponentName);
+		}
 	private:
 
 		bool unloaded;

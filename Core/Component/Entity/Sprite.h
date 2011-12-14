@@ -14,23 +14,24 @@
 namespace Monocle
 {
 	class Entity;
+	class Transform;
 	enum BlendType;
 	enum FilterType;
 	class TextureAsset;
 	class Color;
 
-	class Sprite : public Graphic
+	class Sprite : public EntityComponent
 	{
 	public:
 		typedef class SpriteInitParams
 		{
-		private:
+		public:
 			std::string filename;
 			FilterType filter;
 			float width;
 			float height;
-		public:
-			SpriteInitParams(std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0)
+
+			SpriteInitParams(const std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0)
 			{
 				this->filename = filename;
 				this->filter = filter;
@@ -42,14 +43,17 @@ namespace Monocle
 
 		Sprite();
 		~Sprite();
+		
+		static const std::string ComponentName;
 
-		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_SPRITE; }
-		Sprite * Clone () const { return new Sprite(*this); }
+		const std::string& GetName() { return Sprite::ComponentName; }
+		Sprite *Clone () const { return new Sprite(*this); }
 
-		void ParamInit(InitParams params);
+		void Init(Entity *entity);
+		void ParamInit(Entity *entity, const InitParams& params);
 
 		void Update();
-		void Render(Entity *entity);
+		void Render();
 		void GetWidthHeight(float *width, float *height);
 
 		TextureAsset *texture;
@@ -76,5 +80,10 @@ namespace Monocle
 	protected:
 		virtual void Save(FileNode *myNode);
 		virtual void Load(FileNode *myNode);
+
+		virtual void LoadGraphic(const std::string &filename, FilterType filter, float width, float height);
+	private:
+		Transform *transform;
 	};
+
 }

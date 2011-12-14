@@ -68,8 +68,9 @@ namespace Monocle
 		static const std::string &GetContentPath();
 		
 		Assets();
-
-		std::string GetName() { return "Assets"; }
+		
+		static const std::string ComponentName;
+		const std::string& GetName() { return Assets::ComponentName; }
 
 		void Init(Game* game);
 		void Update() { }
