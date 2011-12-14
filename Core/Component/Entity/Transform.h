@@ -14,12 +14,13 @@ namespace Monocle
 	public:
 		typedef class TransformInitParams
 		{
-		private:
+		public:
 			Vector2 position;
 			float rotation;
 			Vector2 scale;
-		public:
-			TransformInitParams(Vector2 &position = Vector2::zero, float rotation = 0, Vector2 &scale = Vector2::zero);
+
+			TransformInitParams(Vector2 &position = Vector2::zero, float rotation = 0, Vector2 &scale = Vector2::zero)
+				: position(position), rotation(rotation), scale(scale) {}
 		} InitParams;
 
 		static const std::string ComponentName;
@@ -33,7 +34,7 @@ namespace Monocle
         
 		std::string GetName() { return Transform::ComponentName; }
 
-		void ParamInit(InitParams params);
+		void ParamInit(Entity* entity, InitParams params);
 
 		void Update();
 		Transform* Clone() const { return new Transform(*this); }

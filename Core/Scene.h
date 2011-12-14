@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Debug.h"
+#include "Component/Entity/Transform.h"
 #include <list>
 #include <map>
 #include <string>
 #include <vector>
-#include <unordered_map>
 
 ///TODO: Replace with xml wrapper
 class TiXmlElement;
@@ -34,7 +34,7 @@ namespace Monocle
 	class Scene
 	{
 	public:
-		typedef std::unordered_map<std::string, SceneComponent*> ComponentList;
+		typedef std::map<std::string, SceneComponent*> ComponentList;
 
 		Scene();
 		~Scene();

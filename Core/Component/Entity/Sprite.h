@@ -5,6 +5,8 @@
 #include "../../Vector2.h"
 #include "../../Color.h"
 
+#include "Graphics.h"
+
 #include <string>
 
 #define MONOCLE_ENTITYCOMPONENT_SPRITE "Sprite"

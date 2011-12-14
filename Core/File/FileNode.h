@@ -3,7 +3,6 @@
 #include <string>
 #include <list>
 #include <map>
-#include <unordered_map>
 #include <sstream>
 
 namespace Monocle
@@ -16,7 +15,7 @@ namespace Monocle
 	{
 	public:
 		typedef std::map<std::string, std::string> AttributeList;
-		typedef std::unordered_map<std::string, std::list<FileNode*> > ChildLookupList;
+		typedef std::map<std::string, std::list<FileNode*> > ChildLookupList;
 		typedef std::list<FileNode> ChildList;
 
 		//! Creates an unnamed root node

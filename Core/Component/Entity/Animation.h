@@ -3,7 +3,8 @@
 #include "../EntityComponent.h"
 #include <set>
 #include <string>
-#include <unordered_map>
+#include <map>
+#include <list>
 
 namespace Monocle
 {
@@ -11,7 +12,7 @@ namespace Monocle
 	{
 		public:
 		Anim(const std::string &name, int start, int end, float speed, bool loop=true);
-        Anim(const std::string &name, ZwopSprite *firstSprite, int numFrames, float speed, bool loop=true);
+        //Anim(const std::string &name, ZwopSprite *firstSprite, int numFrames, float speed, bool loop=true);
 		Anim();
 		bool isPlaying;
 		const std::string name;
@@ -21,13 +22,13 @@ namespace Monocle
 		int end;
         bool loop;
         
-        ZwopSprite *firstSprite;
+        //ZwopSprite *firstSprite;
 	};
 
 	class Animation : public EntityComponent
 	{
 	public:
-		typedef std::unordered_map< std::string, std::list<Anim> > AnimationList;
+		typedef std::map< std::string, std::list<Anim> > AnimationList;
 		typedef class AnimationInitParams
 		{
 

@@ -2,7 +2,7 @@
 
 #include <list>
 #include "../../Entity.h"
-//#include "../Tween.h"
+#include "Tween.h"
 //#include "Component/Entity/Sprite.h"
 
 #define MONOCLE_ENTITYCOMPONENT_PUPPET "Puppet"

@@ -3,6 +3,8 @@
 #include "../../Graphics.h"
 #include "../../File/FileNode.h"
 
+#include <cmath>
+
 namespace Monocle
 {
 	const std::string Transform::ComponentName = "Transform";
@@ -20,6 +22,15 @@ namespace Monocle
 	void Transform::Update()
 	{
 
+	}
+
+	void Transform::ParamInit(Entity *entity, InitParams params)
+	{
+		Init(entity);
+
+		this->position = params.position;
+		this->rotation = params.rotation;
+		this->scale = params.scale;
 	}
 
     Vector2 Transform::GetDirectionVector()

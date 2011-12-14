@@ -27,7 +27,7 @@ namespace Monocle
 		virtual ~File() {}
 
 		FileNode *GetRootNode() { return &rootNode; }
-		bool IsFlat() { return !rootNode->HasChildren; }
+		bool IsFlat() { return !rootNode.HasChildren(); }
 
 		void Load()
 		{

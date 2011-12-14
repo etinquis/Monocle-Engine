@@ -67,7 +67,7 @@ namespace Monocle
 	class Entity
 	{
 	public:
-		typedef std::unordered_map<std::string, EntityComponent*> ComponentList;
+		typedef std::map<std::string, EntityComponent*> ComponentList;
 
 		Entity();
 		virtual ~Entity();
