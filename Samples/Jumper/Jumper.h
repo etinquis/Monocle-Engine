@@ -21,21 +21,21 @@ namespace Jumper
 		void Update();
 		float Sign(float i, float to);
 
-		KeyCode keyUp;
-		KeyCode keyRight;
-		KeyCode keyLeft;
-
 		Vector2 velocity;
 		float gravity;
 		float speed;
-		bool onGround;
 		float jump;
 		float maxSpeed;
-		bool isJumping;
 
 		float leanAmount; // how much does he lean into his left/right movement?
 
 	private:
+		struct Player_State
+		{
+			bool jumping;
+			bool onGround;
+		} state;
+
 		Transform *transform;
 		Collidable *collidable;
 		Sprite *sprite;

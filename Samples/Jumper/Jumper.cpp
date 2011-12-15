@@ -49,11 +49,11 @@ namespace Jumper
 		transform->rotation = velocity.x * leanAmount;
 
 		// jump
-		if(Input::IsKeyMaskHeld("jump") && onGround)
+		if(Input::IsKeyMaskHeld("jump") && state.onGround)
 		{
 			velocity.y = -jump;
-			isJumping = true;
-			onGround = false;
+			state.jumping = true;
+			state.onGround = false;
 
 			// stretch a bit when jumping
 			sprite->width = 64 * 1.0f;
@@ -79,7 +79,7 @@ namespace Jumper
 
 		transform->position.y += velocity.y * Monocle::deltaTime;
 
-		onGround = false;
+		state.onGround = false;
 
 		if (collidable->Collide("Wall") || collidable->Collide("Player"))
 		{
@@ -90,17 +90,17 @@ namespace Jumper
 
 			transform->position.y = lastPosition.y;
 			velocity.y = 0;
-			onGround = true;
+			state.onGround = true;
 			
 			// get fat when we're landing
-			if (isJumping)
+			if (state.jumping)
 			{
 				sprite->width = 64 * 1.1f;
 				sprite->height = 64 * 1.0f;
 				transform->rotation = 0;
 			}
 
-			isJumping = false;
+			state.jumping = false;
 		}
 	}
 

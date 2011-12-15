@@ -19,7 +19,7 @@ namespace Monocle
 			float rotation;
 			Vector2 scale;
 
-			TransformInitParams(Vector2 &position = Vector2::zero, float rotation = 0, Vector2 &scale = Vector2::zero)
+			TransformInitParams(Vector2 &position = Vector2::zero, float rotation = 0, Vector2 &scale = Vector2::one)
 				: position(position), rotation(rotation), scale(scale) {}
 		} InitParams;
 

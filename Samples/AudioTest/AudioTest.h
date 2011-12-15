@@ -17,6 +17,8 @@ namespace AudioTest
 	protected:
 		FontAsset* font;
 		std::string text;
+	private:
+		Transform *transform;
 	};
     
     class Waveform: public Entity
