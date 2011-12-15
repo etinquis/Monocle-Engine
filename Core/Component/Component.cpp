@@ -23,11 +23,6 @@ namespace Monocle
 		unloaded = true;
 	}
 
-	void Component::AddDependency(std::string component_name)
-	{
-		dependencies.push_back(component_name);
-	}
-
 	std::vector<std::string> Component::GetDependencies()
 	{
 		return dependencies;

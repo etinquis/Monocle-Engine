@@ -37,12 +37,12 @@ namespace Monocle
 			if (Platform::mouseScroll != 0)
 			{
 				const float minZoom = 0.01f;
-				((Transform*)(*mainCamera)["Transform"])->scale += (Platform::mouseScroll * Vector2::one * 0.00025f);
-				if (((Transform*)(*mainCamera)["Transform"])->scale.x < minZoom)
+				mainCamera->GetComponent<Transform>()->scale += (Platform::mouseScroll * Vector2::one * 0.00025f);
+				if (mainCamera->GetComponent<Transform>()->scale.x < minZoom)
 				{
-					((Transform*)(*mainCamera)["Transform"])->scale = Vector2::one * minZoom;
+					mainCamera->GetComponent<Transform>()->scale = Vector2::one * minZoom;
 				}
-				Vector2 camZoom = ((Transform*)(*mainCamera)["Transform"])->scale;
+				Vector2 camZoom = mainCamera->GetComponent<Transform>()->scale;
 				printf("camZoom (%f, %f)\n", camZoom.x, camZoom.y);
 			}
 
@@ -53,7 +53,7 @@ namespace Monocle
 			else if (Input::IsKeyHeld(KEY_LALT))
 			{
 				Vector2 diff = Input::GetWorldMousePosition() - lastWorldMousePosition;
-				((Transform*)(*mainCamera)["Transform"])->scale += Vector2::one * diff.y * Monocle::deltaTime * 0.05f;
+				mainCamera->GetComponent<Transform>()->scale += Vector2::one * diff.y * Monocle::deltaTime * 0.05f;
 				lastWorldMousePosition = Input::GetWorldMousePosition();
 			}
 
@@ -64,10 +64,10 @@ namespace Monocle
 			else if (Input::IsMouseButtonHeld(MOUSE_BUTTON_MIDDLE) || Input::IsKeyHeld(KEY_LSHIFT))
 			{
 				Vector2 diff = Input::GetWorldMousePosition() - lastWorldMousePosition;
-				((Transform*)(*mainCamera)["Transform"])->position = ((Transform*)(*mainCamera)["Transform"])->position + (-1*diff);
+				mainCamera->GetComponent<Transform>()->position = mainCamera->GetComponent<Transform>()->position + (-1*diff);
 				lastWorldMousePosition = Input::GetWorldMousePosition();
 
-				Vector2 camPos = ((Transform*)(*mainCamera)["Transform"])->position;
+				Vector2 camPos = mainCamera->GetComponent<Transform>()->position;
 				printf("camPos (%d, %d)\n", (int)camPos.x, (int)camPos.y);
 			}
 
@@ -76,11 +76,11 @@ namespace Monocle
 
 			const float cameraMoveSpeed = 800.0f; // replace with virtualWidth
 			moveDiff *= Monocle::deltaTime * cameraMoveSpeed;
-			((Transform*)(*mainCamera)["Transform"])->position = ((Transform*)(*mainCamera)["Transform"])->position + moveDiff;
+			mainCamera->GetComponent<Transform>()->position = mainCamera->GetComponent<Transform>()->position + moveDiff;
 
 			float zoomDiff = (Input::IsKeyHeld(KEY_KP7) ? -1.0f : 0.0f) + (Input::IsKeyHeld(KEY_KP9) ? 1.0f : 0.0f);
 			const float cameraZoomSpeed = 1.0f;
-			((Transform*)(*mainCamera)["Transform"])->scale += zoomDiff * cameraZoomSpeed * Vector2::one * Monocle::deltaTime;
+			mainCamera->GetComponent<Transform>()->scale += zoomDiff * cameraZoomSpeed * Vector2::one * Monocle::deltaTime;
 		}
 	}
 }

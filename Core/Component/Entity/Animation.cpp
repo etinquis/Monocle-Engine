@@ -6,6 +6,8 @@
 
 namespace Monocle
 {
+	const std::string Animation::ComponentName = "Animation";
+
 	void Animation::Init(Entity *entity)
 	{
 		EntityComponent::Init(entity);

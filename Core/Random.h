@@ -8,8 +8,9 @@ namespace Monocle
 	{
 	public:
 		Random();
-
-		std::string GetName() { return "Random"; }
+		
+		static const std::string ComponentName;
+		const std::string& GetName() { return Random::ComponentName; }
 
 		void Init(Game* game) { GameComponent::Init(game); }
 		void Update() { }

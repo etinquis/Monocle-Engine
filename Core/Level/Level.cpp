@@ -8,6 +8,7 @@
 
 namespace Monocle
 {
+	const std::string Level::ComponentName = "Level";
 
 	EntityType::EntityType()
 	{

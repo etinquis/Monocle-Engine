@@ -221,14 +221,4 @@ namespace Monocle
     {
         return isDone;
     }
-
-	GameComponent* Game::operator[](std::string component_name)
-	{
-		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
-		{
-			if(i->second->GetName() == component_name) return i->second;
-		}
-
-		return NULL;
-	}
 }

@@ -60,7 +60,7 @@ namespace Monocle
 
 	void FileNode::RemoveChildren(const std::string &name)
 	{
-		for(ChildList::const_iterator it = children.begin(); it != children.end(); it++)
+		for(ChildList::iterator it = children.begin(); it != children.end(); it++)
 		{
 			if(it->GetName() == name)
 			{

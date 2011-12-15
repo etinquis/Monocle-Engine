@@ -29,7 +29,6 @@ namespace Pong
 		Graphics::RenderText(*font, text, 0, 0);
 		Graphics::PopMatrix();
 	}
-
     
 	/*
 	**************************************************
@@ -67,7 +66,7 @@ namespace Pong
 			Debug::Log("Ball hit an entity tagged with 'Paddle'");
 			transform->position = lastPosition;
 			
-			Vector2 otherPos = ((Transform*)(*collider->GetEntity())[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position;
+			Vector2 otherPos = collider->GetEntity()->GetComponent<Transform>()->position;
 
 			Vector2 diff = transform->position - otherPos;
 			diff.Normalize();
@@ -213,26 +212,26 @@ namespace Pong
 		Add(ball);
 
 		paddle1 = new Paddle();
-		((Transform*)(*paddle1)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(100, 300);
+		paddle1->GetComponent<Transform>()->position = Vector2(100, 300);
 		paddle1->keyUp = KEY_W;
 		paddle1->keyDown = KEY_S;
 		Add(paddle1);
 
 		paddle2 = new Paddle();
-		((Transform*)(*paddle2)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(700, 300);
+		paddle2->GetComponent<Transform>()->position = Vector2(700, 300);
 		paddle2->keyUp = KEY_UP;
 		paddle2->keyDown = KEY_DOWN;
 		Add(paddle2);
 
 		FontAsset* font = Assets::RequestFont("Pong/LiberationSans-Regular.ttf", 25.0f);
         scoreText = new Text(GetScoreString(), font);
-        ((Transform*)(*scoreText)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(50, 50);
+        scoreText->GetComponent<Transform>()->position = Vector2(50, 50);
         Add(scoreText);
 	}
 
 	void GameScene::ResetBall()
 	{
-		((Transform*)(*ball)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position = Vector2(400, 300);
+		ball->GetComponent<Transform>()->position = Vector2(400, 300);
 		ball->velocity = Vector2::Random() * 200.0f;
 	}
     
@@ -248,13 +247,13 @@ namespace Pong
 		Scene::Update();
 
 		// do pong specific update
-		if (((Transform*)(*ball)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position.x < 0)
+		if (ball->GetComponent<Transform>()->position.x < 0)
 		{
             p2Score++;
             scoreText->SetText(GetScoreString());
 			ResetBall();
 		}
-		else if (((Transform*)(*ball)[MONOCLE_ENTITYCOMPONENT_TRANSFORM])->position.x > 800)
+		else if (ball->GetComponent<Transform>()->position.x > 800)
 		{
             p1Score++;
             scoreText->SetText(GetScoreString());

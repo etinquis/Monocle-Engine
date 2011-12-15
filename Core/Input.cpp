@@ -9,6 +9,7 @@
 
 namespace Monocle
 {
+	const std::string Input::ComponentName = "Input";
 	Input *Input::instance = NULL;
 
     Input::EventHandler::~EventHandler()
@@ -158,8 +159,8 @@ namespace Monocle
 		adjustedToCameraMousePosition += adjust;
 
 		Vector2 diff = (adjustedToCameraMousePosition * invResScale) - Graphics::GetScreenCenter();
-		Vector2 cameraZoom = ((Transform*)(*camera)["Transform"])->scale;
-		return ((Transform*)(*camera)["Transform"])->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
+		Vector2 cameraZoom = camera->GetComponent<Transform>()->scale;
+		return camera->GetComponent<Transform>()->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
 	}
 
 	void Input::SetWorldMouseCamera(Camera *camera)

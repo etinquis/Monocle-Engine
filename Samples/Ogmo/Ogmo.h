@@ -1,5 +1,5 @@
 #include <Monocle.h>
-#include <Graphics/Sprite.h>
+#include <Component/Entity/Sprite.h>
 #include <Graphics/SpriteAnimation.h>
 #include <Level/Level.h>
 

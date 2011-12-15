@@ -12,21 +12,14 @@ namespace Jumper
 	Player::Player(Vector2 pos) 
 		: Entity()
 	{
-		AddComponent<Transform>();
-		AddComponent<Collidable>();
-		AddComponent<Sprite>();
+		transform = AddComponent<Transform>(Transform::InitParams(pos));
+		collidable = AddComponent<Collidable>();
+		sprite = AddComponent<Sprite>(Sprite::InitParams("Graphics/Player.png", FILTER_NONE, 64, 64));
 
-		transform = (Transform*)(*this)["Transform"];
-		collidable = (Collidable*)(*this)["Collidable"];
-		sprite = (Sprite*)(*this)["Sprite"];
-
-		transform->position = pos;
 		SetLayer(-10);
 
 		collidable->AddTag("Player");
 		collidable->SetCollider(new RectangleCollider(40, 64));
-
-		sprite->Load("Graphics/Player.png", FILTER_NONE, 64, 64);
 
 		speed = 4000.0f;
 		gravity = 2000.0f;
@@ -34,7 +27,7 @@ namespace Jumper
 		jump = gravity * 0.4f;
 		maxSpeed = 400.0f;
 		leanAmount = 0.05f;
-	}
+	}	
 
 	void Player::Update()
 	{
@@ -53,19 +46,19 @@ namespace Jumper
 		}
 
 		// lean
-		rotation = velocity.x * leanAmount;
+		transform->rotation = velocity.x * leanAmount;
 
 		// jump
-		if(Input::IsKeyMaskHeld("jump") && onGround)
+		if(Input::IsKeyMaskHeld("jump") && state.onGround)
 		{
 			velocity.y = -jump;
-			isJumping = true;
-			onGround = false;
+			state.jumping = true;
+			state.onGround = false;
 
 			// stretch a bit when jumping
 			sprite->width = 64 * 1.0f;
 			sprite->height = 64 * 1.1f;
-			rotation = 0;
+			transform->rotation = 0;
 		}
 
 		// friction
@@ -74,40 +67,40 @@ namespace Jumper
 		velocity.y += gravity * Monocle::deltaTime;
 
 		//move
-		Vector2 lastPosition = position;
+		Vector2 lastPosition = transform->position;
 		float temp = 0.001f;
 
-		position.x += velocity.x * Monocle::deltaTime;
-		if(((Collidable *)((*this)["Collidable"]))->Collide("Wall") || ((Collidable *)((*this)["Collidable"]))->Collide("Player"))
+		transform->position.x += velocity.x * Monocle::deltaTime;
+		if(collidable->Collide("Wall") || collidable->Collide("Player"))
 		{
-			position.x = lastPosition.x;
+			transform->position.x = lastPosition.x;
 			velocity.x = 0.0f;
 		}
 
-		position.y += velocity.y * Monocle::deltaTime;
+		transform->position.y += velocity.y * Monocle::deltaTime;
 
-		onGround = false;
+		state.onGround = false;
 
-		if (((Collidable *)((*this)["Collidable"]))->Collide("Wall") || ((Collidable *)((*this)["Collidable"]))->Collide("Player"))
+		if (collidable->Collide("Wall") || collidable->Collide("Player"))
 		{
 			// small ground collision problem here if falling fast (warps back up too far)
 			// could do a line intersection with the collider we hit
 			// collider->IntersectsLine()
 			// ^ if this gave us the intersection point, we could snap right to the ground instead
 
-			position.y = lastPosition.y;
+			transform->position.y = lastPosition.y;
 			velocity.y = 0;
-			onGround = true;
+			state.onGround = true;
 			
 			// get fat when we're landing
-			if (isJumping)
+			if (state.jumping)
 			{
 				sprite->width = 64 * 1.1f;
 				sprite->height = 64 * 1.0f;
-				rotation = 0;
+				transform->rotation = 0;
 			}
 
-			isJumping = false;
+			state.jumping = false;
 		}
 	}
 
@@ -120,9 +113,12 @@ namespace Jumper
 	Wall::Wall(Vector2 pos, float w, float h)
 		: Entity()
 	{
-		position = pos;
-		((Collidable *)(*this)["Collidable"])->AddTag("Wall");
-		((Collidable *)((*this)["Collidable"]))->SetCollider(new RectangleCollider(w, h));
+		transform = AddComponent<Transform>(Transform::InitParams(pos));
+		collidable = AddComponent<Collidable>();
+
+		collidable->AddTag("Wall");
+		collidable->SetCollider(new RectangleCollider(w, h));
+
 		this->width = w;
 		this->height = h;
 	}
@@ -130,7 +126,7 @@ namespace Jumper
 	void Wall::Render()
 	{
 		Graphics::PushMatrix();
-		Graphics::Translate(position);
+		Graphics::Translate(transform->position);
 		Graphics::BindTexture(NULL);
 		Graphics::RenderQuad(width, height);
 		Graphics::PopMatrix();
@@ -149,6 +145,7 @@ namespace Jumper
 		Input::DefineMaskKey("left", KEY_LEFT);
 		Input::DefineMaskKey("right", KEY_RIGHT);
 
+		Graphics::Set2D(800,600);
 		Graphics::SetBackgroundColor(Color::blue * 0.1f);
 
 		Add(new Wall(Vector2(400.0f, 500.0), 200.0f, 10.0f));
@@ -166,6 +163,8 @@ namespace Jumper
 
 	void GameScene::Update()
 	{
+		Platform::Sleep(5);
+
 		Scene::Update();
 
 		if (Input::IsKeyPressed(KEY_SPACE))
@@ -176,6 +175,20 @@ namespace Jumper
         {
 			SpawnPlayer(Input::GetWorldMousePosition());
         }
+
+		const std::list<Entity *> *entities = GetEntities();
+		for(std::list<Entity *>::const_iterator it = entities->begin(); it != entities->end(); it++)
+		{
+			Player *plyr = dynamic_cast<Player*>(*it);
+			if(plyr)
+			{
+				if ( plyr->transform->position.y > Graphics::GetVirtualHeight() )
+				{
+					this->Remove( plyr );
+				}
+			}
+			
+		}
 	}
 
 	void GameScene::End()

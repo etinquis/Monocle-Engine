@@ -6,6 +6,7 @@
 #include <Colliders/RectangleCollider.h>
 
 #include <Component/Entity/Collidable.h>
+#include <Component/Entity/Transform.h>
 
 #include <stdlib.h>
 
@@ -30,10 +31,14 @@ namespace Ogmo
 		cling(0),
 		onGround(false)
 	{
-		position = Vector2(x, y);
+		Transform::InitParams transParams(Vector2(x,y));
+		AddComponent<Transform>(transParams);
+		AddComponent<Collidable>();
 
-		((Collidable *)(*this)["Collidable"])->AddTag("PLAYER");
-		((Collidable *)(*this)["Collidable"])->SetCollider(new RectangleCollider(8, 8));
+		GetComponent<Transform>()->position = Vector2(x, y);
+
+		GetComponent<Collidable>()->AddTag("PLAYER");
+		GetComponent<Collidable>()->SetCollider(new RectangleCollider(8, 8));
 
 		sprite = new SpriteAnimation("player.png", FILTER_NONE, 8, 8);
 		sprite->Add("stand", 0, 0, 0);
@@ -43,7 +48,6 @@ namespace Ogmo
 		sprite->Play("run");
 
 		SetLayer(-1);
-		SetGraphic(sprite);
 
 		direction = true;
 	}
@@ -278,13 +282,13 @@ namespace Ogmo
 		if(collected && isVisible)
 		{
 			//scale out
-			scale -= Vector2::one * 10.0f * Monocle::deltaTime;
+			GetComponent<Transform>()->scale -= Vector2::one * 10.0f * Monocle::deltaTime;
 
 			//follow player
-			position -= ((position - World::player->position) / 10) * Monocle::deltaTime * 100.0f;
+			GetComponent<Transform>()->position -= ((GetComponent<Transform>()->position - World::player->GetComponent<Transform>()->position) / 10) * Monocle::deltaTime * 100.0f;
 
 			//we can't be seen no more
-			if(scale.x < 0)
+			if(GetComponent<Transform>()->scale.x < 0)
 			{
 				isVisible = false;
 			}
@@ -295,24 +299,24 @@ namespace Ogmo
 			isVisible = true;
 
 			//scale in
-			if(scale.x < 1.0f)
+			if(GetComponent<Transform>()->scale.x < 1.0f)
 			{
-				scale += Vector2::one * 10.0f * Monocle::deltaTime;
+				GetComponent<Transform>()->scale += Vector2::one * 10.0f * Monocle::deltaTime;
 			}
 			else
 			{
-				scale = Vector2::one;
+				GetComponent<Transform>()->scale = Vector2::one;
 			}
 
 			//slide to start position
-			position -= ((position - start) / 10) * Monocle::deltaTime * 100.0f;
+			GetComponent<Transform>()->position -= ((GetComponent<Transform>()->position - start) / 10) * Monocle::deltaTime * 100.0f;
 
 			//hop to start position
-			if((position - start).IsInRange(2.0f))
+			if((GetComponent<Transform>()->position - start).IsInRange(2.0f))
 			{
 				reset = false;
-				position = start;
-				scale = Vector2::one;
+				GetComponent<Transform>()->position = start;
+				GetComponent<Transform>()->scale = Vector2::one;
 			}
 		}
 	}
@@ -320,23 +324,22 @@ namespace Ogmo
 	// T H E   S P I K E (entity)
 	Spike::Spike(int x, int y, Sprite *sprite) : Entity()
 	{
-		position = Vector2(x, y);
+		GetComponent<Transform>()->position = Vector2(x, y);
 
 		SetLayer(-1);
-		SetGraphic(sprite);
 
 		((Collidable *)(*this)["Collidable"])->AddTag("SPIKE");
 		((Collidable *)(*this)["Collidable"])->SetCollider(new RectangleCollider(8, 8));
 
-		if(position.x == -1 && position.y == -1)
+		if(GetComponent<Transform>()->position.x == -1 && GetComponent<Transform>()->position.y == -1)
 		{
-			position = Vector2(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
-			while(((Collidable *)(*this)["Collidable"])->Collide("WALL"))
+			GetComponent<Transform>()->position = Vector2(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
+			while(GetComponent<Collidable>()->Collide("WALL"))
 			{
-				position = Vector2(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
+				GetComponent<Transform>()->position = Vector2(((int) rand() % 160 / 8) * 8 + 4, ((int) rand() % 120 / 8) * 8 + 4);
 			}
 
-			while(!((Collidable *)(*this)["Collidable"])->Collide("WALL")) { position.y += 1; }
+			while(!GetComponent<Collidable>()->Collide("WALL")) { GetComponent<Transform>()->position.y += 1; }
 		}
 	}
 
@@ -452,7 +455,7 @@ namespace Ogmo
 			if((*i)->collected)
 			{
 				(*i)->collected = false;
-				(*i)->position = Vector2(player->position.x, player->position.y);
+				(*i)->GetComponent<Transform>()->position = Vector2(player->GetComponent<Transform>()->position.x, player->GetComponent<Transform>()->position.y);
 				(*i)->reset = true;
 			}
 		}

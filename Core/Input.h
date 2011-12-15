@@ -122,8 +122,9 @@ namespace Monocle
 		void Init(Game* game);
 		void Update();
 		void Unload() { }
-
-		std::string GetName() { return "Input"; }
+		
+		static const std::string ComponentName;
+		const std::string& GetName() { return "Input"; }
 
 		Input *Clone() const;
 

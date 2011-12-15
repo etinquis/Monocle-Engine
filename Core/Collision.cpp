@@ -11,6 +11,8 @@ namespace Monocle
 {
 	Collision* Collision::instance = NULL;
 
+	const std::string Collision::ComponentName = "Collision";
+
 	Collision::Collision() : GameComponent()
 	{
 		instance = this;

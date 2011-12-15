@@ -6,6 +6,8 @@
 
 namespace Monocle
 {
+	const std::string Collidable::ComponentName = "Collidable";
+
 	Collidable::Collidable()
 		: collider(NULL)
 	{

@@ -50,33 +50,33 @@ namespace Monocle
 	float RectangleCollider::GetRight(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.x + width*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.x);
+			return offset.x + width*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.x);
 		else
-			return GetEntityPosition().x + offset.x + width*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.x);
+			return GetEntityPosition().x + offset.x + width*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.x);
 	}
 
 	float RectangleCollider::GetLeft(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.x - width*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.x);		
+			return offset.x - width*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.x);		
 		else
-			return GetEntityPosition().x + offset.x - width*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.x);
+			return GetEntityPosition().x + offset.x - width*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.x);
 	}
 
 	float RectangleCollider::GetTop(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.y - height*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.y);
+			return offset.y - height*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.y);
 		else
-			return GetEntityPosition().y + offset.y - height*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.y);	
+			return GetEntityPosition().y + offset.y - height*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.y);	
 	}
 
 	float RectangleCollider::GetBottom(bool relativeToEntity)
 	{
 		if (relativeToEntity)
-			return offset.y + height*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.y);	
+			return offset.y + height*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.y);	
 		else
-			return GetEntityPosition().y + offset.y + height*0.5f * fabs(((Transform*)(*GetEntity())["Transform"])->scale.y);
+			return GetEntityPosition().y + offset.y + height*0.5f * fabs(GetEntity()->GetComponent<Transform>()->scale.y);
 	}
 
 	Vector2 RectangleCollider::GetTopLeft(bool relativeToEntity)
