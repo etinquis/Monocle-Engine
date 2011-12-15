@@ -28,17 +28,16 @@ namespace Jumper
 		float maxSpeed;
 
 		float leanAmount; // how much does he lean into his left/right movement?
-
+		
+		Transform *transform;
+		Collidable *collidable;
+		Sprite *sprite;
 	private:
 		struct Player_State
 		{
 			bool jumping;
 			bool onGround;
 		} state;
-
-		Transform *transform;
-		Collidable *collidable;
-		Sprite *sprite;
 	};
 
 	

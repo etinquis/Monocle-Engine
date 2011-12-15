@@ -45,7 +45,7 @@ namespace Monocle
         //! Retrieves a direction vector based on the rotation value.
         Vector2 GetDirectionVector();
 
-		void LerpTransform(Transform *prev, Transform *next, float percent);
+		//void LerpTransform(Transform *prev, Transform *next, float percent);
 
 		void ApplyMatrix();
 		Vector2 GetWorldPosition(const Vector2 &position = Vector2::zero);

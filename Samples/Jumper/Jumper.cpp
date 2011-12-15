@@ -163,6 +163,8 @@ namespace Jumper
 
 	void GameScene::Update()
 	{
+		Platform::Sleep(5);
+
 		Scene::Update();
 
 		if (Input::IsKeyPressed(KEY_SPACE))
@@ -173,6 +175,20 @@ namespace Jumper
         {
 			SpawnPlayer(Input::GetWorldMousePosition());
         }
+
+		const std::list<Entity *> *entities = GetEntities();
+		for(std::list<Entity *>::const_iterator it = entities->begin(); it != entities->end(); it++)
+		{
+			Player *plyr = dynamic_cast<Player*>(*it);
+			if(plyr)
+			{
+				if ( plyr->transform->position.y > Graphics::GetVirtualHeight() )
+				{
+					this->Remove( plyr );
+				}
+			}
+			
+		}
 	}
 
 	void GameScene::End()

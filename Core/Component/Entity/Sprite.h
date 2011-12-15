@@ -50,6 +50,7 @@ namespace Monocle
 		Sprite *Clone () const { return new Sprite(*this); }
 
 		void Init(Entity *entity);
+		void Unload();
 		void ParamInit(Entity *entity, const InitParams& params);
 
 		void Update();

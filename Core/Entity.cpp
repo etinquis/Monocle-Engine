@@ -107,6 +107,12 @@ namespace Monocle
 			(*i) = NULL;
 		}
 		invokes.clear();
+
+		for (ComponentList::iterator i = components.begin(); i != components.end(); i++)
+		{
+			i->second->Unload();
+			delete i->second;
+		}
 	}
 
 	//void Entity::DestroyChildren()

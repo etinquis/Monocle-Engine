@@ -33,9 +33,15 @@ namespace Monocle
 	{
 		Entity *entity = GetEntity();
 		if (entity)
-			return GetEntity()->GetComponent<Transform>()->GetWorldPosition();
-		else
-			return Vector2();
+		{
+			Transform *trans = entity->GetComponent<Transform>();
+			if (trans)
+			{
+				return trans->GetWorldPosition();
+			}
+		}
+
+		return Vector2();
 	}
 
 	bool Collider::Collide(Collider* a, Collider* b, CollisionData *collisionData)

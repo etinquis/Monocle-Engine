@@ -638,6 +638,11 @@ namespace Monocle
 		mousePosition.y = mousePoint.y;
 	}
 
+	void Platform::Sleep(int microsecs)
+	{
+		::Sleep(microsecs);
+	}
+
 	long Platform::GetMilliseconds()
 	{
 		return (long)timeGetTime();

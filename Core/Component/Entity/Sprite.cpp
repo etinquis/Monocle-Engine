@@ -50,6 +50,12 @@ namespace Monocle
 
 	Sprite::~Sprite()
 	{
+		
+	}
+
+	void Sprite::Unload()
+	{
+		EntityComponent::Unload();
 		if (texture != NULL)
 		{
 			texture->RemoveReference();
