@@ -1,12 +1,16 @@
 /*
 	GWEN
-	Copyright (c) 2009 Facepunch Studios
+	Copyright (c) 2011 Facepunch Studios
 	See license in Gwen.h
 */
+#ifndef GWEN_INPUT_WINDOWS_H
+#define GWEN_INPUT_WINDOWS_H
 
 #include "Gwen/InputHandler.h"
 #include "Gwen/Gwen.h"
 #include "Gwen/Controls/Canvas.h"
+
+#include <windows.h>
 
 namespace Gwen
 {
@@ -34,58 +38,72 @@ namespace Gwen
 
 					switch ( msg.message )
 					{
-
 						case WM_MOUSEMOVE:
 							{
-								int x = LOWORD( msg.lParam );
-								int y = HIWORD( msg.lParam );
+								int x = (signed short)LOWORD( msg.lParam );
+								int y = (signed short)HIWORD( msg.lParam );
 								int dx = x - m_MouseX;
 								int dy = y - m_MouseY;
-								return m_Canvas->InputMouseMoved( x, y, dx, dy );
 
 								m_MouseX = x;
 								m_MouseY = y;
+
+								return m_Canvas->InputMouseMoved( x, y, dx, dy );
 							}
 
 						case WM_CHAR:
-							{									
+							{
 								Gwen::UnicodeChar chr = (Gwen::UnicodeChar)msg.wParam;
 								return m_Canvas->InputCharacter( chr );
 							}
 
 						case WM_MOUSEWHEEL:
 							{
-								return m_Canvas->InputMouseWheel( ((short)HIWORD( msg.wParam )) / 120);
+								return m_Canvas->InputMouseWheel( (short)HIWORD( msg.wParam ) );
 							}
 
 						case WM_LBUTTONDOWN:
 							{
+								SetCapture( msg.hwnd );
 								return m_Canvas->InputMouseButton( 0, true );
 							}
 
 						case WM_LBUTTONUP:
 							{
+								ReleaseCapture();
 								return m_Canvas->InputMouseButton( 0, false );
 							}
 
 						case WM_RBUTTONDOWN:
 							{
+								SetCapture( msg.hwnd );
 								return m_Canvas->InputMouseButton( 1, true );
 							}
 
 						case WM_RBUTTONUP:
 							{
+								ReleaseCapture();
 								return m_Canvas->InputMouseButton( 1, false );
 							}
 
 						case WM_MBUTTONDOWN:
 							{
+								SetCapture( msg.hwnd );
 								return m_Canvas->InputMouseButton( 2, true );
 							}
 
 						case WM_MBUTTONUP:
 							{
+								ReleaseCapture();
 								return m_Canvas->InputMouseButton( 2, true );
+							}
+
+						case WM_LBUTTONDBLCLK:
+						case WM_RBUTTONDBLCLK:
+						case WM_MBUTTONDBLCLK:
+							{
+								// Filter out those events from the application
+								return true;
 							}
 
 						case WM_KEYDOWN:
@@ -143,4 +161,4 @@ namespace Gwen
 		};
 	}
 }
-
+#endif

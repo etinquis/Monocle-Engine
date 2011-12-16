@@ -5,6 +5,8 @@
 */
  
 #pragma once
+#ifndef GWEN_CONTROLS_COLORCONTROLS_H
+#define GWEN_CONTROLS_COLORCONTROLS_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Gwen.h"
@@ -29,7 +31,7 @@ namespace Gwen
 
 				Event::Caller	onSelectionChanged;
 			protected:
-				Point cursorPos;
+				Gwen::Point cursorPos;
 				bool m_bDepressed;
 				int m_Hue;
 				
@@ -56,3 +58,4 @@ namespace Gwen
 	}
 
 }
+#endif

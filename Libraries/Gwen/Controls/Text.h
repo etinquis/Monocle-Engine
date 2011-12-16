@@ -5,8 +5,12 @@
 */
 
 #pragma once
-#include "Base.h"
+#ifndef GWEN_CONTROLS_TEXT_H
+#define GWEN_CONTROLS_TEXT_H
+
 #include "Gwen/BaseRender.h"
+#include "Gwen/Controls/Base.h"
+#include "Gwen/TextObject.h"
 
 namespace Gwen 
 {
@@ -21,8 +25,7 @@ namespace Gwen
 				virtual ~Text();
 				Gwen::Font* GetFont();
 
-				void SetString( const UnicodeString& str );
-				void SetString( const String& str );
+				void SetString( const TextObject& str );
 
 				void Render( Skin::Base* skin );
 				void Layout( Skin::Base* skin );
@@ -33,12 +36,15 @@ namespace Gwen
 
 				const UnicodeString& GetText() const { return m_String; }
 
-				Point GetCharacterPosition( int iChar );
-				int GetClosestCharacter( Point p );
+				Gwen::Point GetCharacterPosition( int iChar );
+				int GetClosestCharacter( Gwen::Point p );
 
 				int Length() const { return (int)m_String.size(); }
 
 				virtual void SetTextColor( const Gwen::Color& col ){ m_Color = col; }
+				virtual void SetTextColorOverride( const Gwen::Color& col ){ m_ColorOverride = col; }
+
+				
 
 				virtual void OnScaleChanged();
 
@@ -49,7 +55,9 @@ namespace Gwen
 				Gwen::UnicodeString	m_String;
 				Gwen::Font*			m_Font;
 				Gwen::Color			m_Color;
+				Gwen::Color			m_ColorOverride;
 		};
 	}
 
 }
+#endif

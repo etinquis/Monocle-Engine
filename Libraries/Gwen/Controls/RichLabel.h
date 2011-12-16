@@ -5,9 +5,14 @@
 */
 
 #pragma once
-#include "Base.h"
+#ifndef GWEN_CONTROLS_RICHLABEL_H
+#define GWEN_CONTROLS_RICHLABEL_H
+
 #include "Gwen/BaseRender.h"
-#include "Text.h"
+#include "Gwen/Controls/Base.h"
+#include "Gwen/Controls/Text.h"
+#include "Gwen/TextObject.h"
+
 
 namespace Gwen 
 {
@@ -54,3 +59,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

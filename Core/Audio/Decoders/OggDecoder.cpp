@@ -14,6 +14,7 @@
 #include <ctype.h>
 
 #include "OggDecoder.h"
+#include "../../Debug.h"
 #include "../AudioAsset.h"
 
 #include "../AudioAssetReader.h"
@@ -64,7 +65,7 @@ namespace Monocle {
         
         // Get the data in the right format
         vorbisData = (AudioAssetReader*)datasource;
-        
+
         return vorbisData->Read(ptr,sizeToRead*byteSize);
     }
     
@@ -101,6 +102,7 @@ namespace Monocle {
         vorbisData = (AudioAssetReader*)datasource;
         
         delete vorbisData;
+		vorbisData = NULL;
         return 1;
     }
     
@@ -144,6 +146,7 @@ namespace Monocle {
     unsigned long OggDecoder::Render( unsigned long size, void *buf )
     {
         OggDecoderData *data = OGGDATA(this);
+        
         if (!data){
             outOfData = true;
             return 0;
@@ -166,7 +169,7 @@ namespace Monocle {
             pos += ret;
         }
         
-        // reached the and?
+        // reached the end?
         if (!ret && (loopsRemaining!=0))
         {
             // we are looping so restart from the beginning
@@ -209,6 +212,7 @@ namespace Monocle {
             delete (OggDecoderData*)oggData;
             oggData = NULL;
             reader = NULL;
+        
             return;
         }
         
@@ -220,6 +224,7 @@ namespace Monocle {
             delete (OggDecoderData*)oggData;
             oggData = NULL;
             reader = NULL;
+            
             return;
         }
         
@@ -234,6 +239,7 @@ namespace Monocle {
         OggDecoderData *data = OGGDATA(this);
         ov_clear(&data->vf);
         delete data;
+		data = NULL;
     }
     
 }

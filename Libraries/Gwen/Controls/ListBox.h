@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_LISTBOX_H
+#define GWEN_CONTROLS_LISTBOX_H
 
 #include "Gwen/Gwen.h"
 #include "Gwen/Controls/Layout/Table.h"
@@ -17,16 +19,18 @@ namespace Gwen
 	{
 		class ScrollControl;
 
-		class GWEN_EXPORT ListBox : public Base
+		class GWEN_EXPORT ListBox : public ScrollControl
 		{
 			public:
 				
-				GWEN_CONTROL( ListBox, Base );
+				GWEN_CONTROL( ListBox, ScrollControl );
 
 				typedef std::list<Layout::TableRow*> Rows;
 
 				Layout::TableRow* AddItem( const String& strLabel, const String& strName = "" );
 				Layout::TableRow* AddItem( const UnicodeString& strLabel, const String& strName = "" );
+
+				void RemoveItem( Layout::TableRow * row );
 
 				void Render( Skin::Base* skin );
 
@@ -40,9 +44,8 @@ namespace Gwen
 				const ListBox::Rows& GetSelectedRows(){ return m_SelectedRows; }
 				Layout::TableRow* GetSelectedRow();
 
-				Gwen::Controls::ScrollControl* Scroller() { return m_ScrollControl; }
-
-				void OnChildBoundsChanged( Rect oldChildBounds, Base* pChild );
+				virtual void SetSelectedRow( Gwen::Controls::Base* pRow, bool bClearOthers = true );
+				virtual void SelectByString( const TextObject& string, bool bClearOthers = true );
 				
 				Gwen::Event::Caller	onRowSelected;
 
@@ -56,9 +59,9 @@ namespace Gwen
 				
 				Controls::Layout::Table*		m_Table;
 				ListBox::Rows					m_SelectedRows;
-				Controls::ScrollControl*		m_ScrollControl;
 
 				bool m_bMultiSelect;
 		};
 	}
 }
+#endif

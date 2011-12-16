@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_PROPERTYTREE_H
+#define GWEN_CONTROLS_PROPERTYTREE_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Label.h"
@@ -24,6 +26,7 @@ namespace Gwen
 
 				GWEN_CONTROL_INLINE( PropertyTreeNode, TreeNode )
 				{
+					m_Title->SetTextColorOverride( GetSkin()->Colors.Properties.Title );
 				}
 
 				virtual void Render( Skin::Base* skin )
@@ -57,3 +60,4 @@ namespace Gwen
 
 	}
 }
+#endif

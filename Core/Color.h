@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <iostream>
+
 namespace Monocle
 {
 	//! Describes a color using 4 floats in 0.0 - 1.0 range.
@@ -9,14 +12,15 @@ namespace Monocle
 		Color(const Color &color);
 		Color();
 		Color(float r, float g, float b, float a);
+		Color(const std::string &hexString);
 
         //! Clamps the rgba values to between 0 and 1.0, inclusive.
 		void Clamp();
 
         //! Indirect accessor for rgba values. Color[0] = r, [1] = g, [2] = b, [3] = a, [4+] = undefined
 		float& operator[] (unsigned int i);
-		bool operator!=(const Color& rhs);
 		bool operator==(const Color& rhs);
+		bool operator!=(const Color& rhs);
 
 		//! Red, green, blue, alpha (translucency)
 		float r, g, b, a;
@@ -30,6 +34,9 @@ namespace Monocle
 		static Color yellow;
 		static Color orange;
 		static Color purple;
+
+		friend std::ostream &operator<<(std::ostream &os, const Color &col);
+		friend std::istream &operator>>(std::istream &is, Color &col);
 	};
 
 	Color operator+(const Color& lhs, const Color& rhs);

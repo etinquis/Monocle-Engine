@@ -5,12 +5,15 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_RESIZABLECONTROL_H
+#define GWEN_CONTROLS_RESIZABLECONTROL_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Label.h"
 #include "Gwen/Controls/Button.h"
 #include "Gwen/Controls/Dragger.h"
 #include "Gwen/Controls/Label.h"
+#include "Gwen/Controls/Resizer.h"
 #include "Gwen/Gwen.h"
 #include "Gwen/Skin.h"
 
@@ -18,6 +21,7 @@ namespace Gwen
 {
 	namespace Controls
 	{
+
 		class GWEN_EXPORT ResizableControl : public Base
 		{
 			public:
@@ -27,8 +31,8 @@ namespace Gwen
 				virtual void SetClampMovement( bool shouldClamp ) { m_bClampMovement = shouldClamp; }
 				virtual bool GetClampMovement() { return m_bClampMovement; }
 
-				virtual void SetMinimumSize( const Point& minSize ) { m_MinimumSize = minSize; }
-				virtual Point GetMinimumSize() { return m_MinimumSize; }
+				virtual void SetMinimumSize( const Gwen::Point& minSize ) { m_MinimumSize = minSize; }
+				virtual Gwen::Point GetMinimumSize() { return m_MinimumSize; }
 
 				virtual void DisableResizing();
 
@@ -38,15 +42,20 @@ namespace Gwen
 
 				Event::Caller	onResize;
 
+				virtual ControlsInternal::Resizer* GetResizer( int iResizer ){ return m_Resizer[iResizer]; } 
+
 			protected:
 
 				void OnResizedInternal( Controls::Base* pControl );
 
-				Point m_MinimumSize;
+				Gwen::Point m_MinimumSize;
 				bool m_bClampMovement;
 				bool m_bResizable;
+
+				ControlsInternal::Resizer* m_Resizer[10];
 
 				
 		};
 	}
 }
+#endif

@@ -1,4 +1,5 @@
 #include "Color.h"
+#include <sstream>
 
 namespace Monocle
 {
@@ -30,14 +31,30 @@ namespace Monocle
 
 	}
 
+	Color::Color(const std::string &hexString)
+	{
+		std::istringstream is(hexString);
+
+		unsigned int hexcolor;
+		is >> std::hex >> hexcolor;
+
+		r = ( hexcolor >> 16 ) & 0xFF;
+		g = ( hexcolor >> 8 ) & 0xFF;
+		b = hexcolor & 0xFF;
+		r /= 255.0f;
+		g /= 255.0f;
+		b /= 255.0f;
+		a = 1.0f;
+	}
+	
+	bool Color::operator==(const Color& rhs)
+	{
+		return ((r == rhs.r) && (g == rhs.g) && (b == rhs.b) && (a == rhs.a));
+	}
+
 	bool Color::operator!=(const Color& rhs)
 	{
 		return ((r != rhs.r) || (g != rhs.g) || (b != rhs.b) || (a != rhs.a));
-	}
-
-    bool Color::operator==(const Color& rhs)
-	{
-		return ((r == rhs.r) && (g == rhs.g) && (b == rhs.b) && (a == rhs.a));
 	}
 
 
@@ -86,5 +103,17 @@ namespace Monocle
 	Color operator/(const Color& lhs, float rhs)
 	{
 		return Color(lhs.r / rhs, lhs.g / rhs, lhs.b / rhs, lhs.a / rhs);
+	}
+
+	std::ostream &operator<<(std::ostream &os, const Color &col)
+	{
+		os << col.r << " " << col.g << " " << col.b << " " << col.a;
+		return os;
+	}
+
+	std::istream &operator>>(std::istream &is, Color &col)
+	{
+		is >> col.r >> col.g >> col.b >> col.a;
+		return is;
 	}
 }

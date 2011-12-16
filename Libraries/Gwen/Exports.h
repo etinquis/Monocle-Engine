@@ -5,64 +5,75 @@
 */
 
 #pragma once
+#ifndef GWEN_EXPORTS_H
+#define GWEN_EXPORTS_H
 
+//
+// GWEN_COMPILE_DLL 
+// - We're compiling the Gwen.DLL (or .dylib etc)
+//
 #if defined(GWEN_COMPILE_DLL)
 
-	#ifdef __GNUC__
+#ifdef _WIN32
+	#if defined(__GNUC__)
 		#define GWEN_EXPORT __attribute__((dllexport))
 	#else
 		#define GWEN_EXPORT __declspec(dllexport)
 	#endif
-
+#endif 
+//
+// GWEN_COMPILE_STATIC
+// - We're compiling gwen as a static library
+//
 #elif defined(GWEN_COMPILE_STATIC)
 
 	#define GWEN_EXPORT
 
-#else 
+//
+// GWEN_DLL
+// - We're including gwen using the dll
+//
+#elif defined( GWEN_DLL )
 
-	// GWEN_DLL means that the project that's including us wants
-	// to use GWEN as a DLL (or library)
-	#ifdef GWEN_DLL
+#ifdef _WIN32
+	#ifdef __GNUC__
+		#define GWEN_EXPORT __attribute__((dllimport))
+	#else
+		#define GWEN_EXPORT __declspec(dllimport)
+	#endif
 
-		#ifdef __GNUC__
-			#define GWEN_EXPORT __attribute__((dllimport))
-		#else
-			#define GWEN_EXPORT __declspec(dllimport)
-		#endif
-
+	#ifdef _MSC_VER
 		#ifndef _DEBUG
 			#pragma comment ( lib, "gwen.lib" )
 		#else
 			#pragma comment ( lib, "gwend.lib" )
 		#endif
+	#endif
+#endif
 
-	#else
+//
+// - We're including gwen using a static library
+//
+#else
 
-		#define GWEN_EXPORT
+	#define GWEN_EXPORT
 
+#ifdef _WIN32
+	#ifdef _MSC_VER
 		#ifndef _DEBUG
 			#pragma comment ( lib, "gwen_static.lib" )
 		#else
 			#pragma comment ( lib, "gwend_static.lib" )
 		#endif
-
 	#endif
+#endif
 
 #endif
 
-#ifdef _MSC_VER
-
-	#define GWEN_FINLINE __forceinline
-	#define GWEN_PURE_INTERFACE __declspec(novtable)
-
-#elif defined(__GNUC__)
-
-	#define GWEN_FINLINE __attribute__((always_inline)) inline
-	#define GWEN_PUREINTERFACE 
-
-#else
-
-	#define GWEN_FINLINE inline
-	#define GWEN_PUREINTERFACE 
-
+#ifndef GWEN_EXPORT 
+	#define GWEN_EXPORT
 #endif
+
+
+
+#endif // GWEN_EXPORTS_H

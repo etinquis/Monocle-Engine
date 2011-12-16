@@ -5,11 +5,21 @@
 */
 
 #pragma once
+#ifndef GWEN_TEXTOBJECT_H
+#define GWEN_TEXTOBJECT_H
+
 #include "Gwen/Gwen.h"
 #include "Gwen/Utility.h"
 
 namespace Gwen
 {
+	/*
+
+		TextObjects can be either a UnicodeString or a String
+
+		Just makes things easier instead of having a function taking both.
+
+	*/
 	class TextObject
 	{
 		public:
@@ -45,7 +55,12 @@ namespace Gwen
 			{
 				m_Data = unicodeStr;
 			}
-			
+
+			bool operator == ( const TextObject& to ) const
+			{
+				return m_Data == to.m_Data;
+			}
+
 			Gwen::String Get() const
 			{
 				return Gwen::Utility::UnicodeToString( m_Data );
@@ -59,3 +74,4 @@ namespace Gwen
 			Gwen::UnicodeString m_Data;
 	};
 }
+#endif

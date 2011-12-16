@@ -5,8 +5,13 @@
 */
 
 #pragma once
+#ifndef GWEN_TEXTURE_H
+#define GWEN_TEXTURE_H
+
 #include <string>
+
 #include "Gwen/BaseRender.h"
+#include "Gwen/TextObject.h"
 
 namespace Gwen
 {
@@ -36,6 +41,7 @@ namespace Gwen
 		void Load( const TextObject& str, Gwen::Renderer::Base* render )
 		{
 			name = str;
+			Gwen::Debug::AssertCheck( render != NULL, "No renderer!" );
 			render->LoadTexture( this );
 		}
 
@@ -46,3 +52,4 @@ namespace Gwen
 	};
 
 }
+#endif

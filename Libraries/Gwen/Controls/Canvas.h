@@ -5,6 +5,9 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_CANVAS_H
+#define GWEN_CONTROLS_CANVAS_H
+
 #include <set>
 #include "Gwen/Controls/Base.h"
 #include "Gwen/InputHandler.h"
@@ -57,7 +60,7 @@ namespace Gwen
 				virtual void SetScale( float f );
 				virtual float Scale() const { return m_fScale; }
 
-				virtual void OnBoundsChanged( Rect oldBounds );
+				virtual void OnBoundsChanged( Gwen::Rect oldBounds );
 
 				//
 				// Call this to delete the canvas, and its children
@@ -79,6 +82,10 @@ namespace Gwen
 				virtual bool InputCharacter( Gwen::UnicodeChar chr );
 				virtual bool InputMouseWheel( int val );
 
+				// Background
+				virtual void SetBackgroundColor( const Gwen::Color& color ){ m_BackgroundColor = color; }
+				virtual void SetDrawBackground( bool bShouldDraw ){ m_bDrawBackground = bShouldDraw; }
+
 			private:
 
 				bool	m_bNeedsRedraw;
@@ -90,7 +97,11 @@ namespace Gwen
 				friend class Controls::Base;
 				void PreDelete( Controls::Base * );
 
+				bool			m_bDrawBackground;
+				Gwen::Color		m_BackgroundColor;
+
 
 		};
 	}
 }
+#endif

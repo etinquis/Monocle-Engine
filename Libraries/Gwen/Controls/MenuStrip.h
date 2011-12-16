@@ -5,10 +5,13 @@
 */
 
 #pragma once
-#include "Base.h"
+#ifndef GWEN_CONTROLS_MENUSTRIP_H
+#define GWEN_CONTROLS_MENUSTRIP_H
+
 #include "Gwen/BaseRender.h"
-#include "Gwen/Controls/MenuItem.h"
+#include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Menu.h"
+#include "Gwen/Controls/MenuItem.h"
 
 namespace Gwen 
 {
@@ -19,7 +22,7 @@ namespace Gwen
 			GWEN_CONTROL( MenuStrip, Menu );
 
 				virtual void Render( Skin::Base* skin );
-				virtual void RenderUnder( Skin::Base* skin ){}
+				virtual void RenderUnder( Skin::Base* /*skin*/ ){}
 				virtual void Layout( Skin::Base* skin );
 
 			protected:
@@ -33,3 +36,4 @@ namespace Gwen
 	}
 
 }
+#endif

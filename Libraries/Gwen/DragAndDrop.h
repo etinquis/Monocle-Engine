@@ -5,7 +5,12 @@
 */
 
 #pragma once
+#ifndef GWEN_DRAGANDDROP_H
+#define GWEN_DRAGANDDROP_H
+
 #include <sstream>
+
+#include "Gwen/Skin.h"
 #include "Gwen/Structures.h"
 
 namespace Gwen
@@ -27,3 +32,4 @@ namespace Gwen
 	}
 
 }
+#endif

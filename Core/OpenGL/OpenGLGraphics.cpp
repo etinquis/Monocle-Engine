@@ -7,7 +7,6 @@
 #include "../FontAsset.h"
 #include "../Color.h"
 #include "../Tween.h"
-#include "../LevelEditor/Node.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -58,11 +57,18 @@ namespace Monocle
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ShowBuffer();
 
+        currentColor = Color::white;
+        glColor4f(1.0,1.0,1.0,1.0);
 
 		Set2D(800,600);
 
 		//cameraPosition = screenCenter;
 		//cameraZoom = Vector2::one;
+	}
+
+	void Graphics::Viewport(int x, int y, int width, int height)
+	{
+		glViewport(x, y, width, height);
 	}
 
 	void Graphics::SetBackgroundColor(const Color &color)
@@ -93,7 +99,10 @@ namespace Monocle
 			switch (blend)
 			{
 			case BLEND_ALPHA:
-				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); 
+                break;
+            case BLEND_ALPHA_PREMULTIPLIED:
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case BLEND_ADDITIVE:
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -101,6 +110,8 @@ namespace Monocle
 			case BLEND_MULTIPLY:
 				glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 				break;
+            default:
+                break;
 			}
 			instance->currentBlend = blend;
 		}
@@ -128,15 +139,15 @@ namespace Monocle
 		// if > 4:3, do something else
 		instance->resolutionScale = Vector2(float(Platform::GetWidth())/virtualWidth, float(Platform::GetWidth())/virtualWidth);
 
-		printf("Set2D: resScale: (%f, %f)\n window (%d, %d)\n", instance->resolutionScale.x, instance->resolutionScale.y, Platform::GetWidth(), Platform::GetHeight());
+//		printf("Set2D: resScale: (%f, %f)\n window (%d, %d)\n", instance->resolutionScale.x, instance->resolutionScale.y, Platform::GetWidth(), Platform::GetHeight());
 		instance->screenCenter = Vector2(virtualWidth/2, virtualHeight/2);
 
-		printf("Set2D: center: (%f, %f)\n", instance->screenCenter.x, instance->screenCenter.y);
+//		printf("Set2D: center: (%f, %f)\n", instance->screenCenter.x, instance->screenCenter.y);
 	}
 
-	void Graphics::Set3D()
-	{
-	}
+	//void Graphics::Set3D()
+	//{
+	//}
 
 	void Graphics::Resize(int width, int height)
 	{
@@ -299,7 +310,10 @@ namespace Monocle
 
 	void Graphics::SetColor(const Color &color)
 	{
-		glColor4f(color.r, color.g, color.b, color.a);
+        if (instance->currentColor != color){
+            glColor4f(color.r, color.g, color.b, color.a);
+            instance->currentColor = color;
+        }
 	}
 
 	int Graphics::GetVirtualWidth()
@@ -362,9 +376,21 @@ namespace Monocle
 		glEnd();
 	}
     
-    void Graphics::RenderText(const FontAsset& font, const std::string& text, float x, float y)
+    void Graphics::RenderText(const FontAsset& font, const std::string& text, float x, float y, TextAlign x_align)
     {
         Rect verts, texCoords;
+        float width;
+        
+        width = font.GetTextWidth(text);
+        
+        glPushMatrix();
+        
+        if (x_align == TEXTALIGN_RIGHT){
+            glTranslatef( -width, 0.0, 0.0 );
+        }else if (x_align == TEXTALIGN_CENTER){
+            glTranslatef( width/-2.0, 0.0, 0.0 );
+        }
+        
         glBegin(GL_QUADS);
         for (int i = 0; i < text.size(); i++)
         {
@@ -387,6 +413,8 @@ namespace Monocle
 			}
         }
         glEnd();
+        
+        glPopMatrix();
     }
     
 	void Graphics::BeginFrame()
@@ -502,80 +530,80 @@ namespace Monocle
 		glEnd();
 	}
 
-	void Graphics::RenderPathMesh(const std::vector<Node*> &nodes, int cells, float size, bool flipX, bool flipY)
+	void Graphics::RenderPathMesh(const std::vector<Node*> &nodes, int cells, float size, bool flipX, bool flipY, Vector2 textureOffset, Vector2 textureScale)
 	{
-		glBegin(GL_QUADS);
-		for (int i = 0; i < nodes.size()-1; i++)
-		{
-			if (nodes[i]->variant != -1 && nodes[i]->variant < cells)
-			{
-				Vector2 diff1;
-				Vector2 perp1;
+		//glBegin(GL_QUADS);
+		//for (int i = 0; i < nodes.size()-1; i++)
+		//{
+		//	if (nodes[i]->variant != -1 && nodes[i]->variant < cells)
+		//	{
+		//		Vector2 diff1;
+		//		Vector2 perp1;
 
-				/*
-				if (i-1 >= 0)
-				{
-					diff1 = points[i] - points[i-1];
-					perp1 = diff1.GetNormalized().GetPerpendicularLeft();
-					//diff1 = points[i + 1] - points[i];
-					//perp1 = perp1*0.5f + diff1.GetNormalized().GetPerpendicularLeft()*0.5f;
-				}
-				else
-				{
-					diff1 = points[i + 1] - points[i];
-					perp1 = diff1.GetNormalized().GetPerpendicularLeft();
-				}
-				*/
+		//		/*
+		//		if (i-1 >= 0)
+		//		{
+		//			diff1 = points[i] - points[i-1];
+		//			perp1 = diff1.GetNormalized().GetPerpendicularLeft();
+		//			//diff1 = points[i + 1] - points[i];
+		//			//perp1 = perp1*0.5f + diff1.GetNormalized().GetPerpendicularLeft()*0.5f;
+		//		}
+		//		else
+		//		{
+		//			diff1 = points[i + 1] - points[i];
+		//			perp1 = diff1.GetNormalized().GetPerpendicularLeft();
+		//		}
+		//		*/
 
-				diff1 = nodes[i + 1]->position - nodes[i]->position;
-				perp1 = diff1.GetNormalized().GetPerpendicularLeft();
+		//		diff1 = nodes[i + 1]->position - nodes[i]->position;
+		//		perp1 = diff1.GetNormalized().GetPerpendicularLeft();
 
-				Vector2 diff2;
-				Vector2 perp2 = perp1;
-			
-				if (i+2 < nodes.size())
-				{
-					diff2 = nodes[i+2]->position - nodes[i+1]->position;
-					perp2 = diff2.GetNormalized().GetPerpendicularLeft();
-				}
-				else
-				{
-					perp2 = perp1;
-				}
-			
-				Vector2 pos1 = nodes[i]->position;
-				Vector2 pos2 = nodes[i+1]->position;
-			
-				Vector2 texOffset = Vector2::zero;
-				Vector2 texScale = Vector2::one * 1.0f/(float)cells;
-				texOffset.x = (nodes[i]->variant % (cells)) * texScale.x;
-				texOffset.y = (int)(nodes[i]->variant / (cells)) * texScale.y;
+		//		Vector2 diff2;
+		//		Vector2 perp2 = perp1;
+		//	
+		//		if (i+2 < nodes.size())
+		//		{
+		//			diff2 = nodes[i+2]->position - nodes[i+1]->position;
+		//			perp2 = diff2.GetNormalized().GetPerpendicularLeft();
+		//		}
+		//		else
+		//		{
+		//			perp2 = perp1;
+		//		}
+		//	
+		//		Vector2 pos1 = nodes[i]->position;
+		//		Vector2 pos2 = nodes[i+1]->position;
+		//	
+		//		Vector2 texOffset = textureOffset;
+		//		Vector2 texScale = textureScale * 1.0f/(float)cells;
+		//		texOffset.x += (nodes[i]->variant % (cells)) * texScale.x;
+		//		texOffset.y += (int)(nodes[i]->variant / (cells)) * texScale.y;
 
-				if (flipY)
-				{
-					texOffset.y = 1.0f - texOffset.y;
-					texScale.y = - texScale.y;
-					//printf("%f, %f\n", texOffset.y, texScale.y);
-				}
-			
-				Graphics::SetColor(nodes[i]->color);
-				glTexCoord2f(texOffset.x, texOffset.y);
-				Vertex(pos1 - perp1 * nodes[i]->scale.y * size * 0.5f);
+		//		if (flipY)
+		//		{
+		//			texOffset.y = (textureOffset.y+textureScale.y) - texOffset.y;
+		//			texScale.y = - texScale.y;
+		//			//printf("%f, %f\n", texOffset.y, texScale.y);
+		//		}
+		//	
+		//		Graphics::SetColor(nodes[i]->color);
+		//		glTexCoord2f(texOffset.x, texOffset.y);
+		//		Vertex(pos1 - perp1 * nodes[i]->scale.y * size * 0.5f);
 
-				Graphics::SetColor(nodes[i+1]->color);
-				glTexCoord2f(texOffset.x + texScale.x, texOffset.y);
-				Vertex(pos2 - perp2 * nodes[i+1]->scale.y * size * 0.5f);
+		//		Graphics::SetColor(nodes[i+1]->color);
+		//		glTexCoord2f(texOffset.x + texScale.x, texOffset.y);
+		//		Vertex(pos2 - perp2 * nodes[i+1]->scale.y * size * 0.5f);
 
-				Graphics::SetColor(nodes[i+1]->color);
-				glTexCoord2f(texOffset.x + texScale.x, texOffset.y + texScale.y);
-				Vertex(pos2 + perp2 * nodes[i+1]->scale.y * size * 0.5f);
+		//		Graphics::SetColor(nodes[i+1]->color);
+		//		glTexCoord2f(texOffset.x + texScale.x, texOffset.y + texScale.y);
+		//		Vertex(pos2 + perp2 * nodes[i+1]->scale.y * size * 0.5f);
 
-				Graphics::SetColor(nodes[i]->color);
-				glTexCoord2f(texOffset.x, texOffset.y + texScale.y);
-				Vertex(pos1 + perp1 * nodes[i]->scale.y * size * 0.5f);
-			}
-		}
-		glEnd();
+		//		Graphics::SetColor(nodes[i]->color);
+		//		glTexCoord2f(texOffset.x, texOffset.y + texScale.y);
+		//		Vertex(pos1 + perp1 * nodes[i]->scale.y * size * 0.5f);
+		//	}
+		//}
+		//glEnd();
 	}
     
     void Graphics::EnableBackgroundReset( bool bgReset )
@@ -613,7 +641,18 @@ namespace Monocle
         }
         
         delete tmpline;
+		tmpline = NULL;
         delete data;
+		data = NULL;
+    }
+    
+    void Graphics::CheckErrors()
+    {
+        GLenum err = glGetError();
+        if (err == GL_NO_ERROR)
+            return;
+        
+        Debug::Log("GL ERROR: " + std::string((char*)gluErrorString(err)));
     }
 }
 

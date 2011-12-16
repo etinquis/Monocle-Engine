@@ -5,12 +5,12 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_SCROLLBARBAR_H
+#define GWEN_CONTROLS_SCROLLBARBAR_H
 
-#include "Gwen/Controls/Base.h"
-#include "Gwen/Controls/Button.h"
+#include "Gwen/Controls/Dragger.h"
 #include "Gwen/Gwen.h"
 #include "Gwen/Skin.h"
-#include "Gwen/Controls/Dragger.h"
 
 namespace Gwen 
 {
@@ -22,7 +22,7 @@ namespace Gwen
 
 				GWEN_CONTROL( ScrollBarBar, ControlsInternal::Dragger );
 
-				virtual void Render(Skin::Base* skin);
+				virtual void Render( Skin::Base* skin );
 				virtual void Layout( Skin::Base* skin );
 
 				virtual void OnMouseMoved( int x, int y, int deltaX, int deltaY );
@@ -43,3 +43,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

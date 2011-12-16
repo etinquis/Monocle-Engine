@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_PROPERTY_TEXT_H
+#define GWEN_CONTROLS_PROPERTY_TEXT_H
 
 #include "Gwen/Controls/Property/BaseProperty.h"
 #include "Gwen/Controls/TextBox.h"
@@ -32,7 +34,7 @@ namespace Gwen
 						return m_TextBox->GetText();
 					}
 
-					virtual void SetPropertyValue( const UnicodeString& v, bool bFireChangeEvents )
+					virtual void SetPropertyValue( const TextObject& v, bool bFireChangeEvents )
 					{
 						m_TextBox->SetText( v, bFireChangeEvents );
 					}
@@ -42,8 +44,14 @@ namespace Gwen
 						return m_TextBox->HasFocus();
 					}
 
+					virtual bool IsHovered()
+					{
+						return BaseClass::IsHovered() || m_TextBox->IsHovered();
+					}
+
 					TextBox* m_TextBox;
 			};
 		}
 	}
 }
+#endif

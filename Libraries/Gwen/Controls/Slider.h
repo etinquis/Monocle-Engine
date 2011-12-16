@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_SLIDER_H
+#define GWEN_CONTROLS_SLIDER_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
@@ -20,7 +22,13 @@ namespace Gwen
 		{
 			GWEN_CONTROL( SliderBar, ControlsInternal::Dragger );
 
-			virtual void Render( Skin::Base* skin );
+				virtual void Render( Skin::Base* skin );
+				virtual void SetHorizontal( bool b ){ m_bHorizontal = b; }
+				virtual bool IsHorizontal(){ return m_bHorizontal; }
+
+			protected:
+
+				bool m_bHorizontal;
 		};
 	}
 
@@ -46,7 +54,7 @@ namespace Gwen
 				virtual float CalculateValue();
 				virtual void OnMoved( Controls::Base * control );
 
-				virtual void OnMouseClickLeft( int x, int y, bool bDown ){};
+				virtual void OnMouseClickLeft( int /*x*/, int /*y*/, bool /*bDown*/ ){};
 
 				virtual bool OnKeyRight( bool bDown )	{	if ( bDown ) SetValue( GetValue() + 1, true ); return true; }
 				virtual bool OnKeyLeft( bool bDown )	{	if ( bDown ) SetValue( GetValue() - 1, true ); return true; }
@@ -75,3 +83,4 @@ namespace Gwen
 
 
 }
+#endif

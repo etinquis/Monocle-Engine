@@ -7,6 +7,7 @@
 #include "TTFFontAsset.h"
 #include "Debug.h"
 #include "Platform.h"
+#include "Color.h"
 
 namespace Monocle
 {
@@ -14,18 +15,20 @@ namespace Monocle
     class FontAsset;
     
 	Assets *Assets::instance = NULL;
+	const std::string Assets::ComponentName = "Assets";
 
 	Assets::Assets()
 	{
 		instance = this;
 	}
 
-	void Assets::Init()
+	void Assets::Init(Game* game)
 	{
+		GameComponent::Init(game);
         SetContentPath(Platform::GetDefaultContentPath());
 	}
 
-	TextureAsset *Assets::RequestTexture(const std::string &filename, FilterType filter, bool repeatX, bool repeatY)
+	TextureAsset *Assets::RequestTexture(const std::string &filename, FilterType filter, bool repeatX, bool repeatY, bool premultiply)
 	{
 		TextureAsset *asset = NULL;
 		std::string fullFilename = instance->contentPath + filename;
@@ -39,7 +42,7 @@ namespace Monocle
 		if (!asset)
 		{
 			asset = new TextureAsset();
-			if(asset->Load(fullFilename, filter, repeatX, repeatY))
+			if(asset->Load(fullFilename, filter, repeatX, repeatY, premultiply))
 			{
 			    instance->StoreAsset(asset);
 			}
@@ -59,6 +62,19 @@ namespace Monocle
 		return asset;
 	}
     
+	TextureAsset *Assets::RequestColorTexture(const Color &color)
+	{
+		TextureAsset *asset = new TextureAsset();
+
+		unsigned char data[] = {color.r, color.g, color.b, color.a};
+		asset->Load(data, 1, 1, FILTER_LINEAR, true, true, false);
+		
+		asset->AddReference();
+		instance->StoreAsset(asset);
+
+		return asset;
+	}
+
     FontAsset *Assets::RequestFont(const std::string &filename, float size, int textureWidth, int textureHeight)
     {
 		TTFFontAsset *asset = NULL;
@@ -113,6 +129,7 @@ namespace Monocle
             // Return NULL if there was no asset...
             if (!asset->GetDataSize()){
                 delete asset;
+				asset = NULL;
                 return NULL;
             }
             
@@ -188,4 +205,8 @@ namespace Monocle
 	}
 	*/
 
+	Assets *Assets::Clone() const
+	{
+		return new Assets(*this);
+	}
 }

@@ -4,6 +4,7 @@
 #include <list>
 #include "Vector2.h"
 #include "Color.h"
+#include "Component/GameComponent.h"
 
 namespace Monocle
 {
@@ -24,28 +25,37 @@ namespace Monocle
 
 	class Tweener;
 
-	class Tween
+	class Tween : public GameComponent
 	{
 	public:
 		Tween();
+		virtual ~Tween();
+
+		virtual void Init(Game* game) { GameComponent::Init(game); }
+		virtual void Unload() { GameComponent::Unload(); }
+
+		static const std::string ComponentName;
+
+		virtual const std::string& GetName() { return Tween::ComponentName; }
 
 		// float
-		static void To(float *value, const float &end, float time, EaseType easeType);
-		static void FromTo(float *value, const float &start, const float &end, float time, EaseType easeType);
+		void To(float *value, const float &end, float time, EaseType easeType);
+		void FromTo(float *value, const float &start, const float &end, float time, EaseType easeType);
 
 		// Vector2
-		static void To(Vector2 *value, const Vector2 &end, float time, EaseType easeType);
-		static void FromTo(Vector2 *value, const Vector2 &start, const Vector2 &end, float time, EaseType easeType);
+		void To(Vector2 *value, const Vector2 &end, float time, EaseType easeType);
+		void FromTo(Vector2 *value, const Vector2 &start, const Vector2 &end, float time, EaseType easeType);
 
 		// Color
-		static void To(Color *value, const Color &end, float time, EaseType easeType);
-		static void FromTo(Color *value, const Color &start, const Color &end, float time, EaseType easeType);
+		void To(Color *value, const Color &end, float time, EaseType easeType);
+		void FromTo(Color *value, const Color &start, const Color &end, float time, EaseType easeType);
 
-		static void Update();
-		static void Clear();
+		virtual void Update();
+		void Clear();
 		static float Ease(float p, EaseType easeType);
 		static void Remove(Tweener *tweener);
 
+		Tween *Clone() const;
 	private:
 		template <typename T, typename N>
 		static void To(T *value, const T &end, float time, EaseType easeType);

@@ -3,23 +3,24 @@
 #include <stdio.h>
 
 #include "Entity.h"
+#include "Colliders/Collider.h"
+#include "Component/Entity/Collidable.h"
+#include "CollisionData.h"
 
 namespace Monocle
 {
 	Collision* Collision::instance = NULL;
 
-	Collision::Collision()
+	const std::string Collision::ComponentName = "Collision";
+
+	Collision::Collision() : GameComponent()
 	{
 		instance = this;
 	}
 
-	void Collision::Init()
+	void Collision::RegisterColliderWithEntity(Collider *collider, Collidable *coll)
 	{
-	}
-
-	void Collision::RegisterColliderWithEntity(Collider *collider, Entity *entity)
-	{
-		collider->SetEntity(entity);
+		collider->SetCollidable(coll);
 		instance->colliders.push_back(collider);
 		// old: //entity->SetCollider(collider);
 	}
@@ -34,30 +35,49 @@ namespace Monocle
 		Collider *collider = NULL;
 		for (std::list<Collider*>::iterator i = instance->colliders.begin(); i != instance->colliders.end(); ++i)
 		{
-			Entity *entity = (*i)->GetEntity();
-			if (entity)
+			if ((*i)->GetCollidable()->HasTag(tag))
 			{
-				if (entity->HasTag(tag))
+				if ((*i)->IntersectsLine(start, end, radius, collisionData))
 				{
-					if ((*i)->IntersectsLine(start, end, radius, collisionData))
-					{
-						return collisionData->collider;
-					}
+					return collisionData->collider;
 				}
 			}
 		}
 		return collider;
 	}
 
-	Collider* Collision::Collide(Entity *entity, const std::string &tag, CollisionData *collisionData)
+	Collider* Collision::Collide(Collidable *entity, const std::string &tag, CollisionData *collisionData)
 	{
 		Collider *passedCollider = entity->GetCollider();
 		if (passedCollider != NULL)
 		{
 			for (std::list<Collider*>::iterator i = instance->colliders.begin(); i != instance->colliders.end(); ++i)
 			{
-				Entity* otherEntity = (*i)->GetEntity();
-				if (otherEntity != NULL && otherEntity != entity)
+				Collider* otherEntity = *i;
+				if (otherEntity != NULL && otherEntity->GetCollidable()->GetEntity() != entity->GetEntity())
+				{
+					Collider* otherCollider = (*i);
+					if (otherCollider != NULL && otherEntity->GetCollidable()->HasTag(tag))
+					{
+						if (Collider::Collide(passedCollider, otherCollider, collisionData))
+						{
+							return otherCollider;
+						}
+					}
+				}
+			}
+		}
+		return NULL;
+	}
+
+	Collider* Collision::Collide(Collider *passedCollider, const std::string &tag, CollisionData *collisionData)
+	{
+		if (passedCollider != NULL)
+		{
+			for (std::list<Collider*>::iterator i = instance->colliders.begin(); i != instance->colliders.end(); ++i)
+			{
+				Collidable* otherEntity = (*i)->GetCollidable();
+				if (otherEntity != NULL) //&& otherEntity != entity)
 				{
 					Collider* otherCollider = otherEntity->GetCollider();
 					if (otherCollider != NULL && otherEntity->HasTag(tag))
@@ -108,4 +128,9 @@ namespace Monocle
 		return NULL;
 	}
 	*/
+
+	Collision *Collision::Clone() const
+	{
+		return new Collision(*this);
+	}
 }

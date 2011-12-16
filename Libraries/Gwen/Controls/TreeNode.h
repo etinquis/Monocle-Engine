@@ -1,10 +1,12 @@
 /*
 	GWEN
-	Copyright (c) 2009 Facepunch Studios
+	Copyright (c) 2011 Facepunch Studios
 	See license in Gwen.h
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_TREENODE_H
+#define GWEN_CONTROLS_TREENODE_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
@@ -50,17 +52,20 @@ namespace Gwen
 				virtual void DeselectAll();
 
 				Event::Caller	onNamePress;
+				Event::Caller	onRightPress;
 				Event::Caller	onSelectChange;
 				Event::Caller	onSelect;
 				Event::Caller	onUnselect;
 
-			protected:
+
+			/*protected:*/
 
 				void OnToggleButtonPress( Base* control );
 				void OnDoubleClickName( Base* control );
+				void OnRightPress( Base* control );
 				void OnClickName( Base* control );
 
-				
+			protected:
 
 				TreeControl*	m_TreeControl;
 				Button*			m_ToggleButton;
@@ -73,3 +78,4 @@ namespace Gwen
 
 	}
 }
+#endif

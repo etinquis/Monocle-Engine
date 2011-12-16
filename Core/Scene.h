@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Debug.h"
+#include "Component/Entity/Transform.h"
 #include <list>
 #include <map>
 #include <string>
 #include <vector>
-#include "Camera.h"
 
 ///TODO: Replace with xml wrapper
 class TiXmlElement;
@@ -14,7 +14,9 @@ namespace Monocle
 {
 	class Game;
 	class Entity;
-	
+	class Camera;
+	class FileNode;
+	class SceneComponent;
 
 	//enum SearchType
 	//{
@@ -32,6 +34,8 @@ namespace Monocle
 	class Scene
 	{
 	public:
+		typedef std::map<std::string, SceneComponent*> ComponentList;
+
 		Scene();
 		~Scene();
 
@@ -54,17 +58,28 @@ namespace Monocle
 
 		//! create a new entity of type T and add it to the scene
 		template<class T>
-		T* Create(Entity *parent=NULL)
+		T* Create(Entity *parent=NULL, const Vector2 &position=Vector2::zero, float rotation=0.0f, const Vector2 &scale=Vector2::one)
 		{
 			T *t = new T();
 			Add(t);
 			if (parent)
 				t->SetParent(parent);
+			((Transform*)(*t)["Transform"])->position = position;
+			((Transform*)(*t)["Transform"])->rotation = rotation;
+			((Transform*)(*t)["Transform"])->scale = scale;
 			return t;
 		}
 
 		//! Add an entity to the scene
 		void Add(Entity* entity);
+
+		template<class T>
+		T *AddEntity()
+		{
+			T *ent = new T();
+			Add(ent);
+			return ent;
+		}
 
 		//! Remove an entity from the scene
 		void Remove(Entity* entity);
@@ -77,15 +92,16 @@ namespace Monocle
 		void EntityRemoveTag(Entity* entity, const std::string& tag);
 
 		//Tag API
-		Entity* GetFirstTag(const std::string& tag);
-		std::list<Entity*>* GetAllTag(const std::string& tag);
+		//Entity* GetFirstTag(const std::string& tag);
+		//std::list<Entity*>* GetAllTag(const std::string& tag);
 
-		int GetAmountTag(const std::string& tag);
+		//int GetAmountTag(const std::string& tag);
 
 		//Entity *GetFirstEntity();
 		//Entity *GetNextEntity();
 
 		Entity* GetNearestEntity(const Vector2 &position, Entity *ignoreEntity=NULL);
+		Entity* GetNearestEntityWithTag(const Vector2 &position, const std::string &tag);
 		//Entity* GetNearestEntityContaining(const Vector2 &position, Entity *ignoreEntity=NULL);
 		Entity* GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity=NULL);
 
@@ -96,14 +112,17 @@ namespace Monocle
 		const std::list<Entity*>* GetEntities();
 
 		//! Add a new camera
-		static void AddCamera(Camera *camera);
+		void AddCamera(Camera *camera);
 		//! Get camera by index number
-		static Camera *GetCamera(int cameraIndex=0);
+		Camera *GetCamera(int cameraIndex=0);
 		//! Return the camera that is currently being used to render, or NULL
 		//static Camera *GetActiveCamera();
 
-		static Camera *GetMainCamera();
-		static void SetMainCamera(Camera *camera);
+		Camera *GetMainCamera();
+		Camera *GetActiveCamera();
+		void SetMainCamera(Camera *camera);
+
+		Game* GetGame();
 
 		///TODO: replace TiXml with wrapper
 		virtual Entity *CreateEntity(const std::string &entityTypeName);
@@ -112,29 +131,33 @@ namespace Monocle
 		virtual void SaveLevel(FileNode *fileNode);
 		virtual void LoadLevel(FileNode *fileNode);
 
-	protected:
-		// not sure if we need to pass scene or not yet
-		// or if we'll use this later
-		//void SendNoteToGame(const std::string &note);
+		template <class t_component>
+		t_component* AddComponent()
+		{
+			t_component *comp = new t_component();
 
-		friend class Entity;
-		virtual void ReceiveNote(const std::string &note);
+			components[comp->GetName()] = comp;
+			comp->Init(this);
+			return comp;
+		}
+
+		template <typename T>
+		T* GetComponent()
+		{
+			return (T*)(*this)[T::ComponentName];
+		}
+
+	protected:
+		// scene has a game pointer
+		// so that it can request scene switches
+		friend class Game;
+		Game *game;
 
 		friend class Level;
 		//Resolves all entities to be added or removed
 		void ResolveEntityChanges();
-
-
-	private:
-		static Scene *instance;
-
-		friend class Game;
 		
-		// scene has a game pointer
-		// so that it can request scene switches
-		Game *game;
-
-		void RelayNoteTo(const std::string &tag, const std::string &note);
+	private:
 
 		//Holds all the entities currently in the scene
 		std::list<Entity*> entities;
@@ -146,9 +169,11 @@ namespace Monocle
 		std::list<Entity*> toRemove;
 
 		//The map of entities sorted by tag
-		std::map<std::string, std::list<Entity*> > tagMap;
+		//std::map<std::string, std::list<Entity*> > tagMap;
 
+		ComponentList components;
 
+		//Entities entities;
 
 		// for GetFirstEntity and GetNextEntity
 		//std::list<Entity*>::iterator entityIterator;

@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_COLORPICKER_H
+#define GWEN_CONTROLS_COLORPICKER_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Gwen.h"
@@ -54,7 +56,6 @@ namespace Gwen
 
 				GWEN_CONTROL( ColorPicker, Base );
 
-				virtual void Render( Skin::Base* skin );
 				virtual void Layout( Skin::Base* skin );
 				virtual void CreateControls();
 				virtual void SlidersMoved( Gwen::Controls::Base* control );
@@ -84,3 +85,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef GWEN_SKINS_SIMPLE_H
+#define GWEN_SKINS_SIMPLE_H
+
 #include "Gwen/Skin.h"
 #include "Gwen/Gwen.h"
 #include "Gwen/Controls/Base.h"
@@ -28,8 +31,6 @@ namespace Gwen
 				Gwen::Color m_colToolTipBorder;
 				Gwen::Color m_colModal;
 
-				Gwen::Font m_MarlettFont;
-
 				Simple()
 				{
 					m_colBorderColor			= Gwen::Color( 80, 80, 80, 255 );
@@ -55,18 +56,21 @@ namespace Gwen
 
 					m_DefaultFont.facename	= L"Microsoft Sans Serif";
 					m_DefaultFont.size		= 11;
-
-					m_MarlettFont.facename	= L"Marlett";
-					m_MarlettFont.size		= 12;
 				}
 
 
-				virtual void DrawButton( Gwen::Controls::Base* control, bool bDepressed, bool bHovered )
+				virtual void DrawButton( Gwen::Controls::Base* control, bool bDepressed, bool bHovered, bool bDisabled )
 				{
 					int w = control->Width();
 					int h = control->Height();
 
 					DrawButton( w, h, bDepressed, bHovered );
+				}
+
+				virtual void DrawWindowCloseButton( Gwen::Controls::Base* control, bool bDepressed, bool bHovered, bool bDisabled )
+				{
+					// TODO.
+					DrawButton( control, bDepressed, bHovered, bDisabled );
 				}
 
 				virtual void DrawMenuItem( Gwen::Controls::Base* control, bool bSubmenuOpen, bool bChecked )
@@ -81,10 +85,12 @@ namespace Gwen
 					}
 
 					Gwen::Rect rect = control->GetRenderBounds();
-					if( bChecked )
+					if ( bChecked )
 					{
 						m_Render->SetDrawColor( Color( 0, 0, 0, 255) );
-						DrawSymbol( Symbol::Check, 15, Gwen::Point( rect.x, rect.y+3 ) );
+
+						Gwen::Rect r( control->Width() / 2 - 2, control->Height() / 2 - 2, 5, 5 );
+						DrawCheck( r );
 					}
 				}
 
@@ -111,7 +117,7 @@ namespace Gwen
 					m_Render->SetDrawColor( m_colControlBright );
 					m_Render->DrawFilledRect( Gwen::Rect( 0, 0, w, h ) );
 
-					if( !bPaddingDisabled )
+					if ( !bPaddingDisabled )
 					{
 						m_Render->SetDrawColor( m_colControl );
 						m_Render->DrawFilledRect( Gwen::Rect( 1, 0, 22, h ) );
@@ -197,19 +203,11 @@ namespace Gwen
 					m_Render->DrawFilledRect( Gwen::Rect( rect.x+3, rect.y+2, rect.w-5, 1 ) );
 
 
-					if( bSelected )
+					if ( bSelected )
 					{
 						m_Render->SetDrawColor( Gwen::Color( 40, 230, 30, 255 ) );
 						m_Render->DrawFilledRect( Gwen::Rect( rect.x+2, rect.y+2, rect.w -4, rect.h-4 ) );
 					}
-					//Give this a try, maybe it'll look less stupid
-					/*
-					if( bSelected )
-					{ 
-						m_Render->SetDrawColor( Color( 0, 0, 0, 255) );
-						DrawSymbol(DOT, 12, Gwen::Point( rect.x, rect.y));
-					}
-					*/
 				}	
 
 		 
@@ -245,12 +243,14 @@ namespace Gwen
 					if ( bDepressed )
 					{
 						m_Render->SetDrawColor( Color( 100, 100, 100, 255) );
-						DrawSymbol( Symbol::Check, 15, Gwen::Point( rect.x, rect.y ) );
+						Gwen::Rect r( control->Width() / 2 - 2, control->Height() / 2 - 2, 5, 5 );
+						DrawCheck( r );
 					}
 					else if ( bSelected )
 					{
 						m_Render->SetDrawColor( Color( 0, 0, 0, 255) );
-						DrawSymbol( Symbol::Check, 15, Gwen::Point( rect.x, rect.y ) );
+						Gwen::Rect r( control->Width() / 2 - 2, control->Height() / 2 - 2, 5, 5 );
+						DrawCheck( r );
 					}
 				}
 
@@ -307,38 +307,30 @@ namespace Gwen
 					}
 				}
 
-				virtual void DrawTabButton( Gwen::Controls::Base* control, bool bActive )
+				virtual void DrawTabButton( Gwen::Controls::Base* control, bool bActive, int dir )
 				{
 					Gwen::Rect rect = control->GetRenderBounds();
 					bool bHovered = control->IsHovered();
 
-					if ( bActive )
-					{
-						m_Render->SetDrawColor( m_colControl );
-						m_Render->DrawFilledRect( Gwen::Rect( rect.x+1, rect.y+1, rect.w-2, rect.h-1 ) );
-					}
-					else
-					{
-						if ( bHovered )m_Render->SetDrawColor( m_colControlBright );
-						else		   m_Render->SetDrawColor( m_colControl );
+					if ( bHovered )m_Render->SetDrawColor( m_colControlBright );
+					else		   m_Render->SetDrawColor( m_colControl );
 
-						m_Render->DrawFilledRect( Gwen::Rect( 1, 1, rect.w-2, rect.h-1 ) );
+					m_Render->DrawFilledRect( Gwen::Rect( 1, 1, rect.w-2, rect.h-1 ) );
 
-						if ( bHovered )m_Render->SetDrawColor( m_colControl );
-						else		   m_Render->SetDrawColor( m_colControlDark );
+					if ( bHovered )m_Render->SetDrawColor( m_colControl );
+					else		   m_Render->SetDrawColor( m_colControlDark );
 
-						m_Render->DrawFilledRect( Gwen::Rect( 1, rect.h*0.5, rect.w-2, rect.h*0.5-1 ) );
+					m_Render->DrawFilledRect( Gwen::Rect( 1, rect.h*0.5, rect.w-2, rect.h*0.5-1 ) );
 
-						m_Render->SetDrawColor( m_colControlBright );
-						m_Render->DrawShavedCornerRect( Gwen::Rect( 1, 1, rect.w-2, rect.h ) );
-					}
+					m_Render->SetDrawColor( m_colControlBright );
+					m_Render->DrawShavedCornerRect( Gwen::Rect( 1, 1, rect.w-2, rect.h ) );
 
 					m_Render->SetDrawColor( m_colBorderColor );
 
 					m_Render->DrawShavedCornerRect( Gwen::Rect( 0, 0, rect.w, rect.h ) );
 				}
 
-				virtual void DrawTabControl( Gwen::Controls::Base* control, Gwen::Rect CurrentButtonRect )
+				virtual void DrawTabControl( Gwen::Controls::Base* control )
 				{
 					Gwen::Rect rect = control->GetRenderBounds();
 
@@ -348,8 +340,8 @@ namespace Gwen
 					m_Render->SetDrawColor( m_colBorderColor );
 					m_Render->DrawLinedRect( rect );
 
-					m_Render->SetDrawColor( m_colControl );
-					m_Render->DrawFilledRect( CurrentButtonRect );
+					//m_Render->SetDrawColor( m_colControl );
+					//m_Render->DrawFilledRect( CurrentButtonRect );
 				}
 
 				virtual void DrawWindow( Gwen::Controls::Base* control, int topHeight, bool inFocus )
@@ -398,7 +390,7 @@ namespace Gwen
 				virtual void DrawScrollBar( Gwen::Controls::Base* control, bool isHorizontal, bool bDepressed )
 				{
 					Gwen::Rect rect = control->GetRenderBounds();
-					if(bDepressed)
+					if (bDepressed)
 						m_Render->SetDrawColor( m_colControlDarker );
 					else
 						m_Render->SetDrawColor( m_colControlBright );
@@ -408,7 +400,7 @@ namespace Gwen
 				virtual void DrawScrollBarBar( Controls::Base* control, bool bDepressed, bool isHovered, bool isHorizontal  )
 				{
 					//TODO: something specialized
-					DrawButton( control, bDepressed, isHovered );
+					DrawButton( control, bDepressed, isHovered, false );
 				}
 
 				virtual void DrawTabTitleBar( Gwen::Controls::Base* control )
@@ -428,7 +420,7 @@ namespace Gwen
 					Gwen::Rect rect = control->GetRenderBounds();
 					Gwen::Color FillColour( 0, 211, 40, 255 );
 
-					if( isHorizontal )
+					if ( isHorizontal )
 					{
 						//Background
 						m_Render->SetDrawColor( m_colControlDark );
@@ -476,7 +468,7 @@ namespace Gwen
 					m_Render->DrawLinedRect( rect );
 				}
 
-				virtual void DrawListBoxLine( Gwen::Controls::Base* control, bool bSelected )
+				virtual void DrawListBoxLine( Gwen::Controls::Base* control, bool bSelected, bool bEven )
 				{
 					Gwen::Rect rect = control->GetRenderBounds();
 
@@ -516,22 +508,12 @@ namespace Gwen
 					m_Render->DrawLinedRect( rect );
 				}
 
-				virtual void DrawComboBox( Gwen::Controls::Base* control )
+				virtual void DrawComboBox( Gwen::Controls::Base* control, bool bIsDown, bool bIsMenuOpen )
 				{
 					DrawTextBox( control );
 				}
 
-				
-				virtual void DrawBackground( Gwen::Controls::Base* control )
-				{
-						Gwen::Rect rect = control->GetRenderBounds();
-						m_Render->SetDrawColor( m_colBGDark );
-						m_Render->DrawFilledRect( rect );
-						m_Render->SetDrawColor( m_colControlDarker);
-						m_Render->DrawLinedRect( rect );
-				}
-
-				virtual void DrawKeyboardHighlight( Gwen::Controls::Base* control, const Rect& r, int iOffset )
+				virtual void DrawKeyboardHighlight( Gwen::Controls::Base* control, const Gwen::Rect& r, int iOffset )
 				{
 						Gwen::Rect rect = r;
 		  
@@ -545,7 +527,7 @@ namespace Gwen
 						for(int i=0; i< rect.w*0.5; i++)
 						{
 							m_Render->SetDrawColor( Gwen::Color( 0, 0, 0, 255 ) );
-							if(!skip)
+							if (!skip)
 							{
 								m_Render->DrawPixel(rect.x + (i*2), rect.y);
 								m_Render->DrawPixel(rect.x + (i*2), rect.y+rect.h-1);
@@ -557,7 +539,7 @@ namespace Gwen
 						for(int i=0; i< rect.h*0.5; i++)
 						{
 							m_Render->SetDrawColor( Gwen::Color( 0, 0, 0, 255 ) );
-							if(!skip)
+							if (!skip)
 							{
 								m_Render->DrawPixel(rect.x , rect.y +i*2);
 								m_Render->DrawPixel(rect.x +rect.w-1, rect.y +i*2 );
@@ -582,37 +564,41 @@ namespace Gwen
 						m_Render->DrawLinedRect( rct );
 				}
 
-				virtual void DrawScrollButton( Gwen::Controls::Base* control, int iDirection, bool bDepressed )
+				virtual void DrawScrollButton( Gwen::Controls::Base* control, int iDirection, bool bDepressed, bool bHovered, bool bDisabled )
 				{
-					DrawButton( control, bDepressed, false );
-
-					Gwen::UnicodeString str = L"4";
-
-					if ( iDirection == Gwen::Pos::Top ) str = L"5";
-					else if ( iDirection == Gwen::Pos::Bottom ) str = L"6";
-					else if ( iDirection == Gwen::Pos::Left ) str = L"3";
+					DrawButton( control, bDepressed, false, false );
 
 					m_Render->SetDrawColor( Gwen::Color( 0, 0, 0, 240 ) );
-					m_Render->RenderText( &m_MarlettFont, Gwen::Point( 2+bDepressed, 2+bDepressed ), str );
+
+					Gwen::Rect r( control->Width() / 2 - 2, control->Height() / 2 - 2, 5, 5 );
+
+					if ( iDirection == Gwen::Pos::Top ) DrawArrowUp( r );
+					else if ( iDirection == Gwen::Pos::Bottom ) DrawArrowDown( r );
+					else if ( iDirection == Gwen::Pos::Left ) DrawArrowLeft( r );
+					else DrawArrowRight( r );
 				}
 
-				virtual void DrawComboBoxButton( Gwen::Controls::Base* control, bool bDepressed )
+				virtual void DrawComboDownArrow( Gwen::Controls::Base* control, bool bHovered, bool bDown, bool bOpen, bool bDisabled )
 				{
-					DrawButton( control->Width(), control->Height(), bDepressed, false, true );
+					//DrawButton( control->Width(), control->Height(), bDepressed, false, true );
 
 					m_Render->SetDrawColor( Gwen::Color( 0, 0, 0, 240 ) );
-					m_Render->RenderText( &m_MarlettFont, Gwen::Point( 3+bDepressed, 2+bDepressed ), L"6" );
+
+					 Gwen::Rect r( control->Width() / 2 - 2, control->Height() / 2 - 2, 5, 5 );
+					 DrawArrowDown( r );
 				}
 
 				virtual void DrawNumericUpDownButton( Gwen::Controls::Base* control, bool bDepressed, bool bUp )
 				{
-					DrawButton( control->Width(), control->Height(), bDepressed, false, true );
-
-					Gwen::UnicodeString str = L"u";
-					if ( bUp ) str = L"t";
+					//DrawButton( control->Width(), control->Height(), bDepressed, false, true );
 
 					m_Render->SetDrawColor( Gwen::Color( 0, 0, 0, 240 ) );
-					m_Render->RenderText( &m_MarlettFont, Gwen::Point( 1+bDepressed, -1+bDepressed ), str );
+
+					Gwen::Rect r( control->Width() / 2 - 2, control->Height() / 2 - 2, 5, 5 );
+
+					if ( bUp ) DrawArrowUp( r );
+					else DrawArrowDown( r );
+
 				}
 
 				virtual void DrawTreeButton( Controls::Base* control, bool bOpen )
@@ -632,9 +618,9 @@ namespace Gwen
 					m_Render->SetDrawColor( m_colBorderColor );
 
 					if ( !bOpen ) // ! because the button shows intention, not the current state
-						m_Render->DrawFilledRect( Rect( rect.x + rect.w/2,	rect.y + 2,				1,			rect.h - 4 ) );
+						m_Render->DrawFilledRect( Gwen::Rect( rect.x + rect.w/2,	rect.y + 2,				1,			rect.h - 4 ) );
 
-					m_Render->DrawFilledRect( Rect( rect.x +2,			rect.y + rect.h/2,		rect.w-4,	1 ) );
+					m_Render->DrawFilledRect( Gwen::Rect( rect.x +2,			rect.y + rect.h/2,		rect.w-4,	1 ) );
 		
 				}
 
@@ -653,99 +639,33 @@ namespace Gwen
 				{
 					if ( bSelected )
 					{
-						m_Render->SetDrawColor( Color( 0, 150, 255, 100 ) );
-						m_Render->DrawFilledRect( Rect( 17, 0, iLabelWidth + 2, iLabelHeight-1 ) );
-						m_Render->SetDrawColor( Color( 0, 150, 255, 200 ) );
-						m_Render->DrawLinedRect( Rect( 17, 0, iLabelWidth + 2, iLabelHeight-1 ) );
+						GetRender()->SetDrawColor( Color( 0, 150, 255, 100 ) );
+						GetRender()->DrawFilledRect( Gwen::Rect( 17, 0, iLabelWidth + 2, iLabelHeight-1 ) );
+						GetRender()->SetDrawColor( Color( 0, 150, 255, 200 ) );
+						GetRender()->DrawLinedRect( Gwen::Rect( 17, 0, iLabelWidth + 2, iLabelHeight-1 ) );
 					}
 
-					m_Render->SetDrawColor( Color( 0, 0, 0, 50 ) );
-
-					if ( !bIsRoot )
-						m_Render->DrawFilledRect( Rect( 9, iHalfWay, 16-9, 1 ) );
-
-					if ( !bOpen ) return;
-
-					m_Render->DrawFilledRect( Rect( 14 + 8, iLabelHeight, 1, iLastBranch + iHalfWay - iLabelHeight ) );
+					Base::DrawTreeNode( ctrl, bOpen, bSelected, iLabelHeight, iLabelWidth, iHalfWay, iLastBranch, bIsRoot );
 				}
 
 				virtual void DrawStatusBar( Controls::Base* control )
 				{
-					DrawBackground( control );
-				}
-
-				virtual void DrawSymbol( unsigned char symbol, float size, Gwen::Point pos )
-				{
-					Gwen::UnicodeString str;
-					switch( symbol )
-					{
-						case Symbol::ArrowRight:
-							str = L"8";
-							break;
-
-						case Symbol::Dot:
-							str = L"h";
-							break;
-
-						case Symbol::Check:
-							str = L"a";
-							break;
-
-						default:
-							str = L"r"; //Big x for error testing
-					}
-
-					float oldSize = m_MarlettFont.size;
-					m_MarlettFont.size = size;
-					m_Render->RenderText( &m_MarlettFont, pos, str );
-					m_MarlettFont.size = oldSize;
-				}	
-
-				virtual void DrawPropertyRow( Controls::Base* control, int iWidth, bool bBeingEdited )
-				{
-					Gwen::Rect rect = control->GetRenderBounds();
-
-
-					if ( bBeingEdited )
-					{
-						m_Render->SetDrawColor( m_colHighlightBG );
-						m_Render->DrawFilledRect( Rect( 0, rect.y, iWidth, rect.h ) );
-					}
-
-					m_Render->SetDrawColor( m_colControlOutlineLighter );
-
-					m_Render->DrawFilledRect( Rect( iWidth, rect.y, 1, rect.h ) );
-
-					rect.y += rect.h-1;
-					rect.h = 1;
-
-					
-					m_Render->DrawFilledRect( rect );
-				}
-
-				virtual void DrawPropertyTreeNode( Controls::Base* control, int BorderLeft, int BorderTop )
-				{
-					Gwen::Rect rect = control->GetRenderBounds();
-
-					m_Render->SetDrawColor( m_colControlOutlineLighter );
-
-					m_Render->DrawFilledRect( Rect( rect.x, rect.y, BorderLeft, rect.h ) );
-					m_Render->DrawFilledRect( Rect( rect.x + BorderLeft, rect.y, rect.w - BorderLeft, BorderTop ) );
+					// TODO.
 				}
 
 				void DrawColorDisplay( Controls::Base* control, Gwen::Color color )
 				{
 					Gwen::Rect rect = control->GetRenderBounds();
 
-					if( color.a != 255 )
+					if ( color.a != 255 )
 					{
 						GetRender()->SetDrawColor( Gwen::Color( 255, 255, 255, 255 ) );
 						GetRender()->DrawFilledRect( rect );
 
 						GetRender()->SetDrawColor( Gwen::Color( 128, 128, 128, 128 ) );
 
-						GetRender()->DrawFilledRect( Rect( 0, 0, rect.w * 0.5, rect.h * 0.5) );
-						GetRender()->DrawFilledRect( Rect( rect.w * 0.5, rect.h * 0.5, rect.w * 0.5,rect.h * 0.5) );
+						GetRender()->DrawFilledRect( Gwen::Rect( 0, 0, rect.w * 0.5, rect.h * 0.5) );
+						GetRender()->DrawFilledRect( Gwen::Rect( rect.w * 0.5, rect.h * 0.5, rect.w * 0.5,rect.h * 0.5) );
 					}
 
 					GetRender()->SetDrawColor( color );
@@ -757,7 +677,7 @@ namespace Gwen
 
 				virtual void DrawModalControl( Controls::Base* control )
 				{
-					if( control->ShouldDrawBackground() )
+					if ( control->ShouldDrawBackground() )
 					{
 						Gwen::Rect rect = control->GetRenderBounds();
 						GetRender()->SetDrawColor( m_colModal );
@@ -773,6 +693,20 @@ namespace Gwen
 					GetRender()->SetDrawColor( m_colControlDarker);
 					GetRender()->DrawLinedRect( rect );
 				}
+
+				virtual void DrawMenuRightArrow( Controls::Base* control )
+				{
+					DrawArrowRight( control->GetRenderBounds() );
+				}
+
+				virtual void DrawSlideButton( Gwen::Controls::Base* control, bool bDepressed, bool bHorizontal )
+				{
+					DrawButton( control, bDepressed, control->IsHovered(), control->IsDisabled() );
+				}
+
+				virtual void DrawCategoryHolder( Controls::Base* ctrl ){}
+				virtual void DrawCategoryInner( Controls::Base* ctrl, bool bCollapsed ){}
 		}; 
 	}
 }
+#endif

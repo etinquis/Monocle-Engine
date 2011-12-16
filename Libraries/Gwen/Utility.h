@@ -5,12 +5,16 @@
 */
 
 #pragma once
+#ifndef GWEN_UTILITY_H
+#define GWEN_UTILITY_H
 #include <sstream>
 #include <vector>
 #include "Gwen/Structures.h"
 
 namespace Gwen
 {
+	class TextObject;
+
 	namespace Utility
 	{
 		template <typename T>
@@ -27,12 +31,15 @@ namespace Gwen
 		  return y;
 		}
 
-		// Pat: put this in after getting memory exceptions. fixed it
-#pragma warning( push )
-#pragma warning( disable : 4996 )
+#ifdef _MSC_VER
+	#pragma warning( push )
+	#pragma warning( disable : 4996 )
+#endif
 
 		inline String UnicodeToString( const UnicodeString& strIn )
 		{
+			if ( !strIn.length() ) return "";
+
 			String temp(strIn.length(), (char)0);
 
 			std::use_facet< std::ctype<wchar_t> >(std::locale()). \
@@ -43,6 +50,8 @@ namespace Gwen
 
 		inline UnicodeString StringToUnicode( const String& strIn )
 		{
+			if ( !strIn.length() ) return L"";
+
 			UnicodeString temp(strIn.length(), (wchar_t)0);
 
 			std::use_facet< std::ctype<wchar_t> >(std::locale()). \
@@ -51,7 +60,9 @@ namespace Gwen
 			return temp; 
 		}
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+	#pragma warning( pop )
+#endif
 
 		template <class T>
 		String ToString( const T& object )
@@ -61,7 +72,7 @@ namespace Gwen
 			return os.str();
 		}
 
-		inline Rect ClampRectToRect( Rect inside, Rect outside, bool clampSize = false )
+		inline Gwen::Rect ClampRectToRect( Gwen::Rect inside, Gwen::Rect outside, bool clampSize = false )
 		{
 			if ( inside.x < outside.x )
 				inside.x = outside.x; 
@@ -96,6 +107,10 @@ namespace Gwen
 
 			GWEN_EXPORT void Split( const Gwen::String& str, const Gwen::String& seperator, Strings::List& outbits, bool bLeaveSeperators = false );
 			GWEN_EXPORT void Split( const Gwen::UnicodeString& str, const Gwen::UnicodeString& seperator, Strings::UnicodeList& outbits, bool bLeaveSeperators = false );
+			GWEN_EXPORT bool Wildcard( const Gwen::TextObject& strWildcard, const Gwen::TextObject& strHaystack );
+
+			GWEN_EXPORT void ToUpper( Gwen::UnicodeString& str );
+			GWEN_EXPORT void Strip( Gwen::UnicodeString& str, const Gwen::UnicodeString& chars );
 
 			template <typename T>
 			T TrimLeft( const T& str, const T& strChars )
@@ -110,7 +125,7 @@ namespace Gwen
 				GWEN_EXPORT bool Bool( const Gwen::String& str );
 				GWEN_EXPORT int Int( const Gwen::String& str );
 				GWEN_EXPORT float Float( const Gwen::String& str );
-				GWEN_EXPORT bool Floats( const Gwen::String& str, float* f, int iCount );
+				GWEN_EXPORT bool Floats( const Gwen::String& str, float* f, size_t iCount );
 			}
 		}
 	}
@@ -118,3 +133,4 @@ namespace Gwen
 
 
 }
+#endif

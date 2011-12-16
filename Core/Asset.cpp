@@ -2,6 +2,8 @@
 #include "Debug.h"
 #include "Assets.h"
 
+#include "File/FileNode.h"
+
 namespace Monocle
 {
 	Asset::Asset(AssetType type)
@@ -23,7 +25,7 @@ namespace Monocle
 	{
 		referenceCount--;
 
-		Debug::Log("referenceCount decreased for: " + filename);
+		//Debug::Log("referenceCount decreased for: " + filename);
 		Debug::Log(referenceCount);
 
 		if (referenceCount == 0)

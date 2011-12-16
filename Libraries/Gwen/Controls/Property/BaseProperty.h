@@ -5,12 +5,12 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_PROPERTY_BASEPROPERTY_H
+#define GWEN_CONTROLS_PROPERTY_BASEPROPERTY_H
 
 #include "Gwen/Controls/Base.h"
-#include "Gwen/Controls/Label.h"
 #include "Gwen/Gwen.h"
 #include "Gwen/Skin.h"
-#include "Gwen/Controls/Properties.h"
 #include "Gwen/Utility.h"
 
 
@@ -24,21 +24,19 @@ namespace Gwen
 			{
 				public:
 
-					GWEN_CONTROL_INLINE( Base, Gwen::Controls::Base ){}
+					GWEN_CONTROL_INLINE( Base, Gwen::Controls::Base )
+					{
+						SetHeight( 17 );
+					}
 
 					virtual String GetPropertyValueAnsi()
 					{
 						return Gwen::Utility::UnicodeToString( GetPropertyValue() );
 					}
 
-					virtual void SetPropertyValue( const String& v, bool bFireChangeEvents = false )
-					{
-						SetPropertyValue( Gwen::Utility::StringToUnicode( v ), bFireChangeEvents );
-					}
-
 					virtual UnicodeString GetPropertyValue() = 0;
 
-					virtual void SetPropertyValue( const UnicodeString& v, bool bFireChangeEvents = false ) = 0;
+					virtual void SetPropertyValue( const TextObject& v, bool bFireChangeEvents = false ) = 0;
 
 					virtual bool IsEditing() = 0;
 
@@ -47,7 +45,7 @@ namespace Gwen
 						onChange.Call( this );
 					}
 
-					virtual void OnPropertyValueChanged( Gwen::Controls::Base* control )
+					void OnPropertyValueChanged( Gwen::Controls::Base* /*control*/ )
 					{
 						DoChanged();
 					}
@@ -57,3 +55,4 @@ namespace Gwen
 		}
 	}
 }
+#endif

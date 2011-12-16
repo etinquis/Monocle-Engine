@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_RADIOBOTTONCONTROLLER_H
+#define GWEN_CONTROLS_RADIOBOTTONCONTROLLER_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Label.h"
@@ -22,7 +24,7 @@ namespace Gwen
 
 				GWEN_CONTROL( RadioButtonController, Base );
 
-				virtual void Render( Skin::Base* skin ){};
+				virtual void Render( Skin::Base* /*skin*/ ){};
 				virtual void OnRadioClicked( Base* pFromPanel );
 
 				virtual void OnChange();
@@ -43,3 +45,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

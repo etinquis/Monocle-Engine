@@ -3,11 +3,12 @@
 #include "Vector2.h"
 #include "Scene.h"
 #include "Color.h"
-#include "FileNode.h"
-#include "Transform.h"
+
+#include "Component/EntityComponent.h"
+#include "Events/EventHandler.h"
 
 #include <string>
-#include <vector>
+#include <map>
 #include <list>
 
 namespace Monocle
@@ -19,9 +20,8 @@ namespace Monocle
 	class Collider;
 	class RectangleCollider;
 	class CircleCollider;
-	class Graphics;
-	class Graphic;
 	class CollisionData;
+	class FileNode;
 
 	class InvokeData
 	{
@@ -34,6 +34,20 @@ namespace Monocle
 		bool isDone;
 		void *me;
 	};
+
+
+	class EntityTagData
+	{
+	public:
+		EntityTagData();
+		EntityTagData(const std::string &name, bool save);
+		EntityTagData(const EntityTagData &);
+
+		std::string name;
+		bool save;
+	};
+
+	typedef std::vector<EntityTagData> EntityTags;
 
 	//! \brief An object that can Update, Render and be derived to perform other actions.
 	//!
@@ -49,13 +63,33 @@ namespace Monocle
 	//!
 	//!		Add(new Player)
 	//!
-	class Entity : public Transform
+	class Entity
 	{
 	public:
-		Entity(const Entity &entity);
+		typedef std::map<std::string, EntityComponent*> ComponentList;
+
+		class EventHandler
+		{
+		public:
+			struct EntityEventArgs
+			{
+			public:
+				EntityEventArgs(Entity *entity) : entity(entity) { }
+				Entity *entity;
+			};
+			
+			virtual void AddedToScene(const EntityEventArgs &args) { }
+			virtual void RemovedFromScene(const EntityEventArgs &args) { }
+			virtual void Destroyed(const EntityEventArgs &args) { }
+			virtual void Saving(const EntityEventArgs &args) { }
+			virtual void Loading(const EntityEventArgs &args) { }
+		};
+
+		EventEmitter<EventHandler> Events;
+
 		Entity();
 		virtual ~Entity();
-		virtual Entity *Clone();
+		virtual Entity *Clone() const;
 
 		//! Enable this object. Set isEnabled to true. Each derived Entity may decide how to handle isEnabled.
 		virtual void Enable();
@@ -73,7 +107,6 @@ namespace Monocle
 		//! Called by the scene when the entity should render
 		virtual void Render();
 
-		//!  from Transform:: used to save/load properties
 		void Save(FileNode *fileNode);
 		void Load(FileNode *fileNode);
 
@@ -84,127 +117,79 @@ namespace Monocle
 		//! Called when Entity is destroyed
 		virtual void Destroyed();
 
-		//! Check our collider against all entities that have "tag"
-		Collider* Collide(const std::string &tag, CollisionData *collisionData=NULL);
-		//! Check our collider against all entities that have "tag" - warping us to atPosition first, then back to our original position after
-		Collider* CollideAt(const std::string &tag, const Vector2& atPosition, CollisionData *collisionData=NULL);
-
-		//Tagging API
-		void AddTag(const std::string& tag);
-		bool HasTag(const std::string& tag);
-		void RemoveTag(const std::string& tag);
-		const std::string& GetTag(int index);
-		int GetNumberOfTags();
-
-		//! is our layer number equal to the layer passed in
+		//! Checks if this entity is on the given layer
 		bool IsLayer(int layer);
+		//! Gets the layer that this entity is on
 		//! \return our layer number
 		int GetLayer();
-		//! set our current layer to the layer passed in
+		//! Moves the entity to the given layer
 		void SetLayer(int layer);
+		//! Moves the entity to the layer determined by the given offset, relative to the layer it
+		//! is currently on
 		void AdjustLayer(int layerAdjustAmount);
 
 		//! is our layer number in the debug render range?
 		bool IsDebugLayer();
 
-		void SetCollider(Collider *collider);
-		void SetGraphic(Graphic *graphic);
-
-		////! add an Entity as a child
-		//void Add(Entity *entity);
-		////! remove an Entity from our list of children
-		//void Remove(Entity *entity);
-
 		//! set parent entity
-		void SetParent(Entity *parent);
-		//! return pointer to parent entity
-		Entity *GetParent();
+		//void SetParent(Entity *parent);
+		////! return pointer to parent entity
+		//Entity *GetParent();
 		//! return pointer to the Scene we are currently in
 		Scene *GetScene();
 
-		// used by editors
-		bool IsPositionInGraphic(const Vector2 &position);
+		template <class t_component>
+		t_component* AddComponent(const typename t_component::InitParams& params)
+		{
+			t_component *comp = new t_component();
+
+			components[t_component::ComponentName] = comp;
+			comp->ParamInit(this, params);
+			return comp;
+		}
+
+		template <class t_component>
+		t_component* AddComponent()
+		{
+			t_component *comp = new t_component();
+
+			components[t_component::ComponentName] = comp;
+			comp->Init(this);
+			return comp;
+		}
+
+		bool HasComponent(const std::string &name);
 		
-		Vector2 GetWorldPosition(const Vector2 &position=Vector2::zero);
-		Vector2 GetWorldScale(const Vector2 &scale);
-		Vector2 GetLocalPosition(const Vector2 &worldPosition);
-
-
-		void Invoke(void (*functionPointer)(void*), float delay);
-
-		float depth;
-		bool isVisible;
-		Vector2 followCamera;
-
-		Color color;
-
+		//Vector2 GetWorldScale(const Vector2 &scale);
+		//Vector2 GetLocalPosition(const Vector2 &worldPosition);
 		
-
+		template <typename T>
+		T* GetComponent()
+		{
+			return (T*)components[T::ComponentName];
+		}
 	protected:
-		//void DestroyChildren();
+		Entity(const Entity &entity);
 
 		friend class Scene;
 
 		//! The scene that contains the entity
 		Scene* scene;
 
-		//Entity *GetNearestEntityByControlPoint(const Vector2 &position, const std::string &tag, Entity *ignoreEntity, float &smallestSqrMag);
-		
-		// notes are very simple "messages"
-		void SendNoteToScene(const std::string &note);
-		// send a note to all entites with tag "tag"
-		void SendNote(const std::string &tag, const std::string &note);
-		virtual void ReceiveNote(const std::string &tag, const std::string &note);
-		
-		//std::list<Entity*> children;
-
 		bool isEnabled;
-
-		void ApplyMatrix();
-		void MatrixChain();
 
 	private:
 		int id;
-
-		Entity *parent;
-
-		// only for use by Collision class
-		friend class Collision;
-		Collider* GetCollider();
-		Collider* collider;
-
-		// only for use by graphics
-		friend class Graphics;
-		Graphic* GetGraphic();
-		Graphic* graphic;
-
-		// only for use by scene
-		//friend class Scene;
 		
-		std::vector<std::string> tags;
+		std::vector<EntityTagData> tags;
 		int layer;
 
 		std::list<InvokeData*> invokes;
 		std::list<InvokeData*> removeInvokes;
 
+        Vector2 cachedWorldPosition;
+        Vector2 lastPositionWhenCached;
 
-	public:
-		//Entity* GetChildEntityAtPosition(const Vector2 &position);
-		//template <class T>
-		//inline T *GetFirstChildOfType()
-		//{
-		//	T *t = NULL;
-		//	for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-		//	{
-		//		t = dynamic_cast<T*>(*i);
-		//		if (t)
-		//		{
-		//			return t;
-		//		}
-		//	}
-		//	return NULL;
-		//}
-
-		//const std::list<Entity*>* GetChildren();
+		ComponentList components;
 	};
 }

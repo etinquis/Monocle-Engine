@@ -5,7 +5,9 @@
 */
 
 #pragma once
-#pragma once
+#ifndef GWEN_CONTROLS_DOCKBASE_H
+#define GWEN_CONTROLS_DOCKBASE_H
+
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
 
@@ -34,7 +36,7 @@ namespace Gwen
 				virtual DockBase* GetBottom(){ return GetChildDock( Pos::Bottom ); }
 
 				// No action on space (default button action is to press)
-				virtual bool OnKeySpace( bool bDown ){ return false; }
+				virtual bool OnKeySpace( bool /*bDown*/ ){ return false; }
 								
 			private:
 
@@ -67,8 +69,9 @@ namespace Gwen
 
 				bool		m_bDrawHover;
 				bool		m_bDropFar;
-				Rect		m_HoverRect;
+				Gwen::Rect		m_HoverRect;
 
 		};
 	}
 }
+#endif

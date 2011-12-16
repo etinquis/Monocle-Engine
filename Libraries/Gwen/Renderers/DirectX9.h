@@ -4,7 +4,8 @@
 	See license in Gwen.h
 */
 
-
+#ifndef GWEN_RENDERERS_DIRECTX9_H
+#define GWEN_RENDERERS_DIRECTX9_H
 #include "Gwen/Gwen.h"
 #include "Gwen/BaseRender.h"
 
@@ -35,7 +36,6 @@ namespace Gwen
 
 				virtual void SetDrawColor(Gwen::Color color);
 
-				virtual void DrawLine( int x, int y, int a, int b );
 				virtual void DrawFilledRect( Gwen::Rect rect );
 
 				virtual void LoadFont( Gwen::Font* pFont );
@@ -49,6 +49,7 @@ namespace Gwen
 				void DrawTexturedRect( Gwen::Texture* pTexture, Gwen::Rect pTargetRect, float u1=0.0f, float v1=0.0f, float u2=1.0f, float v2=1.0f );
 				void LoadTexture( Gwen::Texture* pTexture );
 				void FreeTexture( Gwen::Texture* pTexture );
+				Gwen::Color PixelColour( Gwen::Texture* pTexture, unsigned int x, unsigned int y, const Gwen::Color& col_default );
 
 			protected:
 
@@ -70,3 +71,4 @@ namespace Gwen
 
 	}
 }
+#endif

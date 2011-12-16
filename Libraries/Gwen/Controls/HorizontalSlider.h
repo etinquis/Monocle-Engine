@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_HORIZONTALSLIDER_H
+#define GWEN_CONTROLS_HORIZONTALSLIDER_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
@@ -21,8 +23,8 @@ namespace Gwen
 		{
 			GWEN_CONTROL( HorizontalSlider, Slider );
 
-			virtual void Layout(Skin::Base* skin);
-			virtual void Render(Skin::Base* skin);
+			virtual void Layout( Skin::Base* skin );
+			virtual void Render( Skin::Base* skin );
 
 			virtual float CalculateValue();
 			virtual void UpdateBarFromValue();
@@ -30,3 +32,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

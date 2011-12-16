@@ -5,7 +5,9 @@
 */
 
 #pragma once
-#pragma once
+#ifndef GWEN_CONTROLS_TABCONTROL_H
+#define GWEN_CONTROLS_TABCONTROL_H
+
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
 #include "Gwen/Controls/TabButton.h"
@@ -25,7 +27,8 @@ namespace Gwen
 		{
 			GWEN_CONTROL( TabControl, Base );
 
-				virtual TabButton* AddPage( const UnicodeString& strText, Controls::Base* pPage = NULL );
+				virtual TabButton* AddPage( const TextObject strText, Controls::Base* pPage = NULL );
+
 				virtual void AddPage( TabButton* pButton );
 
 				virtual void OnTabPressed( Controls::Base* control );
@@ -62,3 +65,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

@@ -4,6 +4,8 @@
 
 namespace Monocle
 {
+	class FileNode;
+
 	enum AssetType
 	{
 		ASSET_UNDEFINED,
@@ -61,9 +63,10 @@ namespace Monocle
 
 	protected:
 		friend class Assets;
-		// allow derived classes to add whatever params they want to load
-		//virtual void Load(const std::string &filename)=0;
 		//! Unloads the asset.  Must be overriden by derived classes.
 		virtual void Unload() = 0;
+
+		//virtual void Load(FileNode *myNode);
+		//virtual void Save(FileNode *myNode);
 	};
 }

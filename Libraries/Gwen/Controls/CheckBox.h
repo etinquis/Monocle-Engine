@@ -5,12 +5,13 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_CHECKBOX_H
+#define GWEN_CONTROLS_CHECKBOX_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
 #include "Gwen/Gwen.h"
 #include "Gwen/Skin.h"
-#include "Gwen/Controls/Symbol.h"
 #include "Gwen/Controls/LabelClickable.h"
 
 namespace Gwen 
@@ -55,7 +56,7 @@ namespace Gwen
 
 					m_Checkbox = new CheckBox( this );
 					m_Checkbox->Dock( Pos::Left );
-					m_Checkbox->SetMargin( Margin( 0, 3, 3, 3 ) );
+					m_Checkbox->SetMargin( Margin( 0, 2, 2, 2 ) );
 					m_Checkbox->SetTabable( false );
 
 					m_Label = new LabelClickable( this );
@@ -68,7 +69,7 @@ namespace Gwen
 
 				virtual CheckBox* Checkbox() { return m_Checkbox; }
 				virtual LabelClickable* Label() { return m_Label; }
-				virtual bool OnKeySpace( bool bDown ) { if ( bDown ) m_Checkbox->SetChecked( !m_Checkbox->IsChecked() ); return true; }
+				virtual bool OnKeySpace( bool bDown ) { if ( !bDown ) m_Checkbox->SetChecked( !m_Checkbox->IsChecked() ); return true; }
 
 			private:
 
@@ -77,3 +78,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

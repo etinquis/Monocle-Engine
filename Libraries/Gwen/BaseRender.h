@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_BASERENDER_H
+#define GWEN_BASERENDER_H
 
 #include "Gwen/Structures.h"
 
@@ -39,36 +41,36 @@ namespace Gwen
 				Base();
 				virtual ~Base();
 
-				virtual void Begin() = 0;
-				virtual void End() = 0;
+				virtual void Begin(){};
+				virtual void End(){};
 
-				virtual void SetDrawColor( Color color ) = 0;
+				virtual void SetDrawColor( Color color ){};
 
-				virtual void DrawLine( int x, int y, int a, int b ) = 0;
-				virtual void DrawFilledRect( Rect rect ) = 0;
+				virtual void DrawFilledRect( Gwen::Rect rect ){};;
 
-				virtual void StartClip() = 0;
-				virtual void EndClip() = 0;
+				virtual void StartClip(){};
+				virtual void EndClip(){};
 
-				virtual void LoadTexture( Gwen::Texture* pTexture ) = 0;
-				virtual void FreeTexture( Gwen::Texture* pTexture ) = 0;
-				virtual void DrawTexturedRect( Gwen::Texture* pTexture, Gwen::Rect pTargetRect, float u1=0.0f, float v1=0.0f, float u2=1.0f, float v2=1.0f ) = 0;
+				virtual void LoadTexture( Gwen::Texture* pTexture ){};
+				virtual void FreeTexture( Gwen::Texture* pTexture ){};
+				virtual void DrawTexturedRect( Gwen::Texture* pTexture, Gwen::Rect pTargetRect, float u1=0.0f, float v1=0.0f, float u2=1.0f, float v2=1.0f ){};
 				virtual void DrawMissingImage( Gwen::Rect pTargetRect );
+				virtual Gwen::Color PixelColour( Gwen::Texture* pTexture, unsigned int x, unsigned int y, const Gwen::Color& col_default = Gwen::Color( 255, 255, 255, 255 ) ){ return col_default; }
 
 				virtual ICacheToTexture* GetCTT() { return NULL; }
 
-				virtual void LoadFont( Gwen::Font* pFont ) = 0;
-				virtual void FreeFont( Gwen::Font* pFont ) = 0;
-				virtual void RenderText( Gwen::Font* pFont, Gwen::Point pos, const Gwen::UnicodeString& text ) = 0;
-				virtual Gwen::Point MeasureText( Gwen::Font* pFont, const Gwen::UnicodeString& text ) = 0;
+				virtual void LoadFont( Gwen::Font* pFont ){};
+				virtual void FreeFont( Gwen::Font* pFont ){};
+				virtual void RenderText( Gwen::Font* pFont, Gwen::Point pos, const Gwen::UnicodeString& text );
+				virtual Gwen::Point MeasureText( Gwen::Font* pFont, const Gwen::UnicodeString& text );
 
 				//
 				// No need to implement these functions in your derived class, but if 
 				// you can do them faster than the default implementation it's a good idea to.
 				//
-				virtual void DrawLinedRect( Rect rect );
+				virtual void DrawLinedRect( Gwen::Rect rect );
 				virtual void DrawPixel( int x, int y );
-				virtual void DrawShavedCornerRect( Rect rect, bool bSlight = false );
+				virtual void DrawShavedCornerRect( Gwen::Rect rect, bool bSlight = false );
 				virtual Gwen::Point MeasureText( Gwen::Font* pFont, const Gwen::String& text );
 				virtual void RenderText( Gwen::Font* pFont, Gwen::Point pos, const Gwen::String& text );
 
@@ -85,24 +87,24 @@ namespace Gwen
 				// Set the rendering offset. You shouldn't have to 
 				// touch these, ever.
 				//
-				void SetRenderOffset( const Point& offset ){ m_RenderOffset = offset; }
-				void AddRenderOffset( const Rect& offset ){ m_RenderOffset.x += offset.x; m_RenderOffset.y += offset.y; }
-				const Point& GetRenderOffset() const { return m_RenderOffset; }
+				void SetRenderOffset( const Gwen::Point& offset ){ m_RenderOffset = offset; }
+				void AddRenderOffset( const Gwen::Rect& offset ){ m_RenderOffset.x += offset.x; m_RenderOffset.y += offset.y; }
+				const Gwen::Point& GetRenderOffset() const { return m_RenderOffset; }
 
 			private:
 
-				Point m_RenderOffset;
+				Gwen::Point m_RenderOffset;
 
 			public:
 
-				void SetClipRegion( Rect rect );
-				void AddClipRegion( Rect rect );
+				void SetClipRegion( Gwen::Rect rect );
+				void AddClipRegion( Gwen::Rect rect );
 				bool ClipRegionVisible();
 				const Gwen::Rect& ClipRegion() const;
 
 			private:
 
-				Rect m_rectClipRegion;
+				Gwen::Rect m_rectClipRegion;
 				ICacheToTexture* m_RTT;
 
 			public:
@@ -114,3 +116,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

@@ -20,8 +20,8 @@ public:
         m_DefaultFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
         m_DefaultFont.size = 12;
         
-        m_MarlettFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
-        m_MarlettFont.size = 12;
+        //m_MarlettFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
+        //m_MarlettFont.size = 12;
     }
 };
 
@@ -39,8 +39,8 @@ public:
         m_DefaultFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
         m_DefaultFont.size = 12;
         
-        m_MarlettFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
-        m_MarlettFont.size = 12;
+        //m_MarlettFont.facename = L"AudioTest/LiberationSans-Regular.ttf";
+        //m_MarlettFont.size = 12;
     }
 };
 

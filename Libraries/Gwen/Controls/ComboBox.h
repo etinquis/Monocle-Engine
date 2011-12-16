@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_COMBOBOX_H
+#define GWEN_CONTROLS_COMBOBOX_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
@@ -18,40 +20,35 @@ namespace Gwen
 {
 	namespace Controls
 	{
-		class GWEN_EXPORT ComboBoxButton : public Button
-		{
-			GWEN_CONTROL_INLINE( ComboBoxButton, Button ){}
-
-			virtual void Render( Skin::Base* skin )
-			{
-				skin->DrawComboBoxButton( this, m_bDepressed );
-			}
-		};
-
-		class GWEN_EXPORT ComboBox : public Base
+		class GWEN_EXPORT ComboBox : public Button
 		{
 			public:
 
-				GWEN_CONTROL( ComboBox, Base );
+				GWEN_CONTROL( ComboBox, Button );
 
 				virtual void Render( Skin::Base* skin );
+				virtual void Layout( Skin::Base* skin );
 
-				Gwen::Controls::Label* GetSelectedItem();
+				virtual Gwen::Controls::Label* GetSelectedItem();
 
-				virtual void OpenButtonPressed( Controls::Base* pControl );
+				virtual void OnPress();
 				virtual void OnItemSelected( Controls::Base* pControl );
 				virtual void OpenList();
 				virtual void CloseList();
 
 				virtual void ClearItems();
 
-				virtual MenuItem* AddItem( const UnicodeString& strLabel, const String& strName = "", Gwen::Event::Handler* pHandler = NULL, Gwen::Event::Handler::Function fn = NULL );
-				bool OnKeyUp( bool bDown );
-				bool OnKeyDown( bool bDown );
+				virtual MenuItem* AddItem( const UnicodeString& strLabel, const String& strName = "" );
+				virtual bool OnKeyUp( bool bDown );
+				virtual bool OnKeyDown( bool bDown );
 
-				void RenderFocus( Gwen::Skin::Base* skin );
-				void OnLostKeyboardFocus();
-				void OnKeyboardFocus();
+				virtual void RenderFocus( Gwen::Skin::Base* skin );
+				virtual void OnLostKeyboardFocus();
+				virtual void OnKeyboardFocus();
+
+				virtual bool IsMenuOpen();
+
+				virtual bool IsMenuComponent(){ return true; }
 
 				Gwen::Event::Caller	onSelection;
 
@@ -60,11 +57,10 @@ namespace Gwen
 				Menu* m_Menu;
 				MenuItem* m_SelectedItem;
 
-				ComboBoxButton* m_OpenButton;
-
-				Label* m_SelectedText;
+				Controls::Base*	m_Button;
 
 		};
 		
 	}
 }
+#endif

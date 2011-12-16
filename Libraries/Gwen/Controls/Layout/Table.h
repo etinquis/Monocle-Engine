@@ -5,7 +5,9 @@
 */
 
 #pragma once
-#pragma once
+#ifndef GWEN_CONTROLS_LAYOUT_TABLE_H
+#define GWEN_CONTROLS_LAYOUT_TABLE_H
+
 #include "Gwen/Controls/Label.h"
 #include "Gwen/Utility.h"
 
@@ -24,6 +26,8 @@ namespace Gwen
 
 				GWEN_CONTROL_INLINE( TableRow, Base )
 				{
+					SetEven( false );
+
 					for ( int i=0; i<MaxColumns; i++ )
 						m_Columns[i] = NULL;
 
@@ -125,15 +129,19 @@ namespace Gwen
 				{
 					return m_Columns[i]->GetText();
 				}
-				virtual void SetSelected( bool b ) {}
+				virtual void SetSelected( bool /*b*/ ) {}
 
 				//
 				// This is sometimes called by derivatives.
 				//
 				Gwen::Event::Caller	onRowSelected;
 
+				virtual bool GetEven(){ return m_bEvenRow; }
+				virtual void SetEven( bool b ) { m_bEvenRow = b; }
+
 			private:
 
+				bool	m_bEvenRow;
 				int		m_ColumnCount;
 				Label*	m_Columns[MaxColumns];
 
@@ -166,7 +174,7 @@ namespace Gwen
 
 						for ( Base::List::iterator it = Children.begin(); it != Children.end(); ++it )
 						{
-							TableRow* pRow = dynamic_cast<TableRow*>(*it);
+							TableRow* pRow = gwen_cast<TableRow>(*it);
 							if ( !pRow ) continue;
 
 							pRow->SetColumnCount( i );
@@ -200,6 +208,16 @@ namespace Gwen
 						pRow->Dock( Pos::Top );
 					}
 
+					TableRow* GetRow( int i )
+					{
+						return gwen_cast<TableRow>( GetChild( i ) );
+					}
+
+					unsigned int RowCount( int i )
+					{
+						return NumChildren();
+					}
+
 					void Remove( TableRow* pRow )
 					{ 
 						pRow->DelayedDelete();
@@ -209,7 +227,7 @@ namespace Gwen
 					{
 						for ( Base::List::iterator it = Children.begin(); it != Children.end(); ++it )
 						{
-							TableRow* pRow = dynamic_cast<TableRow*>(*it);
+							TableRow* pRow = gwen_cast<TableRow>(*it);
 							if ( !pRow ) continue;
 								Remove( pRow );
 						}
@@ -224,10 +242,14 @@ namespace Gwen
 							DoSizeToContents();
 						}
 
+						bool bEven = false;
 						for ( Base::List::iterator it = Children.begin(); it != Children.end(); ++it )
 						{
-							TableRow* pRow = dynamic_cast<TableRow*>(*it);
+							TableRow* pRow = gwen_cast<TableRow>(*it);
 							if ( !pRow ) continue;
+
+							pRow->SetEven( bEven );
+							bEven = !bEven;
 
 							for (int i=0; i<TableRow::MaxColumns && i < m_iColumnCount; i++)
 							{
@@ -236,7 +258,7 @@ namespace Gwen
 						}
 					}
 
-					void PostLayout( Skin::Base* skin )
+					void PostLayout( Skin::Base* /*skin*/ )
 					{
 						if ( m_bSizeToContents )
 						{
@@ -260,7 +282,7 @@ namespace Gwen
 
 						for ( Base::List::iterator it = Children.begin(); it != Children.end(); ++it )
 						{
-							TableRow* pRow = dynamic_cast<TableRow*>(*it);
+							TableRow* pRow = gwen_cast<TableRow>(*it);
 							if ( !pRow ) continue;
 
 							pRow->SizeToContents();
@@ -289,3 +311,4 @@ namespace Gwen
 		}
 	}
 }
+#endif

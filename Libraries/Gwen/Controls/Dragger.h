@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_DRAGGER_H
+#define GWEN_CONTROLS_DRAGGER_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Gwen.h"
@@ -27,14 +29,16 @@ namespace Gwen
 				virtual void Render( Skin::Base* skin );
 
 				virtual void SetTarget( Controls::Base* pBase ){ m_pTarget = pBase; }
+				virtual bool IsDepressed(){ return m_bDepressed; }
 
 				Gwen::Event::Caller	onDragged;
 
 			protected:
 
 				bool				m_bDepressed;
-				Point				m_HoldPos;
+				Gwen::Point			m_HoldPos;
 				Controls::Base*		m_pTarget;
 		};
 	}
 }
+#endif

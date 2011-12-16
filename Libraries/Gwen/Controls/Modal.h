@@ -1,5 +1,6 @@
-
 #pragma once
+#ifndef GWEN_CONTROLS_MODAL_H
+#define GWEN_CONTROLS_MODAL_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Gwen.h"
@@ -17,19 +18,20 @@ namespace Gwen
 				SetKeyboardInputEnabled( true );
 				SetMouseInputEnabled( true );
 				SetShouldDrawBackground( true );
+
+				SetBounds( 0, 0, GetParent()->Width(), GetParent()->Height() );
 			}
 			
-			virtual void Layout( Skin::Base* skin )
+			virtual void Layout( Skin::Base* /*skin*/ )
 			{
 				SetBounds( 0, 0, GetCanvas()->Width(), GetCanvas()->Height() );
 			}
 
 			virtual void Render( Skin::Base* skin )
 			{
-				if ( !ShouldDrawBackground() ) return;
-
 				skin->DrawModalControl( this );
 			}
 		};
 	}
 }
+#endif

@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_HORIZONTALSCROLLBAR_H
+#define GWEN_CONTROLS_HORIZONTALSCROLLBAR_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
@@ -23,7 +25,7 @@ namespace Gwen
 
 				GWEN_CONTROL( HorizontalScrollBar, BaseScrollBar );
 
-				virtual void Layout(Skin::Base* skin);
+				virtual void Layout( Skin::Base* skin );
 
 				virtual void OnMouseClickLeft( int x, int y, bool bDown );
 				virtual void OnBarMoved( Controls::Base* control );
@@ -40,7 +42,10 @@ namespace Gwen
 				virtual float GetNudgeAmount();
 		
 				virtual float CalculateScrolledAmount();
-				void SetScrolledAmount(float amount, bool forceUpdate);
+				virtual bool SetScrolledAmount(float amount, bool forceUpdate);
+
+				virtual bool IsHorizontal(){ return true; }
 		};
 	}
 }
+#endif

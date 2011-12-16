@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FileNode.h"
+#include "File/FileNode.h"
 #include "Vector2.h"
 
 #include <map>
@@ -46,6 +46,7 @@ namespace Monocle
 		friend class TextureAtlasEntry;
 		std::string image;
 		int width, height;
+		float scale;
 
 	private:
 		std::map<std::string, TextureAtlasEntry*> entries;

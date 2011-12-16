@@ -1,6 +1,9 @@
 #include "FringeTile.h"
 #include "../Assets.h"
-#include "../Level.h"
+#include "../Level/Level.h"
+#include "Component/Entity/Transform.h"
+#include "Component/Entity/Sprite.h"
+#include "../File/FileNode.h"
 
 #include <cstdio>
 
@@ -67,43 +70,21 @@ namespace Monocle
 	}
 
 	FringeTile::FringeTile()
-		: Entity(), tileID(0), sprite(NULL) //fringeTileset(NULL), tileID(0), sprite(NULL)
+		: Entity(), tileID(0)
 	{
-		//AddTag("FringeTile");
-		sprite = new Sprite();
-		SetGraphic(sprite);
-
-		RefreshTexture();
+		AddComponent<Sprite>();
 	}
 
 	FringeTile::FringeTile(const FringeTile &fringeTile)
-		: Entity(fringeTile), tileID(fringeTile.tileID), sprite(NULL)
+		: Entity(fringeTile), tileID(fringeTile.tileID)
 	{
-		//AddTag("FringeTile");
-		sprite = new Sprite();
-		sprite->blend = fringeTile.sprite->blend;
-		SetGraphic(sprite);
 		
-		RefreshTexture();
 	}
 
-	Entity* FringeTile::Clone()
+	FringeTile* FringeTile::Clone()
 	{
 		return new FringeTile(*this);
 	}
-
-	/*
-	FringeTile::FringeTile(int tileID)
-		: Entity(), tileID(tileID), sprite(NULL)
-	{
-		AddTag("FringeTile");
-
-		sprite = new Sprite();
-		SetGraphic(sprite);
-
-		RefreshTexture();
-	}
-	*/
 	
 	void FringeTile::SetTileID(int tileID)
 	{
@@ -137,48 +118,79 @@ namespace Monocle
 
 	void FringeTile::NextBlend()
 	{
-		int spriteBlend = (int)sprite->blend;
+		int spriteBlend = GetComponent<Sprite>()->blend;
 		spriteBlend++;
-		sprite->blend = (BlendType)spriteBlend;
+		GetComponent<Sprite>()->blend = (BlendType)spriteBlend;
 	}
 
 	void FringeTile::PrevBlend()
 	{
-		int spriteBlend = (int)sprite->blend;
+		int spriteBlend = GetComponent<Sprite>()->blend;
 		spriteBlend--;
-		sprite->blend = (BlendType)spriteBlend;
+		GetComponent<Sprite>()->blend = (BlendType)spriteBlend;
+	}
+
+	void FringeTile::Update()
+	{
+		Entity::Update();
+		
+		RefreshScale();
+	}
+
+	void FringeTile::RefreshScale()
+	{
+		if (GetComponent<Sprite>()->texture && (GetComponent<Sprite>()->texture->repeatX || GetComponent<Sprite>()->texture->repeatY))
+		{
+			const FringeTileData *fringeTileData = Level::GetCurrentFringeTileset()->GetFringeTileDataByID(tileID);
+			if (fringeTileData->autoTile)
+			{
+				if (GetComponent<Sprite>()->texture->repeatX)
+				{
+					GetComponent<Sprite>()->textureScale.x = GetComponent<Transform>()->scale.x;
+				}
+				if (GetComponent<Sprite>()->texture->repeatY)
+				{
+					GetComponent<Sprite>()->textureScale.y = GetComponent<Transform>()->scale.y;
+				}
+			}
+
+		}
 	}
 
 	void FringeTile::RefreshTexture()
 	{
-		printf("RefreshTexture to tileID: %d\n", tileID);
+		//printf("RefreshTexture to tileID: %d\n", tileID);
 
 		// free old texture here somehow:
-		if (sprite->texture)
+		if (GetComponent<Sprite>()->texture)
 		{
-			sprite->texture->RemoveReference();
-			sprite->texture = NULL;
+			GetComponent<Sprite>()->texture->RemoveReference();
+			GetComponent<Sprite>()->texture = NULL;
 		}
 
 		const FringeTileData *fringeTileData = Level::GetCurrentFringeTileset()->GetFringeTileDataByID(tileID);
 		if (fringeTileData)
 		{
-			sprite->texture = Assets::RequestTexture(fringeTileData->imageFilename, fringeTileData->filter, fringeTileData->repeatX, fringeTileData->repeatY);
-			if (fringeTileData->width == -1 && fringeTileData->height == -1 && sprite->texture)
+			GetComponent<Sprite>()->texture = Assets::RequestTexture(fringeTileData->imageFilename, fringeTileData->filter, fringeTileData->repeatX, fringeTileData->repeatY);
+			if (fringeTileData->width == -1 && fringeTileData->height == -1 && GetComponent<Sprite>()->texture)
 			{
-				sprite->width = sprite->texture->width;
-				sprite->height = sprite->texture->height;
+				GetComponent<Sprite>()->width = GetComponent<Sprite>()->texture->width;
+				GetComponent<Sprite>()->height = GetComponent<Sprite>()->texture->height;
 			}
 			else
 			{
-				sprite->width = fringeTileData->width;
-				sprite->height = fringeTileData->height;
+				GetComponent<Sprite>()->width = fringeTileData->width;
+				GetComponent<Sprite>()->height = fringeTileData->height;
 			}
 
-			if (fringeTileData->atlasX != 0 || fringeTileData->atlasW != 0 || fringeTileData->atlasY != 0 || fringeTileData->atlasH != 0)
+			if (GetComponent<Sprite>()->texture && (GetComponent<Sprite>()->texture->repeatX || GetComponent<Sprite>()->texture->repeatY))
 			{
-				sprite->textureOffset = Vector2(fringeTileData->atlasX / (float)sprite->texture->width, fringeTileData->atlasY / (float)sprite->texture->height);
-				sprite->textureScale = Vector2(fringeTileData->atlasW / (float)sprite->texture->width, fringeTileData->atlasH / (float)sprite->texture->height);
+				RefreshScale();
+			}
+			else if (fringeTileData->atlasX != 0 || fringeTileData->atlasW != 0 || fringeTileData->atlasY != 0 || fringeTileData->atlasH != 0)
+			{
+				GetComponent<Sprite>()->textureOffset = Vector2(fringeTileData->atlasX / (float)GetComponent<Sprite>()->texture->width, fringeTileData->atlasY / (float)GetComponent<Sprite>()->texture->height);
+				GetComponent<Sprite>()->textureScale = Vector2(fringeTileData->atlasW / (float)GetComponent<Sprite>()->texture->width, fringeTileData->atlasH / (float)GetComponent<Sprite>()->texture->height);
 			}
 		}
 	}
@@ -187,8 +199,8 @@ namespace Monocle
 	{
 		Entity::Save(fileNode);
 		fileNode->Write("tileID", tileID);
-		if (sprite->blend != BLEND_ALPHA)
-			fileNode->Write("blend", (int)sprite->blend);
+		if (GetComponent<Sprite>()->blend != BLEND_ALPHA)
+			fileNode->Write("blend", GetComponent<Sprite>()->blend);
 	}
 
 	void FringeTile::Load(FileNode *fileNode)
@@ -199,7 +211,7 @@ namespace Monocle
 
 		int spriteBlend = BLEND_ALPHA;
 		fileNode->Read("blend", spriteBlend);
-		sprite->blend = (BlendType)spriteBlend;
+		GetComponent<Sprite>()->blend = (BlendType)spriteBlend;
 
 		RefreshTexture();
 	}

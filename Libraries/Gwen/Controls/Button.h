@@ -5,7 +5,9 @@
 */
 
 #pragma once
-#pragma once
+#ifndef GWEN_CONTROLS_BUTTON_H
+#define GWEN_CONTROLS_BUTTON_H
+
 #include "Gwen/TextObject.h"
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Label.h"
@@ -24,14 +26,17 @@ namespace Gwen
 				
 				virtual void Render( Skin::Base* skin );
 				virtual void OnMouseClickLeft( int x, int y, bool bDown );
+				virtual void OnMouseClickRight( int x, int y, bool bDown );
 				virtual void OnMouseDoubleClickLeft( int x, int y );
 				virtual bool OnKeySpace( bool bDown );
 
 				virtual void OnPress();
+				virtual void OnRightPress();
 
 				virtual void AcceleratePressed();
 
 				virtual bool IsDepressed() const { return m_bDepressed; }
+				virtual void SetDepressed( bool b );
 
 				//
 				// Buttons can be toggle type, which means that it is 
@@ -47,14 +52,16 @@ namespace Gwen
 				virtual void SetImage( const TextObject& strName, bool bCenter = false );
 
 				// You can use this to trigger OnPress directly from other controls using GWEN_CALL_EX
-				virtual void ReceiveEventPress( Base* pControl ){ OnPress(); }
+				virtual void ReceiveEventPress( Base* /*pControl*/ ){ OnPress(); }
 
 				virtual void SizeToContents();
 				virtual void Layout( Skin::Base* pSkin );
+				virtual void UpdateColours();
 
 			public:
 
 				Gwen::Event::Caller	onPress;
+				Gwen::Event::Caller	onRightPress;
 				Gwen::Event::Caller	onDown;
 				Gwen::Event::Caller	onUp;
 				Gwen::Event::Caller	onDoubleClick;
@@ -74,3 +81,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

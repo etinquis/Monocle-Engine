@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_HOOK_H
+#define GWEN_HOOK_H
 
 #include "Gwen/Gwen.h"
 #include <list>
@@ -19,7 +21,7 @@ namespace Gwen
 		{
 			public:
 
-				virtual bool OnControlClicked( Gwen::Controls::Base*, int iMouseX, int iMouseY ){ return false; };
+				virtual bool OnControlClicked( Gwen::Controls::Base*, int /*iMouseX*/, int /*iMouseY*/ ){ return false; };
 		};
 
 		typedef std::list<BaseHook*> HookList;
@@ -76,4 +78,5 @@ namespace Gwen
 
 }
 
+#endif
 #endif

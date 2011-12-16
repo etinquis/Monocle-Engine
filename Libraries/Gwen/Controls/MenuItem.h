@@ -5,11 +5,13 @@
 */
 
 #pragma once
-#include "Base.h"
+#ifndef GWEN_CONTROLS_MENUITEM_H
+#define GWEN_CONTROLS_MENUITEM_H
+
 #include "Gwen/BaseRender.h"
+#include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
 #include "Gwen/Controls/Menu.h"
-#include "Gwen/Controls/Symbol.h"
 
 namespace Gwen 
 {
@@ -28,6 +30,8 @@ namespace Gwen
 				virtual void Render( Skin::Base* skin );
 				virtual void Layout( Skin::Base* skin );
 
+				virtual void SizeToContents();
+
 				virtual void OnPress();
 
 				Menu* GetMenu();
@@ -41,8 +45,22 @@ namespace Gwen
 				bool OnStrip(){ return m_bOnStrip; }
 
 				virtual void SetCheckable( bool bCheck ) { m_bCheckable = bCheck; }
-				virtual void SetCheck( bool bCheck );
+				virtual void SetChecked( bool bCheck );
 				virtual bool GetChecked() { return m_bChecked; }
+
+				template <typename T>
+				MenuItem* SetAction( Gwen::Event::Handler* pHandler, T fn )
+				{
+					if ( m_Accelerator )
+					{
+						AddAccelerator( m_Accelerator->GetText(), fn, pHandler );
+					}
+
+					onMenuItemSelected.Add( pHandler, static_cast<Handler::Function>(fn) );
+					return this;
+				}
+
+				void SetAccelerator( const TextObject& strAccelerator );
 
 				Gwen::Event::Caller	onMenuItemSelected;
 				Gwen::Event::Caller	onChecked;
@@ -56,10 +74,12 @@ namespace Gwen
 				bool	m_bCheckable;
 				bool	m_bChecked;
 
+				Label*	m_Accelerator;
 				
 
-				Symbol::Arrow	*	m_SubmenuArrow;
+				Controls::Base	*	m_SubmenuArrow;
 		};
 	}
 
 }
+#endif

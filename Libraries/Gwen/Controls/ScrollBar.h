@@ -5,14 +5,13 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_SCROLLBAR_H
+#define GWEN_CONTROLS_SCROLLBAR_H
 
 #include "Gwen/Controls/Base.h"
-#include "Gwen/Controls/Button.h"
-#include "Gwen/Gwen.h"
-#include "Gwen/Skin.h"
-#include "Gwen/Controls/Dragger.h"
 #include "Gwen/Controls/ScrollBarBar.h"
 #include "Gwen/Controls/ScrollBarButton.h"
+#include "Gwen/Gwen.h"
 
 
 #define SCROLL_BUTTON_UP 0
@@ -31,15 +30,14 @@ namespace Gwen
 				
 				GWEN_CONTROL( BaseScrollBar, Base );
 
-				virtual void Layout(Skin::Base* skin);
-				virtual void Render(Skin::Base* skin);
+				virtual void Render( Skin::Base* skin );
 
 				virtual void SetBarSize(int size) = 0;
 				virtual int GetBarSize() = 0;
 				virtual int GetBarPos() = 0;
 
 				virtual void OnBarMoved( Controls::Base* control);
-				virtual void OnMouseClickLeft( int x, int y, bool bDown ){}
+				virtual void OnMouseClickLeft( int /*x*/, int /*y*/, bool /*bDown*/ ){}
 
 				virtual void ScrollToLeft(){}
 				virtual void ScrollToRight(){}
@@ -53,13 +51,15 @@ namespace Gwen
 				
 				virtual float CalculateScrolledAmount() { return 0; } 
 				virtual int CalculateBarSize() { return 0; }
-				virtual void SetScrolledAmount(float amount, bool forceUpdate);
+				virtual bool SetScrolledAmount(float amount, bool forceUpdate);
 				
 				virtual void SetContentSize(float size);
 				virtual void SetViewableContentSize(float size);
 
 				virtual int GetButtonSize() { return 0; }
 				virtual float GetScrolledAmount() { return m_fScrolledAmount; }
+
+				virtual bool IsHorizontal(){ return false; }
 
 				Gwen::Event::Caller	onBarMoved;
 
@@ -76,3 +76,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

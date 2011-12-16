@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_TREECONTROL_H
+#define GWEN_CONTROLS_TREECONTROL_H
 
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/TreeNode.h"
@@ -21,7 +23,7 @@ namespace Gwen
 
 				virtual void Render( Skin::Base* skin );
 
-				virtual void OnChildBoundsChanged( Rect oldChildBounds, Base* pChild );
+				virtual void OnChildBoundsChanged( Gwen::Rect oldChildBounds, Base* pChild );
 
 				ScrollControl* Scroller() { return m_ScrollControl; }
 
@@ -44,3 +46,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

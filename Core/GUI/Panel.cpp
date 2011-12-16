@@ -1,25 +1,29 @@
 #include "Panel.h"
 
+#include <Input.h>
+#include <Graphics.h>
+#include <Component/Entity/Transform.h>
+
 namespace Monocle
 {
     Panel *Panel::currentFocus = NULL;
 
     Panel::Panel(Vector2 pos, Vector2 sz) : size(sz)
     {
-        this->position = pos;
+		transform = AddComponent<Transform>(Transform::InitParams(pos));
     }
 
-    void Panel::setSize(int x, int y)
+    /*void Panel::SetSize(int x, int y)
     {
         size = Vector2(x,y);
-    }
+    }*/
 
-    void Panel::setSize(Vector2 newsize)
+    /*void Panel::SetSize(Vector2 newsize)
     {
         size = newsize;
-    }
+    }*/
 
-    bool Panel::hasFocus()
+    bool Panel::HasFocus()
     {
         return currentFocus == this;
     }
@@ -27,7 +31,8 @@ namespace Monocle
     void Panel::Update()
     {
         Entity::Update();
-        Vector2 localMousePos = Input::GetWorldMousePosition() - position;
+
+        Vector2 localMousePos = Input::GetWorldMousePosition() - transform->position;
         if(   localMousePos.x < size.x && localMousePos.y < size.y
            && Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT)
            && currentFocus != this)
@@ -43,7 +48,24 @@ namespace Monocle
         }
     }
 
-    void Panel::setFocus(Panel *panel)
+    void Panel::Render()
+    {
+        Entity::Render();
+    }
+
+    void Panel::ApplyMatrix()
+    {
+        Vector2 pos = Monocle::Graphics::GetScreenCenter();
+
+        Graphics::Translate(pos);
+
+//        if (followCamera == Vector2::zero || (Debug::render && Debug::selectedEntity != this && IsDebugLayer()))
+//			Graphics::Translate(position.x, position.y, depth);
+//		else
+//			Graphics::Translate(scene->GetCamera()->position * followCamera + position * (Vector2::one - followCamera));
+    }
+
+    void Panel::SetFocus(Panel *panel)
     {
         currentFocus = panel;
     }

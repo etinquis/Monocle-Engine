@@ -5,8 +5,10 @@
 */
 
 #pragma once
-
+#ifndef GWEN_CONTROLS_PROGRESSBAR_H
+#define GWEN_CONTROLS_PROGRESSBAR_H
 #include "Gwen/Controls/Base.h"
+#include "Gwen/Controls/Label.h"
 #include "Gwen/Gwen.h"
 #include "Gwen/Skin.h"
 
@@ -21,7 +23,7 @@ namespace Gwen
 
 				GWEN_CONTROL( ProgressBar, Label );
 
-				virtual void Render(Skin::Base* skin);
+				virtual void Render( Skin::Base* skin );
 
 				virtual void SetVertical()  { m_bHorizontal = false; }
 				virtual void SetHorizontal(){ m_bHorizontal = true; }
@@ -40,3 +42,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

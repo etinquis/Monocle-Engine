@@ -5,14 +5,16 @@
 
 namespace Monocle
 {
-	bool Debug::render = false;
-	bool Debug::showBounds = false;
-	Entity *Debug::selectedEntity;
-	int Debug::layerMin = -50;
-	int Debug::layerMax = 50;
+	//bool Debug::render = false;
+	//bool Debug::showBounds = false;
+	//Entity *Debug::selectedEntity;
+	//int Debug::layerMin = -50;
+	//int Debug::layerMax = 50;
+	const std::string Debug::ComponentName = "Debug";
 	
-	void Debug::Init()
+	void Debug::Init(Game* game)
 	{
+		GameComponent::Init(game);
 		render = false;
 	}
 
@@ -62,5 +64,13 @@ namespace Monocle
 	void Debug::Log(const std::string& string)
 	{
 		std::cout << string << std::endl;
+	}
+
+	void Debug::Update() {}
+	void Debug::Unload() {}
+
+	Debug *Debug::Clone() const
+	{
+		return new Debug(*this);
 	}
 }

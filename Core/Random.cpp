@@ -4,6 +4,8 @@
 
 namespace Monocle
 {
+	const std::string Random::ComponentName = "Random";
+
 	Random::Random()
 	{
 		srand(static_cast<unsigned int>(time(NULL)));
@@ -14,9 +16,14 @@ namespace Monocle
 		srand(seed);
 	}
 	
-	int Random::Range(int start, int end)
+	int Random::Int(int start, int end)
 	{
 		return start + (rand() % (end-start));
+	}
+
+	float Random::Float(float start, float end)
+	{
+		return ((((float) rand()) / (float) RAND_MAX) * (end-start)) + start;
 	}
 
 	float Random::Percent()
@@ -24,8 +31,8 @@ namespace Monocle
 		return ((float) rand()) / (float) RAND_MAX;
 	}
 
-	float Random::RangeFloat(float start, float end)
+	Random *Random::Clone() const
 	{
-		return ((((float) rand()) / (float) RAND_MAX) * (end-start)) + start;
+		return new Random(*this);
 	}
 }

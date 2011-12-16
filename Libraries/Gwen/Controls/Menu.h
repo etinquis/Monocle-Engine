@@ -5,8 +5,11 @@
 */
 
 #pragma once
-#include "Base.h"
+#ifndef GWEN_CONTROLS_MENU_H
+#define GWEN_CONTROLS_MENU_H
+
 #include "Gwen/BaseRender.h"
+#include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/MenuItem.h"
 #include "Gwen/Controls/ScrollControl.h"
 
@@ -27,19 +30,7 @@ namespace Gwen
 
 				virtual void Layout( Skin::Base* skin );
 
-				virtual MenuItem* AddItem( const Gwen::UnicodeString& strName, const UnicodeString& strIconName, Gwen::Event::Handler* pHandler = NULL, Gwen::Event::Handler::Function fn = NULL );
-
-				virtual MenuItem* AddItem( const Gwen::UnicodeString& strName, Gwen::Event::Handler* pHandler = NULL, Gwen::Event::Handler::Function fn = NULL )
-				{
-					return AddItem( strName, L"", pHandler, fn );
-				}
-
-				virtual MenuItem* AddItem( const Gwen::String& strName, const String& strIconName, Gwen::Event::Handler* pHandler = NULL, Gwen::Event::Handler::Function fn = NULL );
-
-				virtual MenuItem* AddItem( const Gwen::String& strName, Gwen::Event::Handler* pHandler = NULL, Gwen::Event::Handler::Function fn = NULL )
-				{
-					return AddItem( strName, "", pHandler, fn );
-				}
+				virtual MenuItem* AddItem( const TextObject& strName, const TextObject& strIconName = L"", const TextObject& strAccelerator = L"" );
 
 				virtual void AddDivider();
 
@@ -48,6 +39,7 @@ namespace Gwen
 				bool IsMenuOpen();
 				void ClearItems();
 
+				virtual void Open( unsigned int iPos );
 				virtual void Close();
 
 				virtual bool IsMenuComponent(){ return true; }
@@ -56,7 +48,9 @@ namespace Gwen
 				bool IconMarginDisabled() { return m_bDisableIconMargin; }
 				void SetDisableIconMargin( bool bDisable ) { m_bDisableIconMargin = bDisable; }
 
-				virtual bool ShouldClip(){ return false; }
+				bool DeleteOnClose() { return m_bDeleteOnClose; }
+				void SetDeleteOnClose( bool b ) { m_bDeleteOnClose = b; }
+
 
 			protected:
 
@@ -64,6 +58,7 @@ namespace Gwen
 				virtual void OnAddItem( MenuItem* item );
 			
 				bool m_bDisableIconMargin;
+				bool m_bDeleteOnClose;
 		};
 
 		class GWEN_EXPORT MenuDivider : public Base
@@ -80,3 +75,4 @@ namespace Gwen
 	}
 
 }
+#endif

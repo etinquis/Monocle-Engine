@@ -5,15 +5,22 @@
 */
 
 #pragma once
+#ifndef GWEN_INPUTHANDLER_H
+#define GWEN_INPUTHANDLER_H
+
 #include <queue>
 #include "Gwen/Gwen.h"
 
 namespace Gwen 
 {
-	class Controls::Base;
+	namespace Controls
+	{
+		class Base;
+	}
 
 	namespace Key
 	{
+		const unsigned char Invalid = 0;
 		const unsigned char Return = 1;
 		const unsigned char Backspace = 2;
 		const unsigned char Delete = 3;
@@ -56,8 +63,8 @@ namespace Gwen
 		bool GWEN_EXPORT IsRightMouseDown();
 		Gwen::Point GWEN_EXPORT GetMousePosition();
 
-		inline bool IsShiftDown(){ return IsKeyDown( Key::Shift ); }
-		inline bool IsControlDown(){ return IsKeyDown( Key::Control ); }
+		inline bool IsShiftDown(){ return IsKeyDown( Gwen::Key::Shift ); }
+		inline bool IsControlDown(){ return IsKeyDown( Gwen::Key::Control ); }
 
 		// Does copy, paste etc
 		bool GWEN_EXPORT DoSpecialKeys( Controls::Base* pCanvas, Gwen::UnicodeChar chr );
@@ -72,3 +79,4 @@ namespace Gwen
 		
 	};
 }
+#endif

@@ -5,8 +5,11 @@
 */
 
 #pragma once
-#include "Base.h"
+#ifndef GWEN_CONTROLS_TEXTBOX_H
+#define GWEN_CONTROLS_TEXTOBX_H
+
 #include "Gwen/BaseRender.h"
+#include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Label.h"
 #include "Gwen/Controls/ScrollControl.h"
 
@@ -19,7 +22,7 @@ namespace Gwen
 			GWEN_CONTROL( TextBox, Label );
 
 				virtual void Render( Skin::Base* skin );
-				virtual void RenderFocus( Gwen::Skin::Base* skin){};
+				virtual void RenderFocus( Gwen::Skin::Base* /*skin*/){};
 				virtual void Layout( Skin::Base* skin );
 
 				virtual bool OnChar( Gwen::UnicodeChar c );
@@ -38,6 +41,7 @@ namespace Gwen
 				virtual bool OnKeyEnd( bool bDown );
 
 				virtual bool AccelOnlyFocus() { return true; }
+
 				virtual void OnPaste( Gwen::Controls::Base* pCtrl );
 				virtual void OnCopy( Gwen::Controls::Base* pCtrl );
 				virtual void OnCut( Gwen::Controls::Base* pCtrl );
@@ -69,14 +73,17 @@ namespace Gwen
 			protected:
 
 				virtual void OnTextChanged();
-				virtual bool IsTextAllowed( const Gwen::UnicodeString& str, int iPos ){ return true; }
+				virtual bool IsTextAllowed( const Gwen::UnicodeString& /*str*/, int /*iPos*/ ){ return true; }
 
 				bool m_bSelectAll;
 
 				int m_iCursorPos;
 				int m_iCursorEnd;
 
-				Rect m_rectCursorBounds;
+				Gwen::Rect m_rectSelectionBounds;
+				Gwen::Rect m_rectCaretBounds;
+
+				float	m_fLastInputTime;
 		};
 
 		class GWEN_EXPORT TextBoxNumeric : public TextBox
@@ -94,3 +101,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

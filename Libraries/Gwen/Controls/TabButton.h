@@ -5,7 +5,9 @@
 */
 
 #pragma once
-#pragma once
+#ifndef GWEN_CONTROLS_TABBUTTON_H
+#define GWEN_CONTROLS_TABBUTTON_H
+
 #include "Gwen/Controls/Base.h"
 #include "Gwen/Controls/Button.h"
 
@@ -31,14 +33,17 @@ namespace Gwen
 				bool IsActive() { return m_Page && m_Page->Visible(); }
 
 				virtual bool DragAndDrop_ShouldStartDrag();
-				virtual void DragAndDrop_StartDragging( Gwen::DragAndDrop::Package* pPackage, int x, int y ){ SetHidden( true ); }
-				virtual void DragAndDrop_EndDragging( bool bSuccess, int x, int y ){ SetHidden( false ); }
+				virtual void DragAndDrop_StartDragging( Gwen::DragAndDrop::Package* /*pPackage*/, int /*x*/, int /*y*/ ){ SetHidden( true ); }
+				virtual void DragAndDrop_EndDragging( bool /*bSuccess*/, int /*x*/, int /*y*/ ){ SetHidden( false ); SetDepressed( false ); }
 
 				virtual bool OnKeyLeft( bool bDown );
 				virtual bool OnKeyRight( bool bDown );
 				virtual bool OnKeyUp( bool bDown );
 				virtual bool OnKeyDown( bool bDown );
-				
+
+				virtual void UpdateColours();
+
+				virtual bool ShouldClip(){ return false; }
 
 			private:
 
@@ -49,3 +54,4 @@ namespace Gwen
 
 	}
 }
+#endif

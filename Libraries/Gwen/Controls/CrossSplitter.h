@@ -1,7 +1,10 @@
 #pragma once
+#ifndef GWEN_CONTROLS_CROSSSPLITTER_H
+#define GWEN_CONTROLS_CROSSSPLITTER_H
+
 #include "Gwen/Gwen.h"
 #include "Gwen/Controls/Base.h"
-#include "SplitterBar.h"
+#include "Gwen/Controls/SplitterBar.h"
 
 namespace Gwen 
 {
@@ -57,3 +60,4 @@ namespace Gwen
 		};
 	}
 }
+#endif

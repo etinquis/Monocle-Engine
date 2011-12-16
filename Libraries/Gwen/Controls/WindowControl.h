@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#ifndef GWEN_CONTROLS_WINDOWCONTROL_H
+#define GWEN_CONTROLS_WINDOWCONTROL_H
 
 #include "Gwen/Gwen.h"
 #include "Gwen/Controls/Base.h"
@@ -21,6 +23,8 @@ namespace Gwen
 {
 	namespace Controls
 	{
+		class CloseButton;
+
 		class GWEN_EXPORT WindowControl : public ResizableControl
 		{
 			public:
@@ -31,7 +35,8 @@ namespace Gwen
 				virtual void Render( Skin::Base* skin );
 				virtual void RenderUnder( Skin::Base* skin );
 
-				virtual void SetTitle(Gwen::UnicodeString title);
+				virtual void SetTitle( Gwen::UnicodeString title );
+				virtual void SetTitle( Gwen::String title ){ SetTitle( Gwen::Utility::StringToUnicode( title ) ); }
 				virtual void SetClosable(bool closeable);
 
 				virtual void Touch();
@@ -42,18 +47,19 @@ namespace Gwen
 				void CloseButtonPressed( Gwen::Controls::Base* pFromPanel );
 				void RenderFocus( Gwen::Skin::Base* skin );
 				void SetDeleteOnClose( bool b ){ m_bDeleteOnClose = b; }
-				void MakeModal(bool invisible = false);
+
+				void MakeModal( bool bDrawBackground = true );
+				void DestroyModal();
 
 			protected:
 
 				ControlsInternal::Dragger* m_TitleBar;
 				Label* m_Title;
-				Button* m_CloseButton;
-
-				bool m_bInFocus;
+				CloseButton* m_CloseButton;
 				bool m_bDeleteOnClose;
 
 				ControlsInternal::Modal* m_Modal;
 		};
 	}
 }
+#endif
