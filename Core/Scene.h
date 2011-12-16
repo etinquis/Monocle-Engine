@@ -74,9 +74,11 @@ namespace Monocle
 		void Add(Entity* entity);
 
 		template<class T>
-		void AddEntity()
+		T *AddEntity()
 		{
-			entities.push_back( new T() );
+			T *ent = new T();
+			Add(ent);
+			return ent;
 		}
 
 		//! Remove an entity from the scene

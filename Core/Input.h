@@ -7,6 +7,8 @@
 #include <map>
 #include <list>
 
+#include "Events/EventHandler.h"
+
 namespace Monocle
 {
 	class Game;
@@ -28,18 +30,28 @@ namespace Monocle
         class EventHandler
         {
         public:
-            virtual ~EventHandler();
+			struct MouseEventArgs
+			{
+			public:
+				MouseEventArgs(const Vector2& pos) : mousePosition(pos) { }
+				Vector2 mousePosition;
+			};
+			struct MouseButtonEventArgs : public MouseEventArgs
+			{
+			public:
+				MouseButtonEventArgs(const Vector2& pos, MouseButton button) : MouseEventArgs(pos), button(button) {}
+				MouseButton button;
+			};
+
             virtual void OnKeyPress(Monocle::KeyCode key) {}
             virtual void OnKeyRelease(Monocle::KeyCode key) {}
             
-            virtual void OnMouseMove(Vector2 mousePosition) {}
-            virtual void OnMousePress(Vector2 mousePosition, MouseButton button) {}
-            virtual void OnMouseRelease(Vector2 mousePosition, MouseButton button) {}
+            virtual void OnMouseMove(const Vector2& mousePosition) {}
+            virtual void OnMousePress(const MouseButtonEventArgs& args) {}
+            virtual void OnMouseRelease(const MouseButtonEventArgs& args) {}
             virtual void OnMouseScroll(int scrollDelta) {}
         };
-	
 		
-
 		//Mouse API
 		//! get mouse position relative to virtual screen
 		static Vector2 GetMousePosition();
@@ -108,14 +120,7 @@ namespace Monocle
         static Touch *IsTouchInRect( Vector2 topLeft, Vector2 bottomRight, TouchPhase phase = TOUCH_PHASE_ANY );
         
         //! Determines if there is a touch with a specific index in the rectangle provided. This is for when you expect multi-touch.
-        static Touch *IsTouchWithIndexInRect( Vector2 topLeft, Vector2 bottomRight, TouchPhase phase = TOUCH_PHASE_ANY, int index = 0 );
-
-		//! Adds an event handler to the callback list.
-		static void AddHandler(EventHandler *handler);
-		//! Removes an event handler from the callback
-		//! list.
-		static void RemoveHandler(EventHandler *handler);
-		
+        static Touch *IsTouchWithIndexInRect( Vector2 topLeft, Vector2 bottomRight, TouchPhase phase = TOUCH_PHASE_ANY, int index = 0 );		
 
 		static void SetWorldMouseCamera(Camera *camera);
 
@@ -127,6 +132,8 @@ namespace Monocle
 		const std::string& GetName() { return "Input"; }
 
 		Input *Clone() const;
+
+		static EventEmitter<Input::EventHandler> Events;
 
 	protected:
 		friend class Game;
@@ -146,6 +153,5 @@ namespace Monocle
 		std::map<std::string, std::list<KeyCode> > keyMasks;
 		int lastMouseScroll;
 		Vector2 lastMousePos;
-		std::list < EventHandler* > handlers;
 	};
 }

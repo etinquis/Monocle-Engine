@@ -47,7 +47,7 @@ namespace Monocle
 
 	void Node::TakeOut()
 	{
-		if (GetParent())
+		/*if (GetParent())
 		{
 			/// HACK:
 			PathMesh *pathMesh = dynamic_cast<PathMesh*>(GetParent());
@@ -67,7 +67,7 @@ namespace Monocle
 					pathMesh->SetStartNode(NULL);
 				}
 			}
-		}
+		}*/
 
 		if (next)
 		{
@@ -93,20 +93,20 @@ namespace Monocle
 		{
 			Graphics::BindTexture(NULL);
 			
-			PathMesh *pathMesh = dynamic_cast<PathMesh*>(GetParent());
-			if (pathMesh)
-			{
-				//Color color = pathMesh->color;
-				//color.a = 1;
-				//if (variant == -1)
-				//{
-				//	Graphics::SetColor(color * 0.5f);
-				//}
-				//else
-				//{
-				//	//Graphics::SetColor(pathMesh->color);
-				//}
-			}
+			//PathMesh *pathMesh = dynamic_cast<PathMesh*>(GetParent());
+			//if (pathMesh)
+			//{
+			//	//Color color = pathMesh->color;
+			//	//color.a = 1;
+			//	//if (variant == -1)
+			//	//{
+			//	//	Graphics::SetColor(color * 0.5f);
+			//	//}
+			//	//else
+			//	//{
+			//	//	//Graphics::SetColor(pathMesh->color);
+			//	//}
+			//}
 
 
 			Vector2 pos = GetComponent<Transform>()->GetWorldPosition();

@@ -12,6 +12,8 @@ namespace Jumper
 	Player::Player(Vector2 pos) 
 		: Entity()
 	{
+		Input::Events.AddHandler(this);
+
 		transform = AddComponent<Transform>(Transform::InitParams(pos));
 		collidable = AddComponent<Collidable>();
 		sprite = AddComponent<Sprite>(Sprite::InitParams("Graphics/Player.png", FILTER_NONE, 64, 64));
@@ -27,7 +29,7 @@ namespace Jumper
 		jump = gravity * 0.4f;
 		maxSpeed = 400.0f;
 		leanAmount = 0.05f;
-	}	
+	}
 
 	void Player::Update()
 	{
@@ -132,6 +134,11 @@ namespace Jumper
 		Graphics::PopMatrix();
 	}
 
+	GameScene::GameScene()
+	{
+		Input::Events.AddHandler(this);
+	}
+
 	/// GAME SCENE
 	void GameScene::Begin()
 	{
@@ -161,20 +168,27 @@ namespace Jumper
 		Add(player);
 	}
 
+	void GameScene::OnKeyPress(KeyCode key)
+	{
+		if(key == KEY_SPACE)
+		{
+			SpawnPlayer(Vector2(400.0f, 300.0f));
+		}
+	}
+
+	void GameScene::OnMousePress(const Input::EventHandler::MouseButtonEventArgs& args)
+	{
+		if(args.button == MouseButton::MOUSE_BUTTON_LEFT)
+		{
+			SpawnPlayer(args.mousePosition);
+		}
+	}
+
 	void GameScene::Update()
 	{
 		Platform::Sleep(5);
 
 		Scene::Update();
-
-		if (Input::IsKeyPressed(KEY_SPACE))
-		{
-			SpawnPlayer(Vector2(400.0f, 300.0f));
-		}
-        if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        {
-			SpawnPlayer(Input::GetWorldMousePosition());
-        }
 
 		const std::list<Entity *> *entities = GetEntities();
 		for(std::list<Entity *>::const_iterator it = entities->begin(); it != entities->end(); it++)

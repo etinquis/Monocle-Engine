@@ -5,6 +5,7 @@
 #include "Color.h"
 
 #include "Component/EntityComponent.h"
+#include "Events/EventHandler.h"
 
 #include <string>
 #include <map>
@@ -19,8 +20,6 @@ namespace Monocle
 	class Collider;
 	class RectangleCollider;
 	class CircleCollider;
-	class Graphics;
-	class Graphic;
 	class CollisionData;
 	class FileNode;
 
@@ -69,6 +68,25 @@ namespace Monocle
 	public:
 		typedef std::map<std::string, EntityComponent*> ComponentList;
 
+		class EventHandler
+		{
+		public:
+			struct EntityEventArgs
+			{
+			public:
+				EntityEventArgs(Entity *entity) : entity(entity) { }
+				Entity *entity;
+			};
+			
+			virtual void AddedToScene(const EntityEventArgs &args) { }
+			virtual void RemovedFromScene(const EntityEventArgs &args) { }
+			virtual void Destroyed(const EntityEventArgs &args) { }
+			virtual void Saving(const EntityEventArgs &args) { }
+			virtual void Loading(const EntityEventArgs &args) { }
+		};
+
+		EventEmitter<EventHandler> Events;
+
 		Entity();
 		virtual ~Entity();
 		virtual Entity *Clone() const;
@@ -98,20 +116,6 @@ namespace Monocle
 		virtual void Removed();
 		//! Called when Entity is destroyed
 		virtual void Destroyed();
-        
-        //! Called to determine if the entity should be drawn
-        //virtual bool IsOnCamera( Camera *camera );
-
-		//! Associates this entity with the given tag
-		//void AddTag(const std::string& tag, bool save=false);
-		//! Checks whether this entity is associated with a given tag
-		//bool HasTag(const std::string& tag);
-		//! Removes a tag from this Entity
-		//void RemoveTag(const std::string& tag);
-		//! Gets the tag at the given offset from the list of tags
-		//const std::string& GetTag(int index);
-		//! Gets the number of tags associated with this entity
-		//int GetNumberOfTags();
 
 		//! Checks if this entity is on the given layer
 		bool IsLayer(int layer);
@@ -127,12 +131,10 @@ namespace Monocle
 		//! is our layer number in the debug render range?
 		bool IsDebugLayer();
 
-		//void SetGraphic(Graphic *graphic);
-
 		//! set parent entity
-		void SetParent(Entity *parent);
-		//! return pointer to parent entity
-		Entity *GetParent();
+		//void SetParent(Entity *parent);
+		////! return pointer to parent entity
+		//Entity *GetParent();
 		//! return pointer to the Scene we are currently in
 		Scene *GetScene();
 
@@ -157,18 +159,9 @@ namespace Monocle
 		}
 
 		bool HasComponent(const std::string &name);
-
-		// used by editors
-		//bool IsPositionInGraphic(const Vector2 &position);
 		
-		Vector2 GetWorldScale(const Vector2 &scale);
-		Vector2 GetLocalPosition(const Vector2 &worldPosition);
-		//void Invoke(void (*functionPointer)(void*), float delay);
-
-		//bool isVisible;
-		//Vector2 followCamera;
-
-		//Color color;
+		//Vector2 GetWorldScale(const Vector2 &scale);
+		//Vector2 GetLocalPosition(const Vector2 &worldPosition);
 		
 		template <typename T>
 		T* GetComponent()
@@ -185,20 +178,8 @@ namespace Monocle
 
 		bool isEnabled;
 
-		//void MatrixChain();
-
 	private:
 		int id;
-
-		Entity *parent;
-
-		// only for use by graphics
-		friend class Graphics;
-		Graphic* GetGraphic();
-		Graphic* graphic;
-
-		// only for use by scene
-		//friend class Scene;
 		
 		std::vector<EntityTagData> tags;
 		int layer;
@@ -210,24 +191,5 @@ namespace Monocle
         Vector2 lastPositionWhenCached;
 
 		ComponentList components;
-
-	public:
-		//Entity* GetChildEntityAtPosition(const Vector2 &position);
-		//template <class T>
-		//inline T *GetFirstChildOfType()
-		//{
-		//	T *t = NULL;
-		//	for (std::list<Entity*>::iterator i = children.begin(); i != children.end(); ++i)
-		//	{
-		//		t = dynamic_cast<T*>(*i);
-		//		if (t)
-		//		{
-		//			return t;
-		//		}
-		//	}
-		//	return NULL;
-		//}
-
-		//const std::list<Entity*>* GetChildren();
 	};
 }
