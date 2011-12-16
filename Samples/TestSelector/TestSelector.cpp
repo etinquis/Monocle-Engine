@@ -1,12 +1,12 @@
 #include "TestSelector.h"
 
 #include "AudioTest/AudioTest.h"
-#include "Flash/Flash.h"
+//#include "Flash/Flash.h"
 #include "Jumper/Jumper.h"
-#include "LevelEditor/LevelEditorTest.h"
-#include "Ogmo/Ogmo.h"
+//#include "LevelEditor/LevelEditorTest.h"
+//#include "Ogmo/Ogmo.h"
 #include "Pong/Pong.h"
-#include "PuppetTest/PuppetTest.h"
+//#include "PuppetTest/PuppetTest.h"
 //#include "ShaderEditor/ShaderEditor.h"
 //#include "GUITest/GUITest.h"
 
@@ -47,23 +47,23 @@ namespace TestSelector
         case 1:
             scene = new AudioTest::GameScene();
             break;
-        case 2:
+        /*case 2:
             scene = new Flash::TestScene();
-            assetPath = "Flash/"; break;
+            assetPath = "Flash/"; break;*/
         case 3:
             scene = new Jumper::GameScene();
             assetPath = "Jumper/"; break;
-        case 4:
+        /*case 4:
             scene = new Ogmo::World();
             assetPath = "Ogmo/"; break;
         case 5:
             scene = new LevelEditorTest::LevelScene();
-            assetPath = "LevelEditorTest/"; break;
+            assetPath = "LevelEditorTest/"; break;*/
         case 6:
             scene = new Pong::GameScene(); break;
-        case 7:
+        /*case 7:
             scene = new PuppetTest::TestScene();
-            assetPath = "PuppetTest/"; break;
+            assetPath = "PuppetTest/"; break;*/
         }
 
         if(scene) SceneProxy::ChangeScene(scene, assetPath);

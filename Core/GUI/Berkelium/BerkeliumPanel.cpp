@@ -31,7 +31,7 @@ namespace Monocle
             win->setDelegate(this);
             win->focus();
 
-			Monocle::Input::AddHandler(this);
+			Monocle::Input::Events.AddHandler(this);
 
             tex = new TextureAsset();
             tex->Load(NULL, size.x, size.y, Monocle::FILTER_NONE, false, false);
@@ -74,7 +74,7 @@ namespace Monocle
         {
             Panel::Update();
 
-            Vector2 localMousePos = Input::GetMousePosition() - ((Transform*)(*this)["Transform"])->position;
+            Vector2 localMousePos = Input::GetMousePosition() - transform->position;
 			Vector2 scale = Vector2( Platform::GetWidth() / (float)Graphics::GetVirtualWidth(), Platform::GetHeight() / (float)Graphics::GetVirtualHeight() );
 			Vector2 scaled = localMousePos * scale;
 

@@ -10,9 +10,7 @@ namespace Monocle
 
     Panel::Panel(Vector2 pos, Vector2 sz) : size(sz)
     {
-		AddComponent<Transform>();
-
-        ((Transform*)(*this)["Transform"])->position = pos;
+		transform = AddComponent<Transform>(Transform::InitParams(pos));
     }
 
     void Panel::SetSize(int x, int y)
@@ -34,7 +32,7 @@ namespace Monocle
     {
         Entity::Update();
 
-        Vector2 localMousePos = Input::GetWorldMousePosition() - ((Transform*)(*this)["Transform"])->position;
+        Vector2 localMousePos = Input::GetWorldMousePosition() - transform->position;
         if(   localMousePos.x < size.x && localMousePos.y < size.y
            && Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT)
            && currentFocus != this)

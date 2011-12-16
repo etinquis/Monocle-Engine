@@ -21,7 +21,7 @@ namespace Monocle
     namespace GUI
     {
         //! \brief An implementation of the Berkelium Chromium library in Monocle.
-        class BerkeliumPanel : public Monocle::Panel, public Berkelium::WindowDelegate, public Monocle::Input::EventHandler
+        class BerkeliumPanel : public Monocle::Panel, public Berkelium::WindowDelegate, public EventHandler<Input::EventHandler>
         {
         public:
             //! Default constructor.  Panel will be positioned at (0,0) and will fill the window.

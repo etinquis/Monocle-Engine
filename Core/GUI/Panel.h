@@ -28,6 +28,8 @@ namespace Monocle
         Vector2 size;
         static Panel *currentFocus;
         
+		Transform *transform;
+
         std::map<Monocle::KeyCode, wchar_t> inputMap;
     };
 }
