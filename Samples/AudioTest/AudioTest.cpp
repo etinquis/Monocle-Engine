@@ -7,20 +7,21 @@
 #include <math.h>
 
 //#define MONOCLE_AUDIOTEST_CROSSFADING
-#define MONOCLE_AUDIOTEST_LOOPER
-//#define MONOCLE_AUDIOTEST_SFX
+//#define MONOCLE_AUDIOTEST_LOOPER
+#define MONOCLE_AUDIOTEST_SFX
 
 namespace AudioTest
 {    
 	Text::Text(const std::string& text, FontAsset* font)
 		: Entity(), font(font), text(text)
 	{
+		transform = AddComponent<Transform>(Transform::InitParams(Vector2(50,50)));
 	}
 
 	void Text::Render()
 	{
 		Graphics::PushMatrix();
-		Graphics::Translate(position);
+		transform->ApplyMatrix();
 		Graphics::SetBlend(BLEND_ALPHA);
 		Graphics::SetColor(Color::white);
 		Graphics::BindFont(font);
@@ -134,7 +135,6 @@ namespace AudioTest
 		
 		FontAsset* font = Assets::RequestFont("AudioTest/LiberationSans-Regular.ttf", 25.0f);
         scText = new Text("L: Laser, C: Coin", font);
-        scText->position = Vector2(50, 50);
         Add(scText);
         
         laser = Assets::RequestAudio("AudioTest/Laser.wav");
@@ -199,7 +199,6 @@ namespace AudioTest
 		
 		FontAsset* font = Assets::RequestFont("AudioTest/LiberationSans-Regular.ttf", 25.0f);
         scText = new Text("Dual-worlds Audio Demo", font);
-        scText->position = Vector2(50, 50);
         Add(scText);
     
         // Make the deck, and it starts playing... (we need a play())
@@ -282,7 +281,6 @@ namespace AudioTest
 		
 		FontAsset* font = Assets::RequestFont("AudioTest/LiberationSans-Regular.ttf", 25.0f);
         scText = new Text("Dual-worlds Audio Demo", font);
-        scText->position = Vector2(50, 50);
         Add(scText);
         
 		// Make the deck, and it starts playing... (we need a play())

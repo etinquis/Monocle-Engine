@@ -15,6 +15,7 @@ namespace Monocle
     class FontAsset;
     
 	Assets *Assets::instance = NULL;
+	const std::string Assets::ComponentName = "Assets";
 
 	Assets::Assets()
 	{

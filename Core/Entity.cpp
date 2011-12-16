@@ -50,7 +50,7 @@ namespace Monocle
 	///=====
 
 	Entity::Entity(const Entity &entity)
-		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(entity.layer)//, tags(entity.tags)
+		: isEnabled(true), scene(NULL), layer(entity.layer)//, tags(entity.tags)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
         cachedWorldPosition = Vector2::zero;
@@ -68,7 +68,7 @@ namespace Monocle
 	}
 
 	Entity::Entity()
-		: isEnabled(true), scene(NULL), graphic(NULL), parent(NULL), layer(0)
+		: isEnabled(true), scene(NULL), layer(0)
 		//, willDie(false)
 	{
         lastPositionWhenCached = Vector2(-666.6666,-666.6666);
@@ -76,6 +76,8 @@ namespace Monocle
 		
 		AddComponent<Transform>();
 		AddComponent<Collidable>();
+
+		Events = EventEmitter<Entity::EventHandler>();
 	}
 
 	Entity::~Entity()
@@ -84,20 +86,16 @@ namespace Monocle
 
 	void Entity::Added()
 	{
+		Events.Emit<const EventHandler::EntityEventArgs&, &EventHandler::AddedToScene>(EventHandler::EntityEventArgs(this));
 	}
 
 	void Entity::Removed()
 	{
+		Events.Emit<const EventHandler::EntityEventArgs&, &EventHandler::RemovedFromScene>(EventHandler::EntityEventArgs(this));
 	}
 
 	void Entity::Destroyed()
 	{
-		if (graphic)
-		{
-			delete graphic;
-			graphic = NULL;
-		}
-
 		//DestroyChildren();
 
 		// clean up invokes
@@ -107,6 +105,14 @@ namespace Monocle
 			(*i) = NULL;
 		}
 		invokes.clear();
+
+		for (ComponentList::iterator i = components.begin(); i != components.end(); i++)
+		{
+			i->second->Unload();
+			delete i->second;
+		}
+
+
 	}
 
 	//void Entity::DestroyChildren()
@@ -348,11 +354,6 @@ namespace Monocle
 		return Collision::AddRectangleCollider(this, width, height, offset);
 	}
 	*/
-
-	Graphic* Entity::GetGraphic()
-	{
-		return graphic;
-	}
     
 //    bool Entity::IsOnCamera( Camera *camera )
 //    {
@@ -366,13 +367,13 @@ namespace Monocle
 //            // We use the greatest possible rectangle in case of rotations
 //            biggersize = MAX(w,h);
 //            
-//			Vector2 ul = ((Transform*)(*this)["Transform"])->position - (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
-//			Vector2 lr = ((Transform*)(*this)["Transform"])->position + (Vector2(biggersize,biggersize)*0.5f* ((Transform*)(*this)["Transform"])->scale);
+//			Vector2 ul = GetComponent<Transform>()->position - (Vector2(biggersize,biggersize)*0.5f* GetComponent<Transform>()->scale);
+//			Vector2 lr = GetComponent<Transform>()->position + (Vector2(biggersize,biggersize)*0.5f* GetComponent<Transform>()->scale);
 //            
-//            float vw = Graphics::GetVirtualWidth()* ((Transform*)(*camera)["Transform"])->scale.x;
-//            float vh = Graphics::GetVirtualHeight()* ((Transform*)(*camera)["Transform"])->scale.x;
-//            float cx = (((Transform*)(*camera)["Transform"])->position.x);
-//            float cy = (((Transform*)(*camera)["Transform"])->position.y);
+//            float vw = Graphics::GetVirtualWidth()* camera->GetComponent<Transform>()->scale.x;
+//            float vh = Graphics::GetVirtualHeight()* camera->GetComponent<Transform>()->scale.x;
+//            float cx = (camera->GetComponent<Transform>()->position.x);
+//            float cy = (camera->GetComponent<Transform>()->position.y);
 //            
 //            // As long as any one of the corners could be on screen we draw
 //            return !(
@@ -428,7 +429,7 @@ namespace Monocle
 	//}
 
 	/// TODO: write our own matrix functions to replace this stuff
-	Vector2 Entity::GetLocalPosition(const Vector2 &worldPosition)
+	/*Vector2 Entity::GetLocalPosition(const Vector2 &worldPosition)
 	{
 		Vector2 returnPos;
 		Graphics::PushMatrix();
@@ -447,9 +448,9 @@ namespace Monocle
 
 		for (std::list<Entity*>::iterator i = entityChain.begin(); i != entityChain.end(); ++i)
 		{
-			Graphics::Scale(1.0f/((Transform*)(**i)["Transform"])->scale);
-			Graphics::Rotate(-((Transform*)(**i)["Transform"])->rotation, 0, 0, 1);
-			Graphics::Translate(-((Transform*)(**i)["Transform"])->position);
+			Graphics::Scale(1.0f/(*i)->GetComponent<Transform>()->scale);
+			Graphics::Rotate(-(*i)->GetComponent<Transform>()->rotation, 0, 0, 1);
+			Graphics::Translate(-(*i)->GetComponent<Transform>()->position);
 		}
 
 		returnPos = Graphics::GetMatrixPosition();
@@ -457,7 +458,7 @@ namespace Monocle
 		Graphics::PopMatrix();
 
 		return returnPos;
-	}
+	}*/
 
 
 	//Entity* Entity::GetChildEntityAtPosition(const Vector2 &position)
@@ -539,15 +540,15 @@ namespace Monocle
 		/*fileNode->Read("followCamera", followCamera);*/
 	}
 
-	void Entity::SetParent(Entity *parent)
+	/*void Entity::SetParent(Entity *parent)
 	{
 		this->parent = parent;
-	}
+	}*/
 
-	Entity *Entity::GetParent()
+	/*Entity *Entity::GetParent()
 	{
 		return parent;
-	}
+	}*/
 
 	Scene* Entity::GetScene()
 	{
@@ -633,16 +634,6 @@ namespace Monocle
 		}
 	}
 	*/
-
-	EntityComponent* Entity::operator[](std::string component_name)
-	{
-		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
-		{
-			if(i->second->GetName() == component_name) return i->second;
-		}
-
-		return NULL;
-	}
 
 	Entity *Entity::Clone() const
 	{

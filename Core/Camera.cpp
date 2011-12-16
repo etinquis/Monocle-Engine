@@ -33,7 +33,7 @@ namespace Monocle
 	Camera::Camera()
 		: isVisible(true), frontLayer(-100), backLayer(100)
 	{
-		((Transform*)(*this)["Transform"])->position = Graphics::GetScreenCenter();
+		GetComponent<Transform>()->position = Graphics::GetScreenCenter();
 	}
 
 	void Camera::SetLayers(int backLayer, int frontLayer)

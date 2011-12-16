@@ -9,12 +9,9 @@
 
 namespace Monocle
 {
+	const std::string Input::ComponentName = "Input";
 	Input *Input::instance = NULL;
-
-    Input::EventHandler::~EventHandler()
-    {
-        Input::RemoveHandler(this);
-    }
+	EventEmitter<Input::EventHandler> Input::Events = EventEmitter<Input::EventHandler>();
 
 	Input::Input()
 	{
@@ -44,16 +41,14 @@ namespace Monocle
 			previousKeys[i] = currentKeys[i];
 			currentKeys[i] = Platform::keys[i];
 			
-			if(currentKeys[i] != previousKeys[i] && handlers.size() > 0)
+			if(currentKeys[i] != previousKeys[i])
 			{
 			    if( currentKeys[i] )
                 {
-                    for(std::list<EventHandler*>::iterator it = handlers.begin(); it != handlers.end(); it++)
-		                (*it)->OnKeyPress((KeyCode)i);
+					Events.Emit<KeyCode, &Input::EventHandler::OnKeyPress>( (KeyCode)i );
                 }else
                 {
-                    for(std::list<EventHandler*>::iterator it = handlers.begin(); it != handlers.end(); it++)
-		                (*it)->OnKeyRelease((KeyCode)i);
+					Events.Emit<KeyCode, &Input::EventHandler::OnKeyRelease>( (KeyCode)i );
                 }
 			}
 		}
@@ -63,33 +58,29 @@ namespace Monocle
 		    previousMouseButtons[i] = currentMouseButtons[i];
 			currentMouseButtons[i] = Platform::mouseButtons[i];
 			
-			if( previousMouseButtons[i] != currentMouseButtons[i] && handlers.size() > 0 )
+			if( previousMouseButtons[i] != currentMouseButtons[i])
 		    {
 		        Vector2 mousePos = GetMousePosition();
 		        if(currentMouseButtons[i])
 		        {
-		            for(std::list<EventHandler*>::iterator it = handlers.begin(); it != handlers.end(); it++)
-		                (*it)->OnMousePress(mousePos, (MouseButton)i);
+					Events.Emit<const EventHandler::MouseButtonEventArgs&, &Input::EventHandler::OnMousePress>(EventHandler::MouseButtonEventArgs( mousePos, (MouseButton)i ));
 		        }
 		        else
 		        {
-		            for(std::list<EventHandler*>::iterator it = handlers.begin(); it != handlers.end(); it++)
-		                (*it)->OnMouseRelease(mousePos, (MouseButton)i);
+					Events.Emit<const EventHandler::MouseButtonEventArgs&, &Input::EventHandler::OnMouseRelease>(EventHandler::MouseButtonEventArgs( mousePos, (MouseButton)i ));
 		        }
 		    }
 		}
 		
-		if(Platform::mouseScroll != 0 && handlers.size() > 0)
+		if(Platform::mouseScroll != 0)
 		{
-		    for(std::list<EventHandler*>::iterator it = handlers.begin(); it != handlers.end(); it++)
-                (*it)->OnMouseScroll(Platform::mouseScroll);
+			Events.Emit<int, &Input::EventHandler::OnMouseScroll>( Platform::mouseScroll );
 		}
 		lastMouseScroll = Platform::mouseScroll;
 		
-		if(lastMousePos != Platform::mousePosition && handlers.size() > 0)
+		if(lastMousePos != Platform::mousePosition)
 		{
-		    for(std::list<EventHandler*>::iterator it = handlers.begin(); it != handlers.end(); it++)
-                (*it)->OnMouseMove(Platform::mousePosition);
+			Events.Emit<const Vector2&, &Input::EventHandler::OnMouseMove>( Platform::mousePosition );
 		}
 		lastMousePos = Platform::mousePosition;
         
@@ -158,8 +149,8 @@ namespace Monocle
 		adjustedToCameraMousePosition += adjust;
 
 		Vector2 diff = (adjustedToCameraMousePosition * invResScale) - Graphics::GetScreenCenter();
-		Vector2 cameraZoom = ((Transform*)(*camera)["Transform"])->scale;
-		return ((Transform*)(*camera)["Transform"])->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
+		Vector2 cameraZoom = camera->GetComponent<Transform>()->scale;
+		return camera->GetComponent<Transform>()->position + (diff * Vector2(1/cameraZoom.x, 1/cameraZoom.y));
 	}
 
 	void Input::SetWorldMouseCamera(Camera *camera)
@@ -256,16 +247,6 @@ namespace Monocle
 				return true;
 		}
 		return false;
-	}
-	
-	void Input::AddHandler(EventHandler *handler)
-	{
-	    instance->handlers.push_back(handler);
-	}
-	
-	void Input::RemoveHandler(EventHandler *handler)
-	{
-	    instance->handlers.remove(handler);
 	}
     
     Touch *Input::GetTouchWithStatus( TouchPhase phase, int index )

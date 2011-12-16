@@ -19,7 +19,7 @@ namespace Monocle
 		: Entity(), id(id), name(name), puppet(NULL)
 	{
 		AddComponent<Sprite>();
-		//((Sprite*)(*this)["Sprite"])->Load(imageFilename);
+		//GetComponent<Sprite>()->Load(imageFilename);
 	}
 
 	Part::Part()
@@ -51,17 +51,17 @@ namespace Monocle
 		
 		fileNode->Write("atlasEntry", atlasEntry);
 
-		if (((Sprite*)(*this)["Sprite"])->texture)
+		if (GetComponent<Sprite>()->texture)
 		{
 			if (atlasEntry == "")
 			{
-				fileNode->Write("image", ((Sprite*)(*this)["Sprite"])->texture->GetName());
-				fileNode->Write("width", ((Sprite*)(*this)["Sprite"])->width);
-				fileNode->Write("height", ((Sprite*)(*this)["Sprite"])->height);
+				fileNode->Write("image", GetComponent<Sprite>()->texture->GetName());
+				fileNode->Write("width", GetComponent<Sprite>()->width);
+				fileNode->Write("height", GetComponent<Sprite>()->height);
 			}
 			
-			if (((Transform*)(*this)["Transform"])->position != Vector2::zero)
-				fileNode->Write("offset", ((Transform*)(*this)["Transform"])->position);
+			if (GetComponent<Transform>()->position != Vector2::zero)
+				fileNode->Write("offset", GetComponent<Transform>()->position);
 		}
 
 		int layer = GetLayer();
@@ -90,25 +90,25 @@ namespace Monocle
 				textureAtlasEntry = textureAtlas->GetEntryByName(atlasEntry);
 				if (textureAtlasEntry)
 				{
-					//((Sprite*)(*this)["Sprite"])->Load(textureAtlas->GetImageName());
-					((Sprite*)(*this)["Sprite"])->textureOffset = textureAtlasEntry->GetTextureOffset();
-					((Sprite*)(*this)["Sprite"])->textureScale = textureAtlasEntry->GetTextureScale();
-					printf("textureOffset: (%f, %f) textureScale: (%f, %f)\n", ((Sprite*)(*this)["Sprite"])->textureOffset.x, ((Sprite*)(*this)["Sprite"])->textureOffset.y, ((Sprite*)(*this)["Sprite"])->textureScale.x, ((Sprite*)(*this)["Sprite"])->textureScale.y);
-					((Sprite*)(*this)["Sprite"])->width = textureAtlasEntry->GetWidth();
-					((Sprite*)(*this)["Sprite"])->height = textureAtlasEntry->GetHeight();
+					//GetComponent<Sprite>()->Load(textureAtlas->GetImageName());
+					GetComponent<Sprite>()->textureOffset = textureAtlasEntry->GetTextureOffset();
+					GetComponent<Sprite>()->textureScale = textureAtlasEntry->GetTextureScale();
+					printf("textureOffset: (%f, %f) textureScale: (%f, %f)\n", GetComponent<Sprite>()->textureOffset.x, GetComponent<Sprite>()->textureOffset.y, GetComponent<Sprite>()->textureScale.x, GetComponent<Sprite>()->textureScale.y);
+					GetComponent<Sprite>()->width = textureAtlasEntry->GetWidth();
+					GetComponent<Sprite>()->height = textureAtlasEntry->GetHeight();
 				}
 			}
 		}
 
-		if (((Sprite*)(*this)["Sprite"])->texture == NULL)
+		if (GetComponent<Sprite>()->texture == NULL)
 		{
 			std::string image;
 			fileNode->Read("image", image);
 
-			//((Sprite*)(*this)["Sprite"])->Load(image);
+			//GetComponent<Sprite>()->Load(image);
 		}
 		
-		if (((Sprite*)(*this)["Sprite"])->texture != NULL)
+		if (GetComponent<Sprite>()->texture != NULL)
 		{
 			if (atlasEntry == "")
 			{
@@ -118,16 +118,16 @@ namespace Monocle
 
 				if (width != -1)
 				{
-					((Sprite*)(*this)["Sprite"])->width = width;
+					GetComponent<Sprite>()->width = width;
 				}
 
 				if (height != -1)
 				{
-					((Sprite*)(*this)["Sprite"])->height = height;
+					GetComponent<Sprite>()->height = height;
 				}
 			}
 
-			fileNode->Read("offset", ((Transform*)(*this)["Transform"])->position);
+			fileNode->Read("offset", GetComponent<Transform>()->position);
 		}
 
 		int layer = 0;

@@ -1,12 +1,11 @@
 #pragma once
 
 #include "Debug.h"
+#include "Component/Entity/Transform.h"
 #include <list>
 #include <map>
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include "Entities.h"
 
 ///TODO: Replace with xml wrapper
 class TiXmlElement;
@@ -35,7 +34,7 @@ namespace Monocle
 	class Scene
 	{
 	public:
-		typedef std::unordered_map<std::string, SceneComponent*> ComponentList;
+		typedef std::map<std::string, SceneComponent*> ComponentList;
 
 		Scene();
 		~Scene();
@@ -75,9 +74,11 @@ namespace Monocle
 		void Add(Entity* entity);
 
 		template<class T>
-		void AddEntity()
+		T *AddEntity()
 		{
-			entities.AddEntity<T>();
+			T *ent = new T();
+			Add(ent);
+			return ent;
 		}
 
 		//! Remove an entity from the scene
@@ -141,12 +142,10 @@ namespace Monocle
 		}
 
 		template <typename T>
-		T* GetComponent(std::string component_name)
+		T* GetComponent()
 		{
-			return (T*)(*this)[component_name];
+			return (T*)(*this)[T::ComponentName];
 		}
-
-		SceneComponent* operator[](std::string component_name);
 
 	protected:
 		// scene has a game pointer

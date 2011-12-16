@@ -204,6 +204,8 @@ namespace Monocle
 		static int GetHeight();
         static PlatformOrientation GetOrientation();
 
+		static void Sleep(int microsecs);
+
 		static bool keys[KEY_MAX];
 		static bool mouseButtons[MOUSE_BUTTON_MAX];
 		static Vector2 mousePosition;

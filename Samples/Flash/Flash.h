@@ -1,6 +1,5 @@
 #include <Monocle.h>
 #include <TextureAsset.h>
-#include <Graphics/Sprite.h>
 
 #include <string>
 #include <vector>
@@ -62,7 +61,6 @@ namespace Flash
 		std::vector<Frame> frames;
 
 		Entity *entity;
-		Sprite *sprite;
 	};
 
 	class Animation

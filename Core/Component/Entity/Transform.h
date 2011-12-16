@@ -4,8 +4,6 @@
 #include "../../Vector2.h"
 #include "../../Vector3.h"
 
-#define MONOCLE_ENTITYCOMPONENT_TRANSFORM "Transform"
-
 namespace Monocle
 {
 	//!
@@ -14,6 +12,19 @@ namespace Monocle
 	class Transform : public EntityComponent
 	{
 	public:
+		typedef class TransformInitParams
+		{
+		public:
+			Vector2 position;
+			float rotation;
+			Vector2 scale;
+
+			TransformInitParams(Vector2 &position = Vector2::zero, float rotation = 0, Vector2 &scale = Vector2::one)
+				: position(position), rotation(rotation), scale(scale) {}
+		} InitParams;
+
+		static const std::string ComponentName;
+
 		Transform();
 		Transform(const Transform &transform);
 
@@ -21,7 +32,9 @@ namespace Monocle
 		float rotation;
 		Vector2 scale;
         
-		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_TRANSFORM; }
+		const std::string& GetName() { return Transform::ComponentName; }
+
+		void ParamInit(Entity* entity, const InitParams& params);
 
 		void Update();
 		Transform* Clone() const { return new Transform(*this); }
@@ -32,7 +45,7 @@ namespace Monocle
         //! Retrieves a direction vector based on the rotation value.
         Vector2 GetDirectionVector();
 
-		void LerpTransform(Transform *prev, Transform *next, float percent);
+		//void LerpTransform(Transform *prev, Transform *next, float percent);
 
 		void ApplyMatrix();
 		Vector2 GetWorldPosition(const Vector2 &position = Vector2::zero);

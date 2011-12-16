@@ -39,7 +39,7 @@ namespace Monocle
 		if (pathCollider)
 			delete pathCollider;
 
-		((Collidable *)(*this)["Collidable"])->SetCollider(pathCollider = new PathCollider(startNode, radius));
+		GetComponent<Collidable>()->SetCollider(pathCollider = new PathCollider(startNode, radius));
 	}
 
 	//void PathMesh::Adopted(Entity *entity)
@@ -81,10 +81,10 @@ namespace Monocle
 			Graphics::BindTexture(texture);
 			Graphics::PushMatrix();
 
-			Graphics::Translate(((Transform*)(*this)["Transform"])->position.x, ((Transform*)(*this)["Transform"])->position.y, /*depth*/ 0);
+			Graphics::Translate(GetComponent<Transform>()->position.x, GetComponent<Transform>()->position.y, /*depth*/ 0);
 			
-			Graphics::Rotate(((Transform*)(*this)["Transform"])->rotation, 0, 0, 1);
-			Graphics::Scale(((Transform*)(*this)["Transform"])->scale);
+			Graphics::Rotate(GetComponent<Transform>()->rotation, 0, 0, 1);
+			Graphics::Scale(GetComponent<Transform>()->scale);
 
 			if (nodes.size() > 0){
                 //if (zSprite)

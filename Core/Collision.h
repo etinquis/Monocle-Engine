@@ -34,8 +34,9 @@ namespace Monocle
         //! \param tag The tag of the Colliders to be checked for intersection
         //! \param collisionData [out] The data resulting from the collision
 		static Collider* LineCast(const Vector2 &start, const Vector2 &end, float radius, const std::string &tag, CollisionData *collisionData = NULL);
-
-		std::string GetName() { return "Collision"; }
+		
+		static const std::string ComponentName;
+		const std::string& GetName() { return Collision::ComponentName; }
 
 		void Init(Game* game) { GameComponent::Init(game); }
 		void Update() { }

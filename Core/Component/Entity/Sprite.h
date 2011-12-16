@@ -1,8 +1,13 @@
 #pragma once
 
 #include "Graphic.h"
+#include "../../Asset.h"
 #include "../../Vector2.h"
 #include "../../Color.h"
+
+#include "Graphics.h"
+
+#include "../../Entity.h"
 
 #include <string>
 
@@ -10,26 +15,47 @@
 
 namespace Monocle
 {
-	class Entity;
+	class Transform;
 	enum BlendType;
 	enum FilterType;
 	class TextureAsset;
 	class Color;
-	
-	class Sprite : public Graphic
+
+	class Sprite : public EntityComponent, public EventHandler<Entity::EventHandler>
 	{
 	public:
+		typedef class SpriteInitParams
+		{
+		public:
+			std::string filename;
+			FilterType filter;
+			float width;
+			float height;
+
+			SpriteInitParams(const std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0)
+			{
+				this->filename = filename;
+				this->filter = filter;
+				this->width = width;
+				this->height = height;
+			}
+
+		} InitParams;
+
 		Sprite();
 		~Sprite();
+		
+		static const std::string ComponentName;
 
-		//void Load(const std::string &filename, FilterType filter = FILTER_LINEAR, float width=-1.0, float height=-1.0);
-		//void Load(const Color& color, float w=-1.0, float h=-1.0);
+		const std::string& GetName() { return Sprite::ComponentName; }
+		Sprite *Clone () const { return new Sprite(*this); }
 
-		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_SPRITE; }
-		Sprite * Clone () const { return new Sprite(*this); }
+		void Init(Entity *entity);
+		void Unload();
+		void ParamInit(Entity *entity, const InitParams& params);
 
 		void Update();
-		void Render(Entity *entity);
+		void Render();
 		void GetWidthHeight(float *width, float *height);
 
 		TextureAsset *texture;
@@ -56,5 +82,10 @@ namespace Monocle
 	protected:
 		virtual void Save(FileNode *myNode);
 		virtual void Load(FileNode *myNode);
+
+		virtual void LoadGraphic(const std::string &filename, FilterType filter, float width, float height);
+	private:
+		Transform *transform;
 	};
+
 }

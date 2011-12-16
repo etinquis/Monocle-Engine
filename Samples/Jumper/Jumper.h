@@ -1,6 +1,7 @@
 #include <Monocle.h>
-#include <Graphics/Sprite.h>
+#include <Component/Entity/Sprite.h>
 #include <Level/Level.h>
+#include <Input.h>
 
 // by @NoelFB
 using namespace Monocle;
@@ -14,31 +15,30 @@ namespace Monocle
 
 namespace Jumper
 {
-	class Player : public Entity
+	class Player : public Entity, public EventHandler<Input::EventHandler>
 	{
 	public:
 		Player(Vector2 pos);
 		void Update();
 		float Sign(float i, float to);
 
-		KeyCode keyUp;
-		KeyCode keyRight;
-		KeyCode keyLeft;
-
 		Vector2 velocity;
 		float gravity;
 		float speed;
-		bool onGround;
 		float jump;
 		float maxSpeed;
-		bool isJumping;
 
 		float leanAmount; // how much does he lean into his left/right movement?
-
-	private:
+		
 		Transform *transform;
 		Collidable *collidable;
 		Sprite *sprite;
+	private:
+		struct Player_State
+		{
+			bool jumping;
+			bool onGround;
+		} state;
 	};
 
 	
@@ -51,17 +51,26 @@ namespace Jumper
 
 		//temporary, replace base class with Sprite eventually
 		float width, height;
+
+	private:
+		Transform *transform;
+		Collidable *collidable;
 	};
 
-	class GameScene : public Scene
+	class GameScene : public Scene, public EventHandler<Input::EventHandler>
 	{
 	public:
 		Player *player;
 		Wall *wall;
 
+		GameScene();
+
 		void Begin();
 		void End();
 		void Update();
+
+		void OnKeyPress(KeyCode key);
+		void OnMousePress(const Input::EventHandler::MouseButtonEventArgs& args);
 
 		void SpawnPlayer(Vector2 pos);
 	};

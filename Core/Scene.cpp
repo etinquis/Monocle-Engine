@@ -13,7 +13,7 @@ namespace Monocle
 		: isVisible(true), isPaused(false), activeCamera(NULL), mainCamera(NULL)
 	{
 		Camera *camera = new Camera();
-		((Transform*)(*camera)["Transform"])->position = Graphics::GetScreenCenter();
+		camera->GetComponent<Transform>()->position = Graphics::GetScreenCenter();
 		AddCamera(camera);
 		SetMainCamera(camera);
 	}
@@ -328,7 +328,7 @@ namespace Monocle
 		{
 			if ((*i) != ignoreEntity)
 			{
-				Vector2 diff = ((Transform *)(**i)["Transform"])->position - position;
+				Vector2 diff = (*i)->GetComponent<Transform>()->position - position;
 				float sqrMag = diff.GetSquaredMagnitude();
 				if (smallestSqrMag <= -1 || sqrMag < smallestSqrMag)
 				{
@@ -378,7 +378,7 @@ namespace Monocle
 			{
 				if ((*i) != ignoreEntity)
 				{
-					Vector2 diff = ((Transform *)(**i)["Transform"])->GetWorldPosition() - position;
+					Vector2 diff = (*i)->GetComponent<Transform>()->GetWorldPosition() - position;
 					if (diff.IsInRange(ENTITY_CONTROLPOINT_SIZE))
 					{
 						float sqrMag = diff.GetSquaredMagnitude();
@@ -456,16 +456,6 @@ namespace Monocle
 		//		}
 		//	}
 		//}
-		return NULL;
-	}
-
-	SceneComponent* Scene::operator[](std::string component_name)
-	{
-		for(ComponentList::iterator i = components.begin(); i != components.end(); i++)
-		{
-			if(i->second->GetName() == component_name) return i->second;
-		}
-
 		return NULL;
 	}
 

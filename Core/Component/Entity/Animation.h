@@ -3,21 +3,38 @@
 #include "../EntityComponent.h"
 #include <set>
 #include <string>
-#include <unordered_map>
-
-#define MONOCLE_ENTITYCOMPONENT_ANIMATION "Animation"
+#include <map>
+#include <list>
 
 namespace Monocle
 {
 	class Anim
 	{
-
+		public:
+		Anim(const std::string &name, int start, int end, float speed, bool loop=true);
+        //Anim(const std::string &name, ZwopSprite *firstSprite, int numFrames, float speed, bool loop=true);
+		Anim();
+		bool isPlaying;
+		const std::string name;
+		float frame;
+		float speed;
+		int start;
+		int end;
+        bool loop;
+        
+        //ZwopSprite *firstSprite;
 	};
 
 	class Animation : public EntityComponent
 	{
 	public:
-		typedef std::unordered_map< std::string, std::list<Anim> > AnimationList;
+		typedef std::map< std::string, std::list<Anim> > AnimationList;
+		typedef class AnimationInitParams
+		{
+
+		} InitParams;
+
+		static const std::string ComponentName;
 
 		Animation();
 		virtual ~Animation();
@@ -26,7 +43,7 @@ namespace Monocle
 		virtual void Update();
 		virtual void Unload();
 
-		std::string GetName() { return MONOCLE_ENTITYCOMPONENT_ANIMATION; }
+		const std::string& GetName() { return Animation::ComponentName; }
 
 		Animation *Clone() const;
 	protected:

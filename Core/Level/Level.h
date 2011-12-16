@@ -37,8 +37,9 @@ namespace Monocle
 	{
 	public:
 		Level();
-
-		std::string GetName() { return "Level"; }
+		
+		static const std::string ComponentName;
+		const std::string& GetName() { return Level::ComponentName; }
 		void Init(Game* game);
 		void Update() { }
 		void Unload() { }
@@ -65,57 +66,57 @@ namespace Monocle
 
 		template <class T> static void SaveEntitiesOfType(const std::string &name, TiXmlElement *element, Entity *fromEntity=NULL)
 		{
-			XMLFileNode xmlFileNode;
+			// XMLFileNode xmlFileNode;
 
-			const std::list<Entity*> *entities;
-			//if (fromEntity)
-			//	entities = fromEntity->GetChildren();
-			//else
-			entities = instance->scene->GetEntities();
+			// const std::list<Entity*> *entities;
+			// //if (fromEntity)
+			// //	entities = fromEntity->GetChildren();
+			// //else
+			// entities = instance->scene->GetEntities();
 
-			for (std::list<Entity*>::const_iterator i = entities->begin(); i != entities->end(); ++i)
-			{
-				Entity *entity = *i;
-				T *t = dynamic_cast<T*>(entity);
-				if (t && !t->GetParent())
-				{
-					TiXmlElement saveElement(name);
-					xmlFileNode.element = &saveElement;
+			// for (std::list<Entity*>::const_iterator i = entities->begin(); i != entities->end(); ++i)
+			// {
+			// 	Entity *entity = *i;
+			// 	T *t = dynamic_cast<T*>(entity);
+			// 	if (t && !t->GetParent())
+			// 	{
+			// 		TiXmlElement saveElement(name);
+			// 		xmlFileNode.element = &saveElement;
 
-					//instance->SaveEntities(&saveElement, entity);
+			// 		//instance->SaveEntities(&saveElement, entity);
 
-					entity->Save(&xmlFileNode);
+			// 		entity->Save(&xmlFileNode);
 
-					element->InsertEndChild(saveElement);
-				}
-			}
+			// 		element->InsertEndChild(saveElement);
+			// 	}
+			// }
 		}
 
 		template <class T> static void LoadEntitiesOfType(const std::string &name, TiXmlElement *element, Entity *intoEntity=NULL)
 		{
-			XMLFileNode xmlFileNode;
+			// XMLFileNode xmlFileNode;
 
-			TiXmlElement *eEntity = element->FirstChildElement(name);
-			while (eEntity)
-			{
-				T *t = new T();
+			// TiXmlElement *eEntity = element->FirstChildElement(name);
+			// while (eEntity)
+			// {
+			// 	T *t = new T();
 
-				//printf("made a new %s\n", name.c_str());
+			// 	//printf("made a new %s\n", name.c_str());
 
-				Entity *entity = dynamic_cast<Entity*>(t);
-				//if (intoEntity == NULL)
-				instance->scene->Add(entity);
-				entity->SetParent(intoEntity);
-				//else
-				//intoEntity->Add(entity);
+			// 	Entity *entity = dynamic_cast<Entity*>(t);
+			// 	//if (intoEntity == NULL)
+			// 	instance->scene->Add(entity);
+			// 	entity->SetParent(intoEntity);
+			// 	//else
+			// 	//intoEntity->Add(entity);
 
-				//instance->LoadEntities(eEntity, entity);
+			// 	//instance->LoadEntities(eEntity, entity);
 
-				xmlFileNode.element = eEntity;
-				entity->Load(&xmlFileNode);
+			// 	xmlFileNode.element = eEntity;
+			// 	entity->Load(&xmlFileNode);
 
-				eEntity = eEntity->NextSiblingElement(name);
-			}
+			// 	eEntity = eEntity->NextSiblingElement(name);
+			// }
 		}
 
 	private:
