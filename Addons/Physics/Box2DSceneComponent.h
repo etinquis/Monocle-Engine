@@ -24,7 +24,8 @@ namespace Monocle
 
 		void SetGravity(Vector2 grav);
 
-		std::string GetName() { return MONOCLE_GAMECOMPONENT_BOX2D; }
+		static const std::string ComponentName;
+		const std::string& GetName() { return Box2DSceneComponent::ComponentName; }
 		b2Body *CreateBody(b2BodyDef &bodydef);
 		void DestroyBody(b2Body *body);
 

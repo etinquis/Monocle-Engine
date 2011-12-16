@@ -18,7 +18,7 @@ namespace Monocle
 					Entity();
 					AddComponent<Transform>();
 
-					transform = GetComponent<Transform>("Transform");
+					transform = GetComponent<Transform>();
 
 					transform->position = Vector2(400, 300);
 				}
@@ -61,7 +61,7 @@ namespace Monocle
 					Scene();
 					AddComponent<Box2DSceneComponent>();
 
-					GetComponent<Box2DSceneComponent>("Box2D")->SetGravity(Vector2(0,-9.8));
+					GetComponent<Box2DSceneComponent>()->SetGravity(Vector2(0,-9.8));
 				}
 
 				void Begin()

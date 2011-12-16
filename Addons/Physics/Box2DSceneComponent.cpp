@@ -4,6 +4,8 @@
 
 namespace Monocle
 {
+	const std::string Box2DSceneComponent::ComponentName = "Box2DScene";
+
 	Box2DSceneComponent::Box2DSceneComponent()
 		: world(gravity)
 	{

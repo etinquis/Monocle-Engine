@@ -6,34 +6,43 @@
 
 namespace Monocle
 {
+	const std::string Box2DEntity::ComponentName = "Box2DEntity";
+
 	Box2DEntity::Box2DEntity()
 		: body(NULL)
 	{
-		AddDependency("Transform");
+		AddDependency<Transform>();
 	}
 
 	Box2DEntity::~Box2DEntity()
 	{
-		world->DestroyBody(body);
+		
 	}
 
 	void Box2DEntity::Init(Entity *ent)
 	{
 		EntityComponent::Init(ent);
+	}
 
-		Scene *scene = this->GetEntity()->GetScene();
-		world = (Box2DSceneComponent*)(*scene)["Box2D"];
+	void Box2DEntity::AddedToScene(const Entity::EventHandler::EntityEventArgs& args)
+	{
+		Scene *scene = entity->GetScene();
+		world = scene->GetComponent<Box2DSceneComponent>();
 
-		Vector2 pos = GetEntity()->GetComponent<Transform>("Transform")->position;
+		trans = GetEntity()->GetComponent<Transform>();
+		Vector2 pos = trans->position;
 		bodydef.position = b2Vec2(pos.x, pos.y);
 
 		body = world->CreateBody(bodydef);
 	}
 
+	void Box2DEntity::Destroyed(const Entity::EventHandler::EntityEventArgs& args)
+	{
+		world->DestroyBody(body);
+	}
+
 	void Box2DEntity::Update()
 	{
-		Transform *trans = GetEntity()->GetComponent<Transform>("Transform");
-
 		const b2Vec2 pos = body->GetPosition();
 
 		trans->position = Vector2(pos.x, pos.y);
