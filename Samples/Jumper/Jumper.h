@@ -1,6 +1,7 @@
 #include <Monocle.h>
 #include <Component/Entity/Sprite.h>
 #include <Level/Level.h>
+#include <Input.h>
 
 // by @NoelFB
 using namespace Monocle;
@@ -14,7 +15,7 @@ namespace Monocle
 
 namespace Jumper
 {
-	class Player : public Entity
+	class Player : public Entity, public EventHandler<Input::EventHandler>
 	{
 	public:
 		Player(Vector2 pos);
@@ -56,15 +57,20 @@ namespace Jumper
 		Collidable *collidable;
 	};
 
-	class GameScene : public Scene
+	class GameScene : public Scene, public EventHandler<Input::EventHandler>
 	{
 	public:
 		Player *player;
 		Wall *wall;
 
+		GameScene();
+
 		void Begin();
 		void End();
 		void Update();
+
+		void OnKeyPress(KeyCode key);
+		void OnMousePress(const Input::EventHandler::MouseButtonEventArgs& args);
 
 		void SpawnPlayer(Vector2 pos);
 	};

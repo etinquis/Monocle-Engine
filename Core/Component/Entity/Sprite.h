@@ -7,20 +7,21 @@
 
 #include "Graphics.h"
 
+#include "../../Entity.h"
+
 #include <string>
 
 #define MONOCLE_ENTITYCOMPONENT_SPRITE "Sprite"
 
 namespace Monocle
 {
-	class Entity;
 	class Transform;
 	enum BlendType;
 	enum FilterType;
 	class TextureAsset;
 	class Color;
 
-	class Sprite : public EntityComponent
+	class Sprite : public EntityComponent, public EventHandler<Entity::EventHandler>
 	{
 	public:
 		typedef class SpriteInitParams
