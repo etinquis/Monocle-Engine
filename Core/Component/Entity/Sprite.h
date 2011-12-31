@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Graphic.h"
 #include "../../Asset.h"
 #include "../../Vector2.h"
 #include "../../Color.h"
