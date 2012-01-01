@@ -170,7 +170,9 @@ namespace Monocle
                 Monocle::Graphics::BindTexture(tex);
 
                 Monocle::Graphics::SetBlend(Monocle::BLEND_ALPHA);
-                Monocle::Graphics::RenderQuad(size.x, size.y, Vector2::zero, Vector2::one, Graphics::GetScreenCenter());
+				Monocle::Graphics::Translate( Vector2( transform->position.x + ( size.x / 2 ) , transform->position.y + ( size.y / 2 ) ) );
+				
+                Monocle::Graphics::RenderQuad(size.x, size.y);
 
 				Graphics::Set2D(w, h);
 
