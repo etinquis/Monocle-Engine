@@ -160,6 +160,8 @@ namespace Monocle
             {
                 Monocle::Graphics::PushMatrix();
 
+				Monocle::Graphics::IdentityMatrix();
+
 				int w = Graphics::GetVirtualWidth(), h = Graphics::GetVirtualHeight();
 				Graphics::Set2D(size.x, size.y);
 
@@ -168,11 +170,13 @@ namespace Monocle
                 Monocle::Graphics::BindTexture(tex);
 
                 Monocle::Graphics::SetBlend(Monocle::BLEND_ALPHA);
-                Monocle::Graphics::RenderQuad(size.x, size.y, Vector2::zero, Vector2::one, Vector2(size.x/2.0,size.y/2.0));
+                Monocle::Graphics::RenderQuad(size.x, size.y, Vector2::zero, Vector2::one, Graphics::GetScreenCenter());
 
 				Graphics::Set2D(w, h);
 
                 Monocle::Graphics::PopMatrix();
+
+				Monocle::Graphics::BindTexture(NULL); //Clear bound texture
             }
         }
 
