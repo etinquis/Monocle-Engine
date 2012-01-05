@@ -4,6 +4,8 @@
 #include "../Game.h"
 #include "../Graphics.h"
 
+#include "Input/WindowsJoystick.h"
+
 #include "WindowsPlatform.h"
 #include "Mmsystem.h"
 #include <WindowsX.h>
@@ -541,6 +543,36 @@ namespace Monocle
 	void Platform::Init(const std::string &name, int w, int h, int bits, bool fullscreen)
 	{
 		WindowsPlatform::instance->CreatePlatformWindow(name.c_str(), w, h, bits, fullscreen);
+		
+		UINT joystickCount = joyGetNumDevs();
+		JOYINFOEX joyInfo;
+		MMRESULT res;
+		std::list<WindowsJoystick> joysticks;
+		for(UINT i = 0; i < joystickCount; i++)
+		{
+			res = joyGetPosEx(i, &joyInfo);
+			switch (res)
+			{
+			case JOYERR_NOERROR:
+				Input::AddInputSource(new WindowsJoystick(i));
+				break;
+			case JOYERR_UNPLUGGED:
+				Debug::Log("Joystick unplugged");
+				break;
+			case JOYERR_PARMS:
+				Debug::Log("Joystick id invalid");
+				break;
+			case MMSYSERR_BADDEVICEID:
+				Debug::Log("Bad device ID");
+				break;
+			case MMSYSERR_INVALPARAM:
+				Debug::Log("Invalid param");
+				break;
+			case MMSYSERR_NODRIVER:
+				Debug::Log("No joystick driver present");
+				break;
+			}
+		}
 	}
 
 	bool Platform::ResizeWindow(int width, int height, bool fullscreen, int bits)

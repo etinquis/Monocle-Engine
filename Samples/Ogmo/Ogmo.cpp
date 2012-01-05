@@ -43,6 +43,11 @@ namespace Ogmo
 		SetGraphic(sprite);
 
 		direction = true;
+
+		if(Input::GetJoystickCount() > 0)
+		{
+			js = Input::GetJoystick(0);
+		}
 	}
 
 	void Player::Update()
@@ -53,13 +58,19 @@ namespace Ogmo
         
         Entity::Update();
         
-        heldLeft = (Input::IsKeyMaskHeld("left") || Input::IsTouchInRect(Vector2(0,0),
-                                                                        Vector2(position.x-1,120)));
-        heldRight = (Input::IsKeyMaskHeld("right") || Input::IsTouchInRect(Vector2(position.x,0),
-                                                                          Vector2(160,120)));
+        heldLeft = (Input::IsKeyMaskHeld("left") 
+				|| Input::IsTouchInRect(Vector2(0,0), Vector2(position.x-1,120))
+				|| (js && js->GetAxis1Vector().x < 0));
+                                                                        
+        heldRight = (Input::IsKeyMaskHeld("right")
+				 || Input::IsTouchInRect(Vector2(position.x,0), Vector2(160,120))
+				 || (js && js->GetAxis1Vector().x > 0));
+                                                                         
         
         // Jump touch is below screen or in the top bit of screen
-        jumpKey = (Input::IsKeyMaskPressed("jump") || Input::IsTouchInRect(Vector2(0,121),Vector2(160,1000),TOUCH_PHASE_BEGIN) || Input::IsTouchInRect(Vector2(0,0),Vector2(800,10),TOUCH_PHASE_BEGIN));
+        jumpKey = (Input::IsKeyMaskPressed("jump")
+				|| Input::IsTouchInRect(Vector2(0,121),Vector2(160,1000),TOUCH_PHASE_BEGIN) || Input::IsTouchInRect(Vector2(0,0),Vector2(800,10),TOUCH_PHASE_BEGIN)
+				|| (js && js->isButtonPressed(1)));
         
 		// GRAB INPUT AND ACCELERATE
 		if (heldLeft)

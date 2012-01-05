@@ -40,7 +40,8 @@ namespace Ogmo
 		//other/util
 		bool Motion(float &speed, float &to);
 		bool CollideAt(const std::string &tag, float x, float y);
-
+	private:
+		Joystick *js;
 	};
 
 	class Wall : public Entity

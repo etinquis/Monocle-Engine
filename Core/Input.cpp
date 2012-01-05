@@ -75,6 +75,11 @@ namespace Monocle
 		        }
 		    }
 		}
+
+		for(std::vector< InputSource* >::iterator it = inputSources.begin(); it != inputSources.end(); it++)
+		{
+			(*it)->Update();
+		}
 		
 		if(Platform::mouseScroll != 0 && handlers.size() > 0)
 		{
@@ -265,6 +270,32 @@ namespace Monocle
 	    instance->handlers.remove(handler);
 	}
     
+	void Input::AddInputSource(Joystick *joystick)
+	{
+		instance->joysticks.push_back(joystick);
+		Input::AddInputSource( (InputSource*) joystick);
+	}
+
+	void Input::AddInputSource(InputSource *source)
+	{
+		instance->inputSources.push_back(source);
+	}
+
+	int Input::GetJoystickCount()
+	{
+		return instance->joysticks.size();
+	}
+
+	Joystick *Input::GetJoystick(int num)
+	{
+		if(num > instance->joysticks.size())
+		{
+			return NULL;
+		}
+
+		return instance->joysticks[num];
+	}
+
     Touch *Input::GetTouchWithStatus( TouchPhase phase, int index )
     {
         int numTouches = Platform::numTouches;

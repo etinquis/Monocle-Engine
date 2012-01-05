@@ -109,10 +109,15 @@ namespace Pong
 	*/
 
 	Paddle::Paddle()
-		: Entity(), speed(0.0f)
+		: Entity(), speed(0.0f), js(NULL)
 	{
 		AddTag("Paddle");
 		SetCollider(new RectangleCollider(25.0f, 100.0f));
+	}
+
+	void Paddle::SetJoystick(Joystick *js)
+	{
+		this->js = js;
 	}
 
 	void Paddle::Update()
@@ -122,14 +127,16 @@ namespace Pong
 		const float friction = 500.0f;
 		const float maxY = 600.0f;
 
-		if (Input::IsKeyHeld(keyUp) || Input::IsTouchInRect(Vector2(position.x-150,position.y-500),
-                                                            Vector2(position.x+150,position.y)))
+		if (Input::IsKeyHeld(keyUp) 
+		 || Input::IsTouchInRect(Vector2(position.x-150,position.y-500), Vector2(position.x+150,position.y))
+		 || (js && js->GetAxis1Vector().y < 0))
 		{
 			speed += accel * Monocle::deltaTime;
 			if (speed > maxSpeed) speed = maxSpeed;
 		}
-		else if (Input::IsKeyHeld(keyDown) || Input::IsTouchInRect(Vector2(position.x-150,position.y+1),
-                                                                   Vector2(position.x+150,position.y+500)))
+		else if (Input::IsKeyHeld(keyDown)
+			  || Input::IsTouchInRect(Vector2(position.x-150,position.y+1), Vector2(position.x+150,position.y+500))
+			  || (js && js->GetAxis1Vector().y > 0))
 		{
 			speed -= accel * Monocle::deltaTime;
 			if (speed < -maxSpeed) speed = -maxSpeed;
@@ -205,12 +212,20 @@ namespace Pong
 		paddle1->position = Vector2(100, 300);
 		paddle1->keyUp = KEY_W;
 		paddle1->keyDown = KEY_S;
+		if(Input::GetJoystickCount() > 0)
+		{
+			paddle1->SetJoystick(Input::GetJoystick(0));
+		}
 		Add(paddle1);
 
 		paddle2 = new Paddle();
 		paddle2->position = Vector2(700, 300);
 		paddle2->keyUp = KEY_UP;
 		paddle2->keyDown = KEY_DOWN;
+		if(Input::GetJoystickCount() > 1)
+		{
+			paddle2->SetJoystick(Input::GetJoystick(1));
+		}
 		Add(paddle2);
 
 		FontAsset* font = Assets::RequestFont("Pong/LiberationSans-Regular.ttf", 25.0f);

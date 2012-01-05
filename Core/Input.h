@@ -2,9 +2,12 @@
 
 #include "Platform.h"
 #include "Vector2.h"
+#include "Input/InputSource.h"
+#include "Input/Joystick.h"
 #include <string>
 #include <map>
 #include <list>
+#include <vector>
 
 namespace Monocle
 {    
@@ -35,8 +38,6 @@ namespace Monocle
             virtual void OnMouseRelease(Vector2 mousePosition, MouseButton button) {}
             virtual void OnMouseScroll(int scrollDelta) {}
         };
-	
-		
 
 		//Mouse API
 		//! get mouse position relative to virtual screen
@@ -114,11 +115,15 @@ namespace Monocle
 		//! list.
 		static void RemoveHandler(EventHandler *handler);
 		
+		static void AddInputSource(Joystick *joystick);
+		static void AddInputSource(InputSource *source);
+
+		static Joystick *GetJoystick(int num);
+		static int GetJoystickCount();
 
 		static void SetWorldMouseCamera(Camera *camera);
 
 		void Update();
-	
 	protected:
 		friend class Game;
 		Input();
@@ -139,5 +144,7 @@ namespace Monocle
 		int lastMouseScroll;
 		Vector2 lastMousePos;
 		std::list < EventHandler* > handlers;
+		std::vector < InputSource* > inputSources;
+		std::vector< Joystick * > joysticks;
 	};
 }

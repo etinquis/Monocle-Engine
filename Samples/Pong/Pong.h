@@ -30,7 +30,11 @@ namespace Pong
 		KeyCode keyUp;
 		KeyCode keyDown;
 
+		void SetJoystick(Joystick *js);
+
 		float speed;
+	private:
+		Joystick *js;
 	};
 
 	class Ball : public Entity
