@@ -117,6 +117,7 @@ namespace Monocle
 
 								bool repeatX = XMLReadBool(eFringeTile, "repeatX");
 								bool repeatY = XMLReadBool(eFringeTile, "repeatY");
+								bool autoTile = XMLReadBool(eFringeTile, "autoTile");
 
 								int atlasX=0, atlasY=0, atlasW=0, atlasH=0;
 								std::string atlas = XMLReadString(eFringeTile, "atlas");
@@ -128,7 +129,7 @@ namespace Monocle
 
 								if (image != "")
 								{
-									fringeTileset.SetFringeTileData(tileID, new FringeTileData(image, width, height, filter, repeatX, repeatY, atlasX, atlasY, atlasW, atlasH));
+									fringeTileset.SetFringeTileData(tileID, new FringeTileData(image, width, height, filter, repeatX, repeatY, atlasX, atlasY, atlasW, atlasH, autoTile));
 								}
 							}
 							eFringeTile = eFringeTile->NextSiblingElement("FringeTile");
@@ -177,9 +178,11 @@ namespace Monocle
 						instance->fringeTileset = instance->GetFringeTilesetByName(fringeTilesetName);
 					}
 
+					/*
 					Color backgroundColor = Color::black;
 					XMLReadColor(eLevel, "backgroundColor", &backgroundColor);
 					Graphics::SetBackgroundColor(backgroundColor);
+					*/
 
 					XMLFileNode xmlFileNode(eLevel);
 					instance->scene->LoadLevel(&xmlFileNode);
@@ -331,11 +334,14 @@ namespace Monocle
 				{
 					eLevel.SetAttribute("fringeTileset", instance->fringeTileset->GetName());
 				}
+				
+				/*
 				Color backgroundColor = Graphics::GetBackgroundColor();
 				if (backgroundColor != Color::black)
 				{
 					XMLWriteColor(&eLevel, "backgroundColor", backgroundColor);
 				}
+				*/
 
 				XMLFileNode xmlFileNode(&eLevel);
 				instance->scene->SaveLevel(&xmlFileNode);

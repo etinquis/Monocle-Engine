@@ -31,12 +31,13 @@ namespace Monocle
 
 		float GetSquaredMagnitude();
 		float GetMagnitude();
-		Vector2 GetNormalized();
-		void Normalize();
+		Vector2 GetNormalized(float length = 1.0f);
+		void Normalize(float length = 1.0f);
 		Vector2 GetPerpendicularLeft();
 		Vector2 GetPerpendicularRight();
 		void Clamp(float max);
 		bool IsInRange(float range);
+		bool IsZero();
 		float Dot(Vector2 other);
 		float Cross(Vector2 other);
 		Vector2 Reflect(const Vector2 &other);
@@ -80,5 +81,6 @@ namespace Monocle
 	Vector2 operator/(float lhs, const Vector2 &rhs);
 
 	Vector2 operator*(const Vector2& lhs, const Vector2& rhs);	// multiply components (scale)
+	Vector2 operator/(const Vector2& lhs, const Vector2& rhs);	// divide components (scale)
 	//float operator^(const Vector2& lhs, const Vector2& rhs);	// cross product
 }
