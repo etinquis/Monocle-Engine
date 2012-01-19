@@ -58,7 +58,7 @@ namespace Monocle
  
 	private:
 		FilterType filter;
-		
+		bool PushToHardware(const unsigned char *data, int w, int h);
 	};
 }
  

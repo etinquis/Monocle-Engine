@@ -267,6 +267,49 @@ namespace Monocle
 		}
 		glDeleteTextures(1, &texID);
 	}
+
+	bool TextureAsset::PushToHardware(const unsigned char *data, int w, int h)
+	{
+		glBindTexture(GL_TEXTURE_2D, texID);
+ 
+		// try to avoid ATI driver bug, see: http://www.opengl.org/wiki/Common_Mistakes#Automatic_mipmap_generation
+		// "glGenerateMipmap doesn't work on ATI as of 2011" hmmm...
+		glEnable(GL_TEXTURE_2D);
+ 
+		// choose GL_NEAREST
+		unsigned int glMagFilter = GL_NEAREST;
+		unsigned int glMinFilter = GL_NEAREST;
+ 
+		if (filter == FILTER_LINEAR)
+		{
+			glMagFilter = GL_LINEAR;
+			glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
+		}
+ 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter);
+ 
+		unsigned int glRepeatX = repeatX?GL_REPEAT:GL_CLAMP_TO_EDGE;
+		unsigned int glRepeatY = repeatY?GL_REPEAT:GL_CLAMP_TO_EDGE;
+ 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glRepeatX);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glRepeatY);
+
+		//// mipmaps: OpenGL 1.4 version
+		if (glewIsSupported("GL_VERSION_1_4") && !glewIsSupported("GL_VERSION_3_0"))
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+		}
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		
+		//// mipmaps: OpenGL 3.0 version
+		if (glewIsSupported("GL_VERSION_3_0"))
+		{
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
+		return true;
+	}
 }
 
 #endif

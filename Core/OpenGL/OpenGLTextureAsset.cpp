@@ -33,59 +33,14 @@ namespace Monocle
 		this->repeatX = repeatX;
 		this->repeatY = repeatY;
         this->premultiplied = premultiply;
+		this->width = (unsigned int)w;
+		this->height = (unsigned int)h;
+        glGenTextures(1, &texID);
         
-        if (premultiply)
+		if (premultiply && data)
             PremultiplyAlpha((unsigned char*)data,w,h);
- 
-		glGenTextures(1, &texID);
-		glBindTexture(GL_TEXTURE_2D, texID);
- 
-		// try to avoid ATI driver bug, see: http://www.opengl.org/wiki/Common_Mistakes#Automatic_mipmap_generation
-		// "glGenerateMipmap doesn't work on ATI as of 2011" hmmm...
-		glEnable(GL_TEXTURE_2D);
- 
-		// choose GL_NEAREST
-		unsigned int glMagFilter = GL_NEAREST;
-		unsigned int glMinFilter = GL_NEAREST;
- 
-		if (filter == FILTER_LINEAR)
-		{
-			glMagFilter = GL_LINEAR;
-			glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
-		}
- 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter);
- 
-		unsigned int glRepeatX = repeatX?GL_REPEAT:GL_CLAMP_TO_EDGE;
-		unsigned int glRepeatY = repeatY?GL_REPEAT:GL_CLAMP_TO_EDGE;
- 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glRepeatX);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glRepeatY);
-
-		width = (unsigned int)w;
-		height = (unsigned int)h;
- 
-		// mipmaps: OpenGL 1.4 version
-		//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
- 
-		//TODO: cache on graphics init
-		bool glVersion3_0 = !glewIsSupported("GL_VERSION_3_0");
-
-		if (!glVersion3_0)
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		}
 		
-//#ifdef MONOCLE_MAC
-//		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-//#else
-		if (glVersion3_0)
-		{
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-//#endif
- 
+		PushToHardware(data, w, h);
  
 		Debug::Log("Loaded texture from data");
 	}
@@ -97,59 +52,19 @@ namespace Monocle
 		this->repeatY = repeatY;
 		this->filename = filename;
         this->premultiplied = premultiply;
- 
 		glGenTextures(1, &texID);
-		glBindTexture(GL_TEXTURE_2D, texID);
- 
-		// try to avoid ATI driver bug, see: http://www.opengl.org/wiki/Common_Mistakes#Automatic_mipmap_generation
-		// "glGenerateMipmap doesn't work on ATI as of 2011" hmmm...
-		glEnable(GL_TEXTURE_2D);
- 
-		// choose GL_NEAREST
-		unsigned int glMagFilter = GL_NEAREST;
-		unsigned int glMinFilter = GL_NEAREST;
- 
-		if (filter == FILTER_LINEAR)
-		{
-			glMagFilter = GL_LINEAR;
-			glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
-		}
- 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter);
- 
-		unsigned int glRepeatX = repeatX?GL_REPEAT:GL_CLAMP_TO_EDGE;
-		unsigned int glRepeatY = repeatY?GL_REPEAT:GL_CLAMP_TO_EDGE;
- 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glRepeatX);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glRepeatY);
  
 		int w,h,n;
 		unsigned char* data = stbi_load(filename.c_str(), &w, &h, &n, STBI_rgb_alpha);
         
-        if (premultiply)
-            PremultiplyAlpha(data,w,h);
- 
+		this->width = (unsigned int)w;
+		this->height = (unsigned int)h;
+
 		if (data)
 		{
-			width = (unsigned int)w;
-			height = (unsigned int)h;
- 
-			// mipmaps: OpenGL 1.4 version
-			if (glewIsSupported("GL_VERSION_1_4") && !glewIsSupported("GL_VERSION_3_0"))
-			{
-				glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-			}
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-			// mipmaps: OpenGL 3.0 version
-			if (glewIsSupported("GL_VERSION_3_0"))
-			{
-				glGenerateMipmap(GL_TEXTURE_2D);
-			}
-
-			//Debug::Log("Loaded texture: " + filename);
-			return true;
+			if (premultiply)
+				PremultiplyAlpha(data,w,h);
+			return PushToHardware(data, w, h);
 		}
 		else
 		{
@@ -247,6 +162,49 @@ namespace Monocle
 			p = 55;
 		}
 		glDeleteTextures(1, &texID);
+	}
+
+	bool TextureAsset::PushToHardware(const unsigned char *data, int w, int h)
+	{
+		glBindTexture(GL_TEXTURE_2D, texID);
+ 
+		// try to avoid ATI driver bug, see: http://www.opengl.org/wiki/Common_Mistakes#Automatic_mipmap_generation
+		// "glGenerateMipmap doesn't work on ATI as of 2011" hmmm...
+		glEnable(GL_TEXTURE_2D);
+ 
+		// choose GL_NEAREST
+		unsigned int glMagFilter = GL_NEAREST;
+		unsigned int glMinFilter = GL_NEAREST;
+ 
+		if (filter == FILTER_LINEAR)
+		{
+			glMagFilter = GL_LINEAR;
+			glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
+		}
+ 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter);
+ 
+		unsigned int glRepeatX = repeatX?GL_REPEAT:GL_CLAMP_TO_EDGE;
+		unsigned int glRepeatY = repeatY?GL_REPEAT:GL_CLAMP_TO_EDGE;
+ 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glRepeatX);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glRepeatY);
+
+		//// mipmaps: OpenGL 1.4 version
+		if (glewIsSupported("GL_VERSION_1_4") && !glewIsSupported("GL_VERSION_3_0"))
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+		}
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		
+		//// mipmaps: OpenGL 3.0 version
+		if (glewIsSupported("GL_VERSION_3_0"))
+		{
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
+		return true;
 	}
 }
  
