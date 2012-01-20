@@ -35,7 +35,7 @@ namespace Monocle
 
 				if(filename != "")
 				{
-					logOut.open(filename);
+					logOut.open(filename.c_str());
 				}
 
 				logFilename = filename;
@@ -104,6 +104,7 @@ namespace Monocle
 		std::ofstream logOut;
 		std::string logFilename;
 		int outDest;
+		DebugOutStream(const DebugOutStream& os);
 	};
 
 	bool Debug::render = false;
@@ -112,7 +113,7 @@ namespace Monocle
 	int Debug::layerMin = -50;
 	int Debug::layerMax = 50;
 
-	Debug::DebugOutStream Debug::outStream = Debug::DebugOutStream();
+	Debug::DebugOutStream Debug::outStream;
 
 	void Debug::Init()
 	{
