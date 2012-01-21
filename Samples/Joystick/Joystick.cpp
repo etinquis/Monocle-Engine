@@ -76,7 +76,7 @@ namespace Joystick
 
     Joystick::Joystick()
 	{
-		sprite = new Sprite("Joystick/joystick.png");
+		sprite = Assets::RequestTexture("Joystick/joystick.png");
 		js = Input::GetJoystick(0);
 		LStick = new JoystickAxis(Vector2( -75,35 ), 0, js);
 		RStick = new JoystickAxis(Vector2( 75,35 ), 1, js);
@@ -95,7 +95,9 @@ namespace Joystick
 		Graphics::PushMatrix();
 		Graphics::IdentityMatrix();
 		Graphics::Translate(Graphics::GetScreenCenter());
-		sprite->Render(this);
+		Graphics::BindTexture(sprite);
+		Graphics::RenderQuad(sprite->width, sprite->height);
+		Graphics::BindTexture(NULL);
 		LStick->Render();
 		RStick->Render();
 		Square->Render();

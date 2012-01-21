@@ -39,7 +39,7 @@ namespace Joystick
 		void Update();
 
 	private:
-		Sprite *sprite;
+		TextureAsset *sprite;
 		JoystickAxis *LStick;
 		JoystickAxis *RStick;
 
