@@ -114,6 +114,8 @@ namespace Monocle
 		Vector2 GetLStick() { return Axes[0].GetPosition(); }
 		Vector2 GetRStick() { return Axes[1].GetPosition(); }
 
+		Vector2 GetAxis(int axis) { return Axes[axis].GetPosition(); }
+
 	protected:
 		Joystick() { }
 
