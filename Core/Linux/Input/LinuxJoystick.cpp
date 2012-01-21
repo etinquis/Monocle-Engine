@@ -40,8 +40,7 @@ namespace Monocle
 	void LinuxJoystick::Update()
 	{
 		struct js_event e;
-		int x, y, z, r;
-
+		LastButtonStates = ButtonStates;
 		while( read(joyFileHandle, &e, sizeof( struct js_event )) > 0)
 		{
 			e.type &= ~JS_EVENT_INIT;
@@ -50,20 +49,20 @@ namespace Monocle
 				switch(e.number)
 				{
 				case 0:
-					x = e.value; break;
+					Axes[0].SetPositionX(e.value); break;
 				case 1:
-					y = e.value; break;
+					Axes[0].SetPositionY(e.value); break;
 				case 2:
-					z = e.value; break;
+					Axes[1].SetPositionX(e.value); break;
 				case 3:
-					r = e.value; break;
+					Axes[1].SetPositionY(e.value); break;
 				}
 			}
+			else if( e.type == JS_EVENT_BUTTON )
+			{
+				ButtonStates[e.number] = e.value;
+			}
 		}
-
-		Axes[0].SetPosition(x,y);
-		Axes[1].SetPosition(z,r);
-
 		if(errno != EAGAIN)
 		{
 			Debug::Log("Joystick Error");

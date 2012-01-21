@@ -3,6 +3,8 @@
 #include "InputSource.h"
 #include "../Vector2.h"
 #include <vector>
+#include <cmath>
+#include "../Debug.h"
 
 namespace Monocle
 {
@@ -43,19 +45,27 @@ namespace Monocle
 				this->max = max;
 				this->deadzone = deadzone;
 				this->halfs = Vector2( 
-					((max.x - min.x) / 2) - min.x,
-					((max.y - min.y) / 2) - min.y);
+					((max.x - min.x) / 2),
+					((max.y - min.y) / 2));
+				Debug::Log(halfs.x);
 			}
-
-			void SetPosition(int ix, int iy)
+			
+			void SetPositionX(int ix)
 			{
 				float x = (ix - min.x - halfs.x) / (float)halfs.x;
+				x = std::abs(x) < deadzone.x ? 0 : x;
+				position.x = x;
+			}
+			void SetPositionY(int iy)
+			{
 				float y = (iy - min.y - halfs.y) / (float)halfs.y;
-
-				x = abs(x) < deadzone.x ? 0 : x;
-				y = abs(y) < deadzone.y ? 0 : y;
-
-				position.Set( x,y );
+				y = std::abs(y) < deadzone.y ? 0 : y;
+				position.y = y;
+			}
+			void SetPosition(int ix, int iy)
+			{
+				SetPositionX(ix);
+				SetPositionY(iy);
 			}
 			void SetDeadzone(const Vector2& dz)
 			{
