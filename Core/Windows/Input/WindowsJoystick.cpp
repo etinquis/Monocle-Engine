@@ -10,13 +10,36 @@ namespace Monocle
 	WindowsJoystick::WindowsJoystick(UINT id) : uJoyID(id)
 	{
 		MMRESULT res = joyGetDevCaps(id, &caps, sizeof(JOYCAPS));
-
+		
 		switch(res)
 		{
 		case MMSYSERR_NODRIVER:
 			Monocle::Debug::Log("No driver found for Joystick #" + id);
 		case MMSYSERR_INVALPARAM:
 			Monocle::Debug::Log("Invalid param for initialization of Joystick #" + id);
+		}
+
+		if(caps.wNumAxes > 0)
+		{
+			Axes.push_back(
+				Axis(
+					Vector2(caps.wXmin, caps.wYmin), 
+					Vector2(caps.wXmax, caps.wYmax)
+				)
+			);
+		}
+		if(caps.wNumAxes > 1)
+		{
+			Axes.push_back(
+				Axis(
+					Vector2(caps.wZmin, caps.wRmin), 
+					Vector2(caps.wZmax, caps.wRmax)
+				)
+			);
+		}
+		for(int i = 0; i < caps.wNumButtons; i++)
+		{
+			ButtonStates.push_back(false);
 		}
 	}
 
@@ -50,28 +73,15 @@ namespace Monocle
 
 		info = inf;
 
-		int xScale = floor( (info.dwXpos - caps.wXmin) / (double)(caps.wXmax - caps.wXmin) * 1000 + 0.5 );
-		int yScale = floor( (info.dwYpos - caps.wYmin) / (double)(caps.wYmax - caps.wYmin) * 1000 + 0.5 );
-		int zScale = floor( (info.dwZpos - caps.wZmin) / (double)(caps.wZmax - caps.wZmin) * 1000 + 0.5 );
-		int rScale = floor( (info.dwRpos - caps.wRmin) / (double)(caps.wRmax - caps.wRmin) * 1000 + 0.5 );
+		Axes[0].SetPosition( info.dwXpos, info.dwYpos );
+		Axes[1].SetPosition( info.dwZpos, info.dwRpos );
 
-		Axis1 = Vector2( (xScale - 500) / 500.f , (yScale - 500) / 500.f );
-		Axis2 = Vector2( (zScale - 500) / 500.f , (rScale - 500) / 500.f );
-	}
-
-	Vector2 WindowsJoystick::GetAxis1Vector()
-	{
-		return Axis1;
-	}
-
-	Vector2 WindowsJoystick::GetAxis2Vector()
-	{
-		return Axis2;
-	}
-
-	bool WindowsJoystick::isButtonPressed(unsigned char buttonNum)
-	{
-		return !(lastInfo.dwButtons & (1 << (buttonNum - 1))) && (info.dwButtons & (1 << (buttonNum - 1)));
+		int button = 0;
+		LastButtonStates = ButtonStates;
+		for(std::vector<bool>::iterator it = ButtonStates.begin(); it != ButtonStates.end(); it++, button++)
+		{
+			ButtonStates[button] = (info.dwButtons & (1 << (button)));
+		}
 	}
 
 	std::ostream &operator<<(std::ostream& os, const Monocle::WindowsJoystick &js)

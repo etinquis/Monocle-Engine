@@ -14,61 +14,61 @@ namespace Monocle
 {
 	LinuxJoystick::LinuxJoystick(unsigned int id) 
 	{
-		Axis1 = Vector2::zero;
-		Axis1 = Vector2::zero;
 		joyFileHandle = open("/dev/input/js0", O_NONBLOCK);
+
+		char out;
+		ioctl( joyFileHandle, JSIOCGAXES, &out );
+
+		for(int i = 0; i < out; i++)
+		{
+			Axes.push_back(
+				Axis(
+					Vector2(-32767, -32767), 
+					Vector2(32767, 32767)
+				)
+			);
+		}
+
+		ioctl( joyFileHandle, JSIOCGBUTTONS, &out );
+
+		for(int i = 0; i < out; i++)
+		{
+			ButtonStates.push_back(false);
+		}
 	}
 
 	void LinuxJoystick::Update()
 	{
 		struct js_event e;
+		int x, y, z, r;
+
 		while( read(joyFileHandle, &e, sizeof( struct js_event )) > 0)
 		{
-			Debug::Log("Event");
 			e.type &= ~JS_EVENT_INIT;
 			if( e.type == JS_EVENT_AXIS )
 			{
-				if(e.number == 0)
+				switch(e.number)
 				{
-					Axis1.x = e.value;
-				}
-				else if(e.number == 1)
-				{
-					Axis1.y = e.value;
-				}	
-				else if(e.number == 3)
-				{
-					Axis2.x = e.value;
-				}
-				else if(e.number == 4)
-				{
-					Axis2.y = e.value;
+				case 0:
+					x = e.value; break;
+				case 1:
+					y = e.value; break;
+				case 2:
+					z = e.value; break;
+				case 3:
+					r = e.value; break;
 				}
 			}
 		}
+
+		Axes[0].SetPosition(x,y);
+		Axes[1].SetPosition(z,r);
+
 		if(errno != EAGAIN)
 		{
 			Debug::Log("Joystick Error");
 			Debug::Log(strerror(errno));
 		}
-
-		//Axis1 = Vector2( (xScale - 500) / 500.f , (yScale - 500) / 500.f );
-		//Axis2 = Vector2( (zScale - 500) / 500.f , (rScale - 500) / 500.f );
-	}
-
-	Vector2 LinuxJoystick::GetAxis1Vector()
-	{
-		return Axis1;
-	}
-
-	Vector2 LinuxJoystick::GetAxis2Vector()
-	{
-		return Axis2;
-	}
-
-	bool LinuxJoystick::isButtonPressed(unsigned char buttonNum)
-	{
-		return false;
 	}
 
 	std::ostream &operator<<(std::ostream& os, const Monocle::LinuxJoystick &js)

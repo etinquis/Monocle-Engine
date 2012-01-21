@@ -129,14 +129,14 @@ namespace Pong
 
 		if (Input::IsKeyHeld(keyUp) 
 		 || Input::IsTouchInRect(Vector2(position.x-150,position.y-500), Vector2(position.x+150,position.y))
-		 || (js && js->GetAxis1Vector().y < 0))
+		 || (js && js->GetLStick().y < 0))
 		{
 			speed += accel * Monocle::deltaTime;
 			if (speed > maxSpeed) speed = maxSpeed;
 		}
 		else if (Input::IsKeyHeld(keyDown)
 			  || Input::IsTouchInRect(Vector2(position.x-150,position.y+1), Vector2(position.x+150,position.y+500))
-			  || (js && js->GetAxis1Vector().y > 0))
+			  || (js && js->GetLStick().y > 0))
 		{
 			speed -= accel * Monocle::deltaTime;
 			if (speed < -maxSpeed) speed = -maxSpeed;
