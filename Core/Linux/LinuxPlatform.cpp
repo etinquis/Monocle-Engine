@@ -17,6 +17,8 @@
 #include "../Game.h"
 #include "../Graphics.h"
 
+#include "Input/LinuxJoystick.h" 
+
 namespace Monocle
 {
     //Internal time
@@ -286,7 +288,8 @@ namespace Monocle
     void Platform::Init(const std::string &name, int w, int h, int bits, bool fullscreen)
     {
         LinuxPlatform::instance->CreatePlatformWindow(name.c_str(), w, h, bits, fullscreen);
-        width = w;
+        Input::AddInputSource(new LinuxJoystick(0));
+	width = w;
         height = h;
     }
 
