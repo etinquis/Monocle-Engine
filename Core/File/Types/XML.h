@@ -16,8 +16,8 @@ namespace Monocle
 		public:
 			XML();
 
-			virtual void WriteToFile(const std::string &filename, FileNode *node);
-			virtual void ReadFromFile(const std::string &filename, FileNode *node);
+			virtual void WriteTo(std::ostream &os, FileNode *node);
+			virtual void ReadFrom(std::istream &is, FileNode *node);
 		private:
 			void WriteNode(TiXmlElement *, FileNode *);
 			void ReadNode(TiXmlElement *, FileNode *);

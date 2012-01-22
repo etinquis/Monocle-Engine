@@ -12,15 +12,14 @@ namespace Monocle
 
 		}
 
-		void json::WriteToFile(const std::string &filename, FileNode *node)
+		void json::WriteTo(std::ostream &os, FileNode *node)
 		{
 			Json::Value root = Json::Value(Json::ValueType::objectValue);
 			WriteNode(&root, node);
 
 			Json::StyledWriter writer = Json::StyledWriter();
-			std::ofstream fout = std::ofstream(filename.c_str());
-			fout << writer.write(root);
-			fout.close();
+			
+			os << writer.write(root);
 		}
 
 		void json::WriteNode(Json::Value *element, FileNode *node)
@@ -42,22 +41,20 @@ namespace Monocle
 			 }
 		}
 
-		void json::ReadFromFile(const std::string &filename, FileNode *root)
+		void json::ReadFrom(std::istream &is, FileNode *root)
 		{
 			 Json::Reader reader = Json::Reader();
 			 Json::Value jroot;
 
-			 std::ifstream fin = std::ifstream(filename.c_str());
 			 std::string line;
 
 			 std::ostringstream lines = std::ostringstream();
 			
-			 while(!fin.eof())
+			 while(!is.eof())
 			 {
-			 	std::getline(fin, line);
+			 	std::getline(is, line);
 			 	lines << line;
 			 }
-			 fin.close();
 			
 			 if(reader.parse(lines.str(), jroot))
 			 {
@@ -68,7 +65,6 @@ namespace Monocle
 			 	std::cout  << "Failed to parse configuration\n" << reader.getFormatedErrorMessages();
 			 	return;
 			 }
-
 		}
 
 		void json::ReadNode(Json::Value *element, FileNode *node)

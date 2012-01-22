@@ -19,8 +19,8 @@ namespace Monocle
 		public:
 			json();
 
-			virtual void WriteToFile(const std::string &filename, FileNode *node);
-			virtual void ReadFromFile(const std::string &filename, FileNode *node);
+			virtual void WriteTo(std::ostream &os, FileNode *node);
+			virtual void ReadFrom(std::istream &is, FileNode *node);
 		private:
 			void WriteNode(Json::Value *, FileNode *);
 			void ReadNode(Json::Value *, FileNode *);

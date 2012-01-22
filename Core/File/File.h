@@ -11,8 +11,8 @@ namespace Monocle
 		class FileTypeBase
 		{
 		public:
-			virtual void WriteToFile(const std::string &filename, FileNode *node) = 0;
-			virtual void ReadFromFile(const std::string &filename, FileNode *node) = 0;
+			virtual void WriteTo(std::ostream &os, FileNode *node) = 0;
+			virtual void ReadFrom(std::istream &os, FileNode *node) = 0;
 		};
 	}
 

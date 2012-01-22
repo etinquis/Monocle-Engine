@@ -11,7 +11,7 @@ namespace Monocle
 
 		}
 
-		void XML::WriteToFile(const std::string &filename, FileNode *node)
+		void XML::WriteTo(std::ostream &os, FileNode *node)
 		{
 			TiXmlDocument doc = TiXmlDocument();
 			TiXmlElement *element = new TiXmlElement(node->GetName());
@@ -23,7 +23,7 @@ namespace Monocle
 				doc.LinkEndChild(child);
 			}
 
-			doc.SaveFile(filename);
+			os << doc;
 		}
 
 		void XML::WriteNode(TiXmlElement *element, FileNode *node)
@@ -41,9 +41,11 @@ namespace Monocle
 			}
 		}
 
-		void XML::ReadFromFile(const std::string &filename, FileNode *root)
+		void XML::ReadFrom(std::istream &is, FileNode *root)
 		{
-			TiXmlDocument doc(filename);
+			TiXmlDocument doc;
+			is >> doc;
+
 			if( doc.LoadFile() )
 			{
 				TiXmlElement *child = doc.FirstChildElement();
