@@ -27,7 +27,7 @@ namespace Monocle
 		listen(SocketHandle, 10);
 	}
 
-	void ServerSocket::Accept()
+	SocketStream *ServerSocket::Accept()
 	{
 
 	}

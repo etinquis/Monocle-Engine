@@ -11,6 +11,6 @@ namespace Monocle
 
 		void Bind(int port);
 		void Listen();
-		void Accept();
+		SocketStream *Accept();
 	};
 }
