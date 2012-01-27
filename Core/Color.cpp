@@ -103,4 +103,16 @@ namespace Monocle
 	{
 		return Color(lhs.r / rhs, lhs.g / rhs, lhs.b / rhs, lhs.a / rhs);
 	}
+
+	std::ostream &operator<<(std::ostream &os, const Color &col)
+	{
+		os << col.r << " " << col.g << " " << col.b << " " << col.a;
+		return os;
+	}
+
+	std::istream &operator>>(std::istream &is, Color &col)
+	{
+		is >> col.r >> col.g >> col.b >> col.a;
+		return is;
+	}
 }

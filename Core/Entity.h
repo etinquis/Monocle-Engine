@@ -3,8 +3,9 @@
 #include "Vector2.h"
 #include "Scene.h"
 #include "Color.h"
-#include "FileNode.h"
+#include "File/FileNode.h"
 #include "Transform.h"
+#include "Serializable.h"
 
 #include <string>
 #include <vector>
@@ -70,7 +71,6 @@ namespace Monocle
 		Entity(const Entity &entity);
 		Entity();
 		virtual ~Entity();
-		virtual Entity *Clone();
 
 		//! Enable this object. Set isEnabled to true. Each derived Entity may decide how to handle isEnabled.
 		virtual void Enable();
@@ -89,8 +89,8 @@ namespace Monocle
 		virtual void Render();
 
 		//!  from Transform:: used to save/load properties
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
+		virtual void SaveTo(FileNode *parentNode);
+		virtual void LoadFrom(FileNode *myNode);
 
 		//! Called by the scene when the entity is added to that scene
 		virtual void Added();

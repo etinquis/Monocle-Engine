@@ -170,7 +170,7 @@ namespace Jumper
 
 	void GameScene::End()
 	{
-		Level::End();
+		//Level::End();
 		delete player;
 		//walls.clear();
 	}

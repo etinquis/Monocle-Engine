@@ -11,7 +11,7 @@ namespace Monocle
 
 	void ConfigValues::Load(const std::string &filename)
 	{
-		TiXmlDocument doc;
+		/*TiXmlDocument doc;
 		doc.LoadFile(Assets::GetContentPath() + filename);
 		TiXmlElement *xmlValues = doc.FirstChildElement("config"); 
 		if (xmlValues)
@@ -38,7 +38,7 @@ namespace Monocle
 
 				xmlValue = xmlValue->NextSiblingElement("value");
 			}
-		}
+		}*/
 	}
 
 	std::string ConfigValues::GetString(const std::string &valueName)

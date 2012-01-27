@@ -108,7 +108,7 @@ namespace Monocle
 
 	void PathMesh::Save(FileNode *fileNode)
 	{
-		Entity::Save(fileNode);
+		Entity::SaveTo(fileNode);
 
 		fileNode->Write("cells", cells);
 		fileNode->Write("size", size);
@@ -125,14 +125,15 @@ namespace Monocle
 		Node *curNode = startNode;
 		while (curNode)
 		{
-			fileNode->SaveChildNode("Node", curNode);
+			FileNode *n = fileNode->InsertEndChildNode("Node");
+			curNode->SaveTo(n);
 			curNode = curNode->GetNext();
 		}
 	}
 
 	void PathMesh::Load(FileNode *fileNode)
 	{
-		Entity::Load(fileNode);
+		Entity::LoadFrom(fileNode);
 
 		fileNode->Read("cells", cells);
 		fileNode->Read("size", size);
@@ -160,21 +161,21 @@ namespace Monocle
 		Node *lastNode = NULL;
 		Node *firstNode = NULL;
 
-		FileNode *curNode = fileNode->FirstChildNode("Node");
-		while (curNode)
+		std::list<FileNode*> nodes = fileNode->GetChildren("Node");
+
+		for(std::list<FileNode*>::iterator it = nodes.begin(); it != nodes.end(); it++)
 		{
 			Node *newNode = scene->Create<Node>();
-			newNode->Load(curNode);
-			
+			newNode->LoadFrom(*it);
+
 			if (firstNode == NULL)
 				firstNode = newNode;
 			if (lastNode)
 				lastNode->SetNext(newNode);
+
 			lastNode = newNode;
 
 			newNode->SetParent(this);
-
-			curNode = fileNode->NextChildNode("Node");
 		}
 
 		startNode = firstNode;

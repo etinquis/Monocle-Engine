@@ -23,12 +23,11 @@ namespace Monocle
 		Node *GetNext();
 		Node *GetPrev();
 
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
+		virtual void SaveTo(FileNode *fileNode);
+		virtual void LoadFrom(FileNode *fileNode);
 
 		int variant;
-
-
+		
 	private:
 		Node *next;
 		Node *prev;

@@ -24,8 +24,8 @@ namespace Monocle
 
 		void SetPuppet(Puppet *puppet);
 
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
+		void SaveTo(FileNode *parentNode);
+		void LoadFrom(FileNode *myNode);
 
 		Sprite *GetSprite();
 
@@ -48,8 +48,8 @@ namespace Monocle
         float GetTime() const;
 		void SetTime(float time);
 
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
+		void SaveTo(FileNode *parentNode);
+		void LoadFrom(FileNode *myNode);
 
 		EaseType easeType;
 
@@ -72,8 +72,8 @@ namespace Monocle
 
 		void SetPuppet(Puppet *puppet);
 
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
+		void SaveTo(FileNode *parentNode);
+		void LoadFrom(FileNode *myNode);
 		
 	private:
 		std::list<KeyFrame> keyFrames;
@@ -102,8 +102,8 @@ namespace Monocle
         
 		void RefreshDuration();
 
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
+		void SaveTo(FileNode *parentNode);
+		void LoadFrom(FileNode *myNode);
         
 	private:
 		friend class Puppet;
@@ -121,14 +121,16 @@ namespace Monocle
 
 	class TextureAtlas;
 	
-	class Puppet
+	class Puppet : public Entity
 	{
 	public:
 		Puppet();
 		~Puppet();
 
-		void Save();
-		void Load(const std::string &filename, Entity *entity);
+		//void Save();
+		void SaveTo(FileNode *parentNode);
+		void LoadFrom(FileNode *myNode);
+		//void Load(const std::string &filename, Entity *entity);
 
 		void Play(const std::string &animationName, bool isLooping=true);
 		void Stop();

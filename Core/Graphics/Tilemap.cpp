@@ -3,10 +3,16 @@
 #include "../Graphics.h"
 #include "../Debug.h"
 #include "../Input.h"
+#include "../File/FileNode.h"
 
 namespace Monocle
 {
 	int Tilemap::selectedTile = 0;
+
+	Tilemap::Tilemap(FileNode *myNode)
+	{
+		LoadFrom(myNode);
+	}
 
 	Tilemap::Tilemap(Tileset *tileset, int width, int height, int tileWidth, int tileHeight)
 		: Graphic(), width(0), height(0), tileWidth(tileWidth), tileHeight(tileHeight)
@@ -25,6 +31,51 @@ namespace Monocle
 			{
 				SetTile(x, y, (y*16) + x);
 			}
+		}
+	}
+
+	void Tilemap::LoadFrom(FileNode *myNode)
+	{
+		std::string set;
+		myNode->Read("set", set);
+		myNode->Read("tileHeight", tileHeight);
+		myNode->Read("tileWidth", tileWidth);
+		
+		std::list<FileNode*> tileList = myNode->GetChildren("Tile");
+		for(std::list<FileNode*>::iterator it = tileList.begin(); it != tileList.end(); it++)
+		{
+			int id;
+			int x, y;
+			(*it)->Read("x", x);
+			(*it)->Read("y", y);
+			(*it)->Read("tileId", id);
+
+			SetTile(x, y, id);
+		}
+	}
+
+	void Tilemap::SaveTo(FileNode *parentNode)
+	{
+		FileNode *myNode = parentNode->InsertEndChildNode("Tilemap");
+		myNode->Write("set", tileset->name);
+		myNode->Write("tileWidth", tileWidth);
+		myNode->Write("tileHeight", tileHeight);
+
+		int idx;
+		for(std::vector<int>::iterator it = tiles.begin(); it != tiles.end(); it++)
+		{
+			int x, y, id;
+
+			x = idx % width;
+			y = idx / width;
+			id = (*it);
+
+			FileNode *tileNode = myNode->InsertEndChildNode("Tile");
+			tileNode->Write("x", x);
+			tileNode->Write("y", y);
+			tileNode->Write("tileId", id);
+
+			idx++;
 		}
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vector2.h"
-
+#include "Serializable.h"
 
 namespace Monocle
 {

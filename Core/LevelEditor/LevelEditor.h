@@ -60,7 +60,7 @@ namespace Monocle
 
 		void ApplyGrid(Entity *entity, int gridSize);
 
-		void CloneEntity(Entity *entity, const Vector2 &position);
+		//void CloneEntity(Entity *entity, const Vector2 &position);
 
 		void SetState(FringeTileEditorState state);
 

@@ -2,7 +2,7 @@
 #include "Entity.h"
 #include "Collision.h"
 #include "Graphics.h"
-#include "FileNode.h"
+#include "File/FileNode.h"
 #include "MonocleToolkit.h"
 #include <sstream>
 
@@ -68,12 +68,6 @@ namespace Monocle
 
 	Entity::~Entity()
 	{
-	}
-
-	Entity *Entity::Clone()
-	{
-		Debug::Log("Entity::Clone()");
-		return new Entity(*this);
 	}
 
 	void Entity::Added()
@@ -573,9 +567,9 @@ namespace Monocle
 	//	return NULL;
 	//}
 
-	void Entity::Save(FileNode *fileNode)
+	void Entity::SaveTo(FileNode *fileNode)
 	{
-		Transform::Save(fileNode);
+		Transform::SaveTo(fileNode);
 
 		if (layer != 0)
 			fileNode->Write("layer", layer);
@@ -599,9 +593,9 @@ namespace Monocle
 			fileNode->Write("followCamera", followCamera);
 	}
 
-	void Entity::Load(FileNode *fileNode)
+	void Entity::LoadFrom(FileNode *fileNode)
 	{
-		Transform::Load(fileNode);
+		Transform::LoadFrom(fileNode);
 
 		int newLayer =0;
 		fileNode->Read("layer", newLayer);

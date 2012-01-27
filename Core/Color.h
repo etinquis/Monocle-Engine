@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <iostream>
 
 namespace Monocle
 {
@@ -33,6 +34,9 @@ namespace Monocle
 		static Color yellow;
 		static Color orange;
 		static Color purple;
+
+		friend std::ostream &operator<<(std::ostream &os, const Color &col);
+		friend std::istream &operator>>(std::istream &is, Color &col);
 	};
 
 	Color operator+(const Color& lhs, const Color& rhs);	

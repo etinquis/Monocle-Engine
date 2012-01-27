@@ -3,13 +3,14 @@
 #include "../Assets.h"
 #include "../TextureAsset.h"
 
-#include <XML/XMLFileNode.h>
 #include <TinyXML/tinyxml.h>
 
 #include <sstream>
 #include <iostream>
 
 #include <assert.h>
+
+#pragma warning "TODO::REPLACE XML WITH FILENODE"
 
 namespace Monocle
 {
@@ -29,13 +30,13 @@ namespace Monocle
         // This is <Sprite>
         // <Sprite name="tree.png" size="{64, 116}" sourcesize="{64, 128}" rect="{{2, 2}, {64, 116}}" />
         
-        XMLFileNode zwopSprite(element);
+        /*XMLFileNode zwopSprite(element);
         zwopSprite.Read("name",name);
         size = ZwopSpriteSheet::XMLToVector(&zwopSprite,"size");
         sourceSize = ZwopSpriteSheet::XMLToVector(&zwopSprite,"sourceSize");
         rect = ZwopSpriteSheet::XMLToRect(&zwopSprite,"rect");
         colorRect = ZwopSpriteSheet::XMLToRect(&zwopSprite, "colorRect");
-        spriteOffset = ZwopSpriteSheet::XMLToVector(&zwopSprite, "offset");
+        spriteOffset = ZwopSpriteSheet::XMLToVector(&zwopSprite, "offset");*/
     } 
     
     Rect ZwopSprite::GetColorRect()
@@ -92,7 +93,7 @@ namespace Monocle
     Vector2 ZwopSpriteSheet::XMLToVector( XMLFileNode *node, std::string key )
     {
         std::string instr;
-        node->Read(key,instr);
+        //node->Read(key,instr);
         std::istringstream read(instr);
         
         // {64, 64}
@@ -116,7 +117,7 @@ namespace Monocle
     Rect ZwopSpriteSheet::XMLToRect( XMLFileNode *node, std::string key )
     {
         std::string instr;
-        node->Read(key,instr);
+        //node->Read(key,instr);
         std::istringstream read(instr);
         
         // {{64, 64}, {64, 64}}
@@ -153,8 +154,8 @@ namespace Monocle
     void ZwopSpriteSheet::Load(TiXmlElement *element, const std::string &textureName)
 	{
         // This is <ZwopSpriteSheet>
-        XMLFileNode zwopSheetNode(element);
-        size = XMLToVector( &zwopSheetNode, "size" );
+        //XMLFileNode zwopSheetNode(element);
+        /*size = XMLToVector( &zwopSheetNode, "size" );
         
         TiXmlElement *xmlSprite = element->FirstChildElement("Sprite");
 		while (xmlSprite)
@@ -172,7 +173,7 @@ namespace Monocle
 		}
         
         this->textureName = textureName;
-        this->texture = Assets::RequestTexture(textureName);
+        this->texture = Assets::RequestTexture(textureName);*/
     }
     
     ZwopSpriteSheet::~ZwopSpriteSheet()

@@ -46,7 +46,7 @@ namespace Monocle
 			TiXmlDocument doc;
 			is >> doc;
 
-			if( doc.LoadFile() )
+			if( !doc.Error() )
 			{
 				TiXmlElement *child = doc.FirstChildElement();
 				while(child)

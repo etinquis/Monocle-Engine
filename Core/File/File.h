@@ -33,7 +33,8 @@ namespace Monocle
 		{
 			if(Exists(filename))
 			{
-				ftype.ReadFromFile(filename, &rootNode);
+				std::ifstream f(filename);
+				ftype.ReadFrom(f, &rootNode);
 			}
 		}
 

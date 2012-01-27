@@ -114,8 +114,6 @@ namespace Monocle
 		virtual Entity *CreateEntity(const std::string &entityTypeName);
 		virtual void SaveEntities(TiXmlElement *element);
 		virtual void LoadEntities(TiXmlElement *element);
-		virtual void SaveLevel(FileNode *fileNode);
-		virtual void LoadLevel(FileNode *fileNode);
 
 	protected:
 		// scene has a game pointer
