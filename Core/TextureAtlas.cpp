@@ -1,6 +1,6 @@
 #include "TextureAtlas.h"
 
-#include <XML/XMLFileNode.h>
+#include <File/FileNode.h>
 #include <TinyXML/tinyxml.h>
 
 #include <sstream>
@@ -37,27 +37,28 @@ namespace Monocle
 		return Vector2(width/float(textureAtlas->width), height/float(textureAtlas->height));
 	}
 
-	void TextureAtlasEntry::Save(FileNode *fileNode)
+	void TextureAtlasEntry::SaveTo(FileNode *parentNode)
 	{
-		fileNode->Write("name", name);
+		FileNode *myNode = parentNode->InsertEndChildNode("TextureAtlasEntry");
+		myNode->Write("name", name);
 
-		fileNode->Write("x", x);
-		fileNode->Write("y", y);
-		fileNode->Write("width", width);
-		fileNode->Write("height", height);
+		myNode->Write("x", x);
+		myNode->Write("y", y);
+		myNode->Write("width", width);
+		myNode->Write("height", height);
 		//std::ostringstream os;
 		//os << x << " " << y << " " << width << " " << height;
 		//fileNode->Write("coords", os.str());
 	}
 
-	void TextureAtlasEntry::Load(FileNode *fileNode)
+	void TextureAtlasEntry::LoadFrom(FileNode *myNode)
 	{
-		fileNode->Read("name", name);
+		myNode->Read("name", name);
 
-		fileNode->Read("x", x);
-		fileNode->Read("y", y);
-		fileNode->Read("width", width);
-		fileNode->Read("height", height);
+		myNode->Read("x", x);
+		myNode->Read("y", y);
+		myNode->Read("width", width);
+		myNode->Read("height", height);
 
 		/*
 		std::string read;
@@ -86,7 +87,7 @@ namespace Monocle
 		return entries[name];
 	}
 
-	void TextureAtlas::Save(TiXmlDocument *document)
+	/*void TextureAtlas::Save(TiXmlDocument *document)
 	{
 		TiXmlElement xmlTextureAtlas("TextureAtlas");
 
@@ -130,7 +131,7 @@ namespace Monocle
 
 			xmlAtlasEntry = xmlAtlasEntry->NextSiblingElement("TextureAtlasEntry");
 		}
-	}
+	}*/
 
 	std::string TextureAtlas::GetImageName()
 	{

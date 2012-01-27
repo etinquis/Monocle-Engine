@@ -3,6 +3,8 @@
 #include <Level.h>
 #include <Monocle.h>
 #include <Macros.h>
+#include <File/File.h>
+#include <File/Types/XML.h>
 
 #include <stdlib.h>
 
@@ -341,6 +343,11 @@ namespace Ogmo
 	Player *World::player;
 	World *World::instance;
 
+	World::World()
+	{
+		OgmoProject proj;
+	}
+
 	void World::Begin()
 	{
 		Scene::Begin();
@@ -367,9 +374,10 @@ namespace Ogmo
 		Input::DefineMaskKey("kill", KEY_K);
 
 		//eventually this will load the level
-		Level::SetScene(this);
-		Level::LoadProject("project.xml");
-		Level::Load("level01.xml");
+		//Level::SetScene(this);
+		
+		File<FileType::XML> projectFile("project.xml");
+		FileNode *root = projectFile.GetRootNode();
         
         sfxCoin = Assets::RequestAudio("Coin.wav");
         sfxJump = Assets::RequestAudio("Jump.wav");
@@ -429,7 +437,7 @@ namespace Ogmo
 		if (Input::IsKeyPressed(KEY_S) && Input::IsKeyHeld(KEY_LCTRL))
 		{
 			Debug::Log("save level...");
-			Level::Save();
+			//Level::Save();
 		}
 
 		/*
@@ -461,5 +469,36 @@ namespace Ogmo
 
 		delete player;
 		delete wall;
+	}
+
+	OgmoProject::OgmoProject() : projectFile(Assets::GetContentPath() + "project.xml")
+	{
+		projectFile.Load();
+
+		LoadFrom(projectFile.GetRootNode()->GetChild("Project"));
+	}
+
+	OgmoProject::~OgmoProject()
+	{
+
+	}
+
+	void OgmoProject::LoadFrom(FileNode *myNode)
+	{
+		FileNode *levelsNode = myNode->GetChild("Levels");
+		if(levelsNode)
+		{
+			std::list<FileNode*> levellist = myNode->GetChild("Levels")->GetChildren("Level");
+			for(std::list<FileNode*>::iterator it = levellist.begin(); it != levellist.end(); it++)
+			{
+				//Level l(*it);
+				//levels.push_back(l);
+			}
+		}
+	}
+
+	void OgmoProject::SaveTo(FileNode *parentNode)
+	{
+
 	}
 }

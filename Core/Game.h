@@ -64,7 +64,7 @@ namespace Monocle
 		Collision collision;
 		Random random;
 		Audio audio;
-		Level level;
+		//Level level;
 
 	private:
 		static Game *instance;

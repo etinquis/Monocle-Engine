@@ -149,9 +149,9 @@ namespace Monocle
 		return prev;
 	}
 
-	void Node::Save(FileNode *fileNode)
+	void Node::SaveTo(FileNode *fileNode)
 	{
-		Entity::Save(fileNode);
+		Entity::SaveTo(fileNode);
 
 		if (variant != 0)
 			fileNode->Write("variant", variant);
@@ -161,9 +161,9 @@ namespace Monocle
 		*/
 	}
 
-	void Node::Load(FileNode *fileNode)
+	void Node::LoadFrom(FileNode *fileNode)
 	{
-		Entity::Load(fileNode);
+		Entity::LoadFrom(fileNode);
 
 		fileNode->Read("variant", variant);
 		//fileNode->Read("radius", radius);

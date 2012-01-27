@@ -1,5 +1,5 @@
 #include "Transform.h"
-#include "FileNode.h"
+#include "File/FileNode.h"
 
 #include "MonocleToolkit.h"
 #include <math.h>
@@ -24,21 +24,22 @@ namespace Monocle
 		scale = next->scale*percent + prev->scale*(1.0f-percent);
 	}
 
-	void Transform::Save(FileNode *fileNode)
+	void Transform::SaveTo(FileNode *parentNode)
 	{
+		FileNode *myNode = parentNode->InsertEndChildNode("Transform");
 		if (position != Vector2::zero)
-			fileNode->Write("position", position);
+			myNode->Write("position", position);
 		if (rotation != 0)
-			fileNode->Write("rotation", rotation);
+			myNode->Write("rotation", rotation);
 		if (scale != Vector2::one)
-			fileNode->Write("scale", scale);
+			myNode->Write("scale", scale);
 	}
 
-	void Transform::Load(FileNode *fileNode)
+	void Transform::LoadFrom(FileNode *myNode)
 	{
-		fileNode->Read("position", position);
-		fileNode->Read("rotation", rotation);
-		fileNode->Read("scale", scale);
+		myNode->Read("position", position);
+		myNode->Read("rotation", rotation);
+		myNode->Read("scale", scale);
 	}
     
     Vector2 Transform::GetDirectionVector()

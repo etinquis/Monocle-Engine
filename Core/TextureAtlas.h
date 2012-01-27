@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FileNode.h"
+#include "File/FileNode.h"
 #include "Vector2.h"
 
 #include <map>
@@ -17,8 +17,8 @@ namespace Monocle
 	public:
 		TextureAtlasEntry();
 		TextureAtlasEntry(TextureAtlas *textureAtlas);
-		void Save(FileNode *fileNode);
-		void Load(FileNode *fileNode);
+		void SaveTo(FileNode *parentNode);
+		void LoadFrom(FileNode *parentNode);
 
 		Vector2 GetTextureOffset();
 		Vector2 GetTextureScale();
@@ -38,8 +38,8 @@ namespace Monocle
 		TextureAtlas();
 		~TextureAtlas();
 		TextureAtlasEntry* GetEntryByName(const std::string &name);
-		void Save(TiXmlDocument *document);
-		void Load(TiXmlElement *element);
+		void SaveTo(FileNode *parentNode);
+		void LoadFrom(FileNode *parentNode);
 		std::string GetImageName();
 
 	private:

@@ -55,42 +55,43 @@ namespace Monocle
 		this->puppet = puppet;
 	}
 
-	void Part::Save(FileNode *fileNode)
+	void Part::SaveTo(FileNode *parentNode)
 	{
+		FileNode *myNode = parentNode->InsertEndChildNode("Part");
 		//Entity::Save(fileNode);
-		fileNode->Write("id", id);
-		fileNode->Write("name", name);
+		myNode->Write("id", id);
+		myNode->Write("name", name);
 		
-		fileNode->Write("atlasEntry", atlasEntry);
+		myNode->Write("atlasEntry", atlasEntry);
 
 		if (sprite)
 		{
 			if (atlasEntry == "")
 			{
-				fileNode->Write("image", sprite->texture->GetName());
-				fileNode->Write("width", sprite->width);
-				fileNode->Write("height", sprite->height);
+				myNode->Write("image", sprite->texture->GetName());
+				myNode->Write("width", sprite->width);
+				myNode->Write("height", sprite->height);
 			}
 			
 			if (sprite->position != Vector2::zero)
-				fileNode->Write("offset", sprite->position);
+				myNode->Write("offset", sprite->position);
 		}
 
 		int layer = GetLayer();
 		if (layer != 0)
-			fileNode->Write("layer", layer);
+			myNode->Write("layer", layer);
 
 		//std::ostringstream os;
 		//os << sprite->textureOffset.x << " " << sprite->textureOffset.y << " " << sprite->textureScale.x << " " << sprite->textureScale.y;
 		//os.str();
 	}
 
-	void Part::Load(FileNode *fileNode)
+	void Part::LoadFrom(FileNode *myNode)
 	{
 		//Entity::Load(fileNode);
 
-		fileNode->Read("id", id);
-		fileNode->Read("name", name);
+		myNode->Read("id", id);
+		myNode->Read("name", name);
 
 		sprite = NULL;
 		SetGraphic(NULL);
@@ -99,7 +100,7 @@ namespace Monocle
 		if (textureAtlas)
 		{
 			TextureAtlasEntry *textureAtlasEntry = NULL;
-			fileNode->Read("atlasEntry", atlasEntry);
+			myNode->Read("atlasEntry", atlasEntry);
 			if (atlasEntry != "")
 			{
 				textureAtlasEntry = textureAtlas->GetEntryByName(atlasEntry);
@@ -119,7 +120,7 @@ namespace Monocle
 		if (sprite == NULL)
 		{
 			std::string image;
-			fileNode->Read("image", image);
+			myNode->Read("image", image);
 
 			sprite = new Sprite(image);
 			SetGraphic(sprite);
@@ -130,8 +131,8 @@ namespace Monocle
 			if (atlasEntry == "")
 			{
 				int width=-1, height=-1;
-				fileNode->Read("width", width);
-				fileNode->Read("height", height);
+				myNode->Read("width", width);
+				myNode->Read("height", height);
 
 				if (width != -1)
 				{
@@ -144,11 +145,11 @@ namespace Monocle
 				}
 			}
 
-			fileNode->Read("offset", sprite->position);
+			myNode->Read("offset", sprite->position);
 		}
 
 		int layer = 0;
-		fileNode->Read("layer", layer);
+		myNode->Read("layer", layer);
 		SetLayer(layer);
 
 //		if (sprite)
@@ -196,18 +197,20 @@ namespace Monocle
 		this->time = time;
 	}
 
-	void KeyFrame::Save(FileNode *fileNode)
+	void KeyFrame::SaveTo(FileNode *parentNode)
 	{
-		Transform::Save(fileNode);
-
-		fileNode->Write("time", time);
+		FileNode *myNode = parentNode->InsertEndChildNode("KeyFrame");
+		myNode->Write("position", position);
+		myNode->Write("scale", scale);
+		myNode->Write("rotation", rotation);
+		myNode->Write("time", time);
 	}
 
-	void KeyFrame::Load(FileNode *fileNode)
+	void KeyFrame::LoadFrom(FileNode *myNode)
 	{
-		Transform::Load(fileNode);
+		Transform::LoadFrom(myNode);
 
-		fileNode->Read("time", time);
+		myNode->Read("time", time);
 	}
 
     
@@ -251,16 +254,30 @@ namespace Monocle
 		}
 	}
 
-	void PartKeyFrames::Save(FileNode *fileNode)
+	void PartKeyFrames::SaveTo(FileNode *parentNode)
 	{
-		fileNode->Write("id", part->GetID());
+		FileNode *myNode = parentNode->InsertEndChildNode("PartKeyFrames");
+		myNode->Write("id", part->GetID());
+
+		for(std::list<KeyFrame>::iterator it = keyFrames.begin(); it != keyFrames.end(); it++)
+		{
+			it->SaveTo(myNode);
+		}
 	}
 
-	void PartKeyFrames::Load(FileNode *fileNode)
+	void PartKeyFrames::LoadFrom(FileNode *myNode)
 	{
-		int id = -1;
-		fileNode->Read("id", id);
+		int id;
+		myNode->Read("id", id, "-1");
 		SetPart(puppet->GetPartByID(id));
+
+		std::list<FileNode *> kflist = myNode->GetChildren("KeyFrame");
+		for(std::list<FileNode *>::iterator it = kflist.begin(); it != kflist.end(); it++)
+		{
+			KeyFrame kf;
+			kf.LoadFrom(*it);
+			keyFrames.push_back(kf);
+		}
 	}
 
 	void PartKeyFrames::SetPart(Part *part)
@@ -441,14 +458,28 @@ namespace Monocle
 		}
 	}
 
-	void Animation::Save(FileNode *fileNode)
+	void Animation::SaveTo(FileNode *parentNode)
 	{
-		fileNode->Write("name", name);
+		FileNode *myNode = parentNode->InsertEndChildNode("Animation");
+		myNode->Write("name", name);
+
+		for(std::list<PartKeyFrames>::iterator it = partKeyFrames.begin(); it != partKeyFrames.end(); it++)
+		{
+			it->SaveTo(myNode);
+		}
 	}
 
-	void Animation::Load(FileNode *fileNode)
+	void Animation::LoadFrom(FileNode *myNode)
 	{
-		fileNode->Read("name", name);
+		myNode->Read("name", name);
+
+		std::list<FileNode*> pkflist = myNode->GetChildren("PartKeyFrames");
+		for(std::list<FileNode*>::iterator it = pkflist.begin(); it != pkflist.end(); it++)
+		{
+			PartKeyFrames pkf;
+			pkf.LoadFrom(*it);
+			partKeyFrames.push_back(pkf);
+		}
 	}
 
 	Puppet::Puppet()
@@ -465,224 +496,52 @@ namespace Monocle
 		}
 	}
 
-	void Puppet::Save()
+	void Puppet::SaveTo(FileNode *parentNode)
 	{
-		if (entity)
+		FileNode *puppet = parentNode->InsertEndChildNode("Puppet");
+		textureAtlas->SaveTo(puppet);
+		FileNode *partlist = parentNode->InsertEndChildNode("Parts");
+		
+		for (std::list<Part*>::iterator i = parts.begin(); i != parts.end(); ++i)
 		{
-			// save to filename
-			TiXmlDocument xmlDoc;
-
-			/// TextureAtlas
-			if (textureAtlas)
+			if ((*i)->GetParent() == entity)
 			{
-				textureAtlas->Save(&xmlDoc);
+				printf("calling SaveParts... top level...\n");
+				(*i)->SaveTo(partlist);
 			}
+		}
 
-			/// Parts
-			//TiXmlElement *xmlParts = xmlDoc.FirstChildElement("Parts");
-			TiXmlElement xmlParts("Parts");
-			for (std::list<Part*>::iterator i = parts.begin(); i != parts.end(); ++i)
-			{
-				if ((*i)->GetParent() == entity)
-				{
-					printf("calling SaveParts... top level...\n");
-					SavePart(&xmlParts, (*i));
-				}
-			}
-			xmlDoc.InsertEndChild(xmlParts);
+		FileNode *animationlist = parentNode->InsertEndChildNode("Animations");
 
-
-			/// Animations
-			TiXmlElement xmlAnimations("Animations");
-			{
-				/// Animation
-				for (std::list<Animation>::iterator i = animations.begin(); i != animations.end(); ++i)
-				{
-					TiXmlElement xmlAnimation("Animation");
-
-					Animation *animation = &(*i);
-                
-					XMLFileNode xmlFileNodeKeyFrameAnim(&xmlAnimation);
-					animation->Save(&xmlFileNodeKeyFrameAnim);
-
-					/// PartKeyFrames
-					for (std::list<Part*>::iterator j = parts.begin(); j != parts.end(); ++j)
-					{
-						PartKeyFrames *partKeyFrames = animation->GetPartKeyFrames(*j);
-						if (partKeyFrames)
-						{
-							TiXmlElement xmlPartKeyFrames("PartKeyFrames");
-							XMLFileNode xmlFileNodePartKeyFrames(&xmlPartKeyFrames);
-
-							partKeyFrames->Save(&xmlFileNodePartKeyFrames);
-
-							/// KeyFrame
-					
-							std::list<KeyFrame> *keyFrames = partKeyFrames->GetKeyFrames();
-							for (std::list<KeyFrame>::iterator k = keyFrames->begin(); k != keyFrames->end(); ++k)
-							{
-								KeyFrame *keyFrame = &(*k);
-
-								TiXmlElement xmlKeyFrame("KeyFrame");
-								XMLFileNode xmlFileNodeKeyFrame(&xmlKeyFrame);
-
-								keyFrame->Save(&xmlFileNodeKeyFrame);
-
-								xmlPartKeyFrames.InsertEndChild(xmlKeyFrame);
-							}
-
-							xmlAnimation.InsertEndChild(xmlPartKeyFrames);
-						}
-					}
-
-					xmlAnimations.InsertEndChild(xmlAnimation);
-				}
-			}
-			xmlDoc.InsertEndChild(xmlAnimations);
-
-			xmlDoc.SaveFile(Assets::GetContentPath() + filename);
+		for (std::list<Animation>::iterator i = animations.begin(); i != animations.end(); ++i)
+		{
+			Animation *animation = &(*i);
+            i->SaveTo(animationlist);
 		}
 	}
 
-	void Puppet::Load(const std::string &filename, Entity *entity)
+	void Puppet::LoadFrom(FileNode *myNode)
 	{
-		this->entity = entity;
-		this->filename = filename;
 		animations.clear();
-		// delete parts?
 		parts.clear();
-		
-		TiXmlDocument xmlDoc(Assets::GetContentPath() + filename);
-		
-		if (xmlDoc.LoadFile())
+
+		FileNode *texAtlas = myNode->GetChild("TextureAtlas");
+		textureAtlas->LoadFrom(texAtlas);
+
+		std::list<FileNode *>partlist = myNode->GetChildren("Parts");
+		for(std::list<FileNode *>::iterator it = partlist.begin(); it != partlist.end(); it++)
 		{
-			/// TextureAtlas
-			TiXmlElement *xmlTextureAtlas = xmlDoc.FirstChildElement("TextureAtlas");
-			if (xmlTextureAtlas)
-			{
-				textureAtlas = new TextureAtlas();
-				textureAtlas->Load(xmlTextureAtlas);
-			}
-			
-			/// Parts
-			TiXmlElement *xmlParts = xmlDoc.FirstChildElement("Parts");
-			if (xmlParts)
-			{
-				LoadParts(xmlParts, NULL);
-			}
-
-			/// Animations
-			TiXmlElement *xmlAnimations = xmlDoc.FirstChildElement("Animations");
-			if (xmlAnimations)
-			{
-				/// Animation
-				TiXmlElement *xmlAnimation = xmlAnimations->FirstChildElement("Animation");
-				while (xmlAnimation)
-				{
-					Animation animation;
-                    XMLFileNode xmlFileNodeKeyFrameAnim(xmlAnimation);
-					animation.Load(&xmlFileNodeKeyFrameAnim);
-
-					/// PartKeyFrames
-					TiXmlElement *xmlPartKeyFrames = xmlAnimation->FirstChildElement("PartKeyFrames");
-					while (xmlPartKeyFrames)
-					{
-						PartKeyFrames partKeyFrames;
-						partKeyFrames.SetPuppet(this);
-                        XMLFileNode xmlFileNodeKeyFramePart(xmlPartKeyFrames);
-						partKeyFrames.Load(&xmlFileNodeKeyFramePart);
-
-						/// KeyFrame
-						TiXmlElement *xmlKeyFrame = xmlPartKeyFrames->FirstChildElement("KeyFrame");
-						while (xmlKeyFrame)
-						{
-							KeyFrame keyFrame;
-                            XMLFileNode xmlFileNodeKeyFrame(xmlKeyFrame);
-							keyFrame.Load(&xmlFileNodeKeyFrame);
-							partKeyFrames.AddKeyFrame(keyFrame);
-
-							xmlKeyFrame = xmlKeyFrame->NextSiblingElement("KeyFrame");
-						}
-
-						animation.AddPartKeyFrames(partKeyFrames);
-
-						xmlPartKeyFrames = xmlPartKeyFrames->NextSiblingElement("PartKeyFrames");
-					}
-
-					animation.RefreshDuration();
-					animations.push_back(animation);
-
-					xmlAnimation = xmlAnimation->NextSiblingElement("Animation");
-				}
-			}
-		}
-		else
-		{
-			Debug::Log("Warning: Could not open puppet file: " + Assets::GetContentPath() + filename);
-			Debug::Log("         " + std::string(xmlDoc.ErrorDesc()));
-			printf("         Row: %d\n", xmlDoc.ErrorRow());
-		}
-	}
-
-	void Puppet::SavePart(TiXmlElement *parentElement, Part *part)
-	{
-		printf("saving part [%s]\n", part->GetName().c_str());
-
-		TiXmlElement xmlPart("Part");
-		XMLFileNode xmlFileNode(&xmlPart);
-
-		if (part)
-		{
-			part->Save(&xmlFileNode);
+			Part *p = new Part();
+			p->LoadFrom((*it));
+			parts.push_back(p);
 		}
 
-		for (std::list<Part*>::iterator i = part->parts.begin(); i != part->parts.end(); ++i)
+		std::list<FileNode *>animationlist = myNode->GetChildren("Animations");
+		for(std::list<FileNode *>::iterator it = animationlist.begin(); it != animationlist.end(); it++)
 		{
-			Part *iterPart = (*i);
-			if (iterPart)
-			{
-				printf ("   calling save on subpart [%s]\n", iterPart->GetName().c_str());
-
-				SavePart(&xmlPart, iterPart);
-			}
-		}
-		parentElement->InsertEndChild(xmlPart);
-	}
-
-	void Puppet::LoadParts(TiXmlElement *element, Part *intoPart)
-	{
-		TiXmlElement *xmlPart = element->FirstChildElement("Part");
-		while (xmlPart)
-		{
-			XMLFileNode xmlFileNode(xmlPart);
-
-			Part *part = new Part();
-			part->SetPuppet(this);
-			part->Load(&xmlFileNode);
-			
-			LoadParts(xmlPart, part);
-
-			printf("loaded part [%s]\n", part->GetName().c_str());
-
-			if (intoPart)
-			{
-				intoPart->parts.push_back(part);
-				part->SetParent(intoPart);
-
-				printf("   into part [%s]\n", intoPart->GetName().c_str());
-			}
-			else
-			{
-				part->SetParent(entity);
-			}
-
-			parts.push_back(part);
-
-			Game::GetScene()->Add(part);
-			
-			//intoEntity->Add(part);
-
-			xmlPart = xmlPart->NextSiblingElement("Part");
+			Animation a;
+			a.LoadFrom((*it));
+			animations.push_back(a);
 		}
 	}
 

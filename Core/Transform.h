@@ -15,8 +15,8 @@ namespace Monocle
 		Transform();
 		Transform(const Transform &transform);
 
-		virtual void Save(FileNode *fileNode);
-		virtual void Load(FileNode *fileNode);
+		virtual void SaveTo(FileNode *parentNode);
+		virtual void LoadFrom(FileNode *myNode);
 
 		//! Interpolate this Transform from prev and next, based on percent. (0.0 ... 1.0)
 		void LerpTransform(Transform *prev, Transform *next, float percent);

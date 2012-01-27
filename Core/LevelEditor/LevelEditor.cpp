@@ -99,7 +99,7 @@ namespace Monocle
 				{
 					if (Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 					{
-						scene->Remove(imageBrowser);
+						//scene->Remove(imageBrowser);
 						imageBrowser = NULL;
 						SetState(FTES_NONE);
 					}
@@ -157,14 +157,14 @@ namespace Monocle
 		{
 			SetState(FTES_BROWSER);
 
-			if (imageBrowser != NULL)
-			{
-				scene->Remove(imageBrowser);
-				imageBrowser = NULL;
-			}
-			imageBrowser = new ImageBrowser();
-			scene->Add(imageBrowser);
-			imageBrowser->ScanDirectory("graphics");
+			//if (imageBrowser != NULL)
+			//{
+				//scene->Remove(imageBrowser);
+				//imageBrowser = NULL;
+			//}
+			//imageBrowser = new ImageBrowser();
+			//scene->Add(imageBrowser);
+			//imageBrowser->ScanDirectory("graphics");
 		}
 	}
 
@@ -213,32 +213,32 @@ namespace Monocle
 	}
 	*/
 
-	void LevelEditor::CloneEntity(Entity *entity, const Vector2 &position)
-	{
-		//Entity *newEntity = (Entity*)(new typeid(T));
-		Entity *newEntity = entity->Clone();
-		scene->Add(newEntity);
+	//void LevelEditor::CloneEntity(Entity *entity, const Vector2 &position)
+	//{
+	//	//Entity *newEntity = (Entity*)(new typeid(T));
+	//	Entity *newEntity = entity->Clone();
+	//	scene->Add(newEntity);
 
-		if (entity->GetParent())
-		{
-			newEntity->position = position - entity->GetParent()->GetWorldPosition();
-		}
-		else
-		{
-			newEntity->position = position;
-		}
+	//	if (entity->GetParent())
+	//	{
+	//		newEntity->position = position - entity->GetParent()->GetWorldPosition();
+	//	}
+	//	else
+	//	{
+	//		newEntity->position = position;
+	//	}
 
-		// special case code
-		Node *node = dynamic_cast<Node*>(newEntity);
-		if (node && selectedNode)
-		{
-			selectedNode->InsertNext(node);
-		}
+	//	// special case code
+	//	Node *node = dynamic_cast<Node*>(newEntity);
+	//	if (node && selectedNode)
+	//	{
+	//		selectedNode->InsertNext(node);
+	//	}
 
-		newEntity->SetParent(entity->GetParent());
+	//	newEntity->SetParent(entity->GetParent());
 
-		Select(newEntity);
-	}
+	//	Select(newEntity);
+	//}
 
 	//// cloning a node is a special case for now
 	//void LevelEditor::CloneNode()
@@ -272,7 +272,7 @@ namespace Monocle
 
 		if (entity)
 		{
-			selectedFringeTile = dynamic_cast<FringeTile*>(entity);
+			//selectedFringeTile = dynamic_cast<FringeTile*>(entity);
 			selectedNode = dynamic_cast<Node*>(entity);
 		}
 		else
@@ -399,20 +399,20 @@ namespace Monocle
 		{
 			if (Input::IsKeyPressed(KEY_B))
 			{
-				selectedFringeTile->PrevBlend();
+				//selectedFringeTile->PrevBlend();
 			}
 			if (Input::IsKeyPressed(KEY_N))
 			{
-				selectedFringeTile->NextBlend();
+				//selectedFringeTile->NextBlend();
 			}
 
 			if (Input::IsKeyPressed(KEY_LEFTBRACKET))
 			{
-				selectedFringeTile->PrevTile();
+				//selectedFringeTile->PrevTile();
 			}
 			if (Input::IsKeyPressed(KEY_RIGHTBRACKET))
 			{
-				selectedFringeTile->NextTile();
+				//selectedFringeTile->NextTile();
 			}
 			//if (Input::IsKeyPressed(keyClone))
 			//{
@@ -420,13 +420,13 @@ namespace Monocle
 			//}
 			if (Input::IsKeyPressed(KEY_M))
 			{
-				std::string path = Monocle::GetWorkingDirectory() + selectedFringeTile->sprite->texture->filename;
-				Debug::Log("Opening: " + path + " ...");
-				Monocle::OpenURL(path);
+				//std::string path = Monocle::GetWorkingDirectory() + selectedFringeTile->sprite->texture->filename;
+				//Debug::Log("Opening: " + path + " ...");
+				//Monocle::OpenURL(path);
 			}
 			if (Input::IsKeyPressed(KEY_R))
 			{
-				selectedFringeTile->sprite->texture->Reload();
+				//selectedFringeTile->sprite->texture->Reload();
 			}
 
 			if (Input::IsKeyHeld(KEY_LSHIFT) && Input::IsKeyPressed(KEY_0))
@@ -438,7 +438,7 @@ namespace Monocle
 
 		if (Input::IsKeyPressed(keyClone))
 		{
-			CloneEntity(selectedEntity, Input::GetWorldMousePosition());
+			//CloneEntity(selectedEntity, Input::GetWorldMousePosition());
 		}
 
 		if (!selectedNode)

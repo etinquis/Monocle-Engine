@@ -9,11 +9,16 @@
 namespace Monocle
 {
 	class Level;
+	class FileNode;
 
 	class Tilemap : public Graphic
 	{
 		public:
+			Tilemap(FileNode *myNode);
 			Tilemap(Tileset *tileset, int width, int height, int tileWidth, int tileHeight);
+
+			void LoadFrom(FileNode *myNode);
+			void SaveTo(FileNode *parentNode);
 
 			void Resize(int width, int height);
 

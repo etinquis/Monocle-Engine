@@ -3,6 +3,10 @@
 #include <Graphics/SpriteAnimation.h>
 #include <Level.h>
 
+#include <Serializable.h>
+#include <File/File.h>
+#include <File/Types/XML.h>
+
 // by @NoelFB
 using namespace Monocle;
 
@@ -70,6 +74,8 @@ namespace Ogmo
 	class World : public Scene
 	{
 	public:
+		World();
+
 		void Begin();
 		void End();
 		void Update();
@@ -83,5 +89,18 @@ namespace Ogmo
 		Sprite *atSpike;
 		std::list<Coin*> coins;
 
+	};
+
+	class OgmoProject : public Serializable
+	{
+	public:
+		OgmoProject();
+		~OgmoProject();
+
+		void LoadFrom(FileNode *myNode);
+		void SaveTo(FileNode *parentNode);
+	private:
+		//std::vector<Level> levels;
+		File<FileType::XML> projectFile;
 	};
 }

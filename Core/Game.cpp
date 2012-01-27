@@ -28,7 +28,7 @@ namespace Monocle
 		graphics.Init();
 		collision.Init();
 		audio.Init();
-		level.Init();
+		//level.Init();
 	}
 
 	//!
