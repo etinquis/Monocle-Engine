@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 #ifdef MONOCLE_WINDOWS
 #include <WinSock2.h>
@@ -18,6 +18,7 @@
 #include "../File/FileNode.h"
 #include "../File/Types/json.h"
 #include <vector>
+#include "../Debug.h"
 
 namespace Monocle
 {

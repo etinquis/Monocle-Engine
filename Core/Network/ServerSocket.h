@@ -21,13 +21,13 @@ namespace Monocle
 			addr.sin_port = htons(port);
 			addr.sin_addr.s_addr = INADDR_ANY;
 
-			if( bind(SocketHandle, (struct sockaddr *)&addr, sizeof(addr)) == 0 )
+			if( bind(this->SocketHandle, (struct sockaddr *)&addr, sizeof(addr)) == 0 )
 			{
 				Debug::Log("Bound socket successfully");
 			}
 			else
 			{
-				Close();
+				this->Close();
 				Debug::Log("Could not bind socket");
 			}
 		}
@@ -35,18 +35,18 @@ namespace Monocle
 		void Listen()
 		{
 			Debug::Log("Socket Listening");
-			listen(SocketHandle, 10);
+			listen(this->SocketHandle, 10);
 		}
 
 		SocketStream *Accept()
 		{
 			Debug::Log("Waiting for connection...");
-			SOCKETHANDLE streamHandle = accept(SocketHandle, NULL, NULL);
+			SOCKETHANDLE streamHandle = accept(this->SocketHandle, NULL, NULL);
 
 			if(streamHandle >= 0)
 			{
 				SocketStream *stream = new SocketStream(streamHandle);
-				streams.push_back(stream);
+				this->streams.push_back(stream);
 				return stream;
 			}
 			else

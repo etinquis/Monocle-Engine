@@ -14,10 +14,10 @@ namespace Monocle
 
 		void json::WriteTo(std::ostream &os, FileNode *node)
 		{
-			Json::Value root = Json::Value(Json::ValueType::objectValue);
+			Json::Value root(Json::objectValue);
 			WriteNode(&root, node);
 
-			Json::StyledWriter writer = Json::StyledWriter();
+			Json::StyledWriter writer;
 			
 			os << writer.write(root);
 		}
@@ -43,12 +43,12 @@ namespace Monocle
 
 		void json::ReadFrom(std::istream &is, FileNode *root)
 		{
-			 Json::Reader reader = Json::Reader();
+			 Json::Reader reader;
 			 Json::Value jroot;
 
 			 std::string line;
 
-			 std::ostringstream lines = std::ostringstream();
+			 std::ostringstream lines;
 			
 			 while(!is.eof())
 			 {

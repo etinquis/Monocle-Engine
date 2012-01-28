@@ -26,10 +26,10 @@ namespace Monocle
 			addr.sin_port = port;
 			addr.sin_addr.s_addr = *((unsigned long*)hostIp->h_addr);
 
-			if(connect(SocketHandle, (struct sockaddr *)&addr, sizeof(addr)) == 0)
+			if(connect(this->SocketHandle, (struct sockaddr *)&addr, sizeof(addr)) == 0)
 			{
-				SocketStream *stream = new SocketStream(SocketHandle);
-				streams.push_back(stream);
+				SocketStream *stream = new SocketStream(this->SocketHandle);
+				this->streams.push_back(stream);
 				return stream;
 			}
 			else

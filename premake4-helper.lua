@@ -78,7 +78,7 @@ function monocle_os_links_base()
 	monocle_extlib("TinyXML")
 	
 	if os.is( "windows" ) == true then
-		links {"Winmm", "glew32s", "opengl32", "glu32", "openal32"}
+		links {"Winmm", "glew32s", "opengl32", "glu32", "openal32", "gdi32"}
 	elseif os.is( "linux" ) == true then
 		links { "X11","GLEW","GL","GLU","openal" }
 	elseif os.is( "macosx" ) == true then

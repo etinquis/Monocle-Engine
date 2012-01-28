@@ -8,6 +8,8 @@
 #include "Mmsystem.h"
 #include <WindowsX.h>
 
+#include <cstdlib>
+
 // opengl/windows init code baesd on http://nehe.gamedev.net
 // keyboard code based on SDL http://www.libsdl.org/
 
