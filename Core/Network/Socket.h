@@ -32,7 +32,12 @@ namespace Monocle
 	public:
 		static const int BUFF_SIZE = 500;
 
-		SocketStream(SOCKETHANDLE sHandle) : handle(sHandle)
+		bool isOpen()
+		{
+			return !closed;
+		}
+
+		SocketStream(SOCKETHANDLE sHandle) : handle(sHandle), closed(false)
 		{
 
 		}
@@ -40,7 +45,7 @@ namespace Monocle
 		template <typename T>
 		SocketStream &operator <<(const T &obj)
 		{
-			str.clear();
+			std::ostringstream str;
 
 			FileNode *node = new FileNode();
 			obj.SaveTo(node);
@@ -49,55 +54,58 @@ namespace Monocle
 
 			std::string outstr = str.str();
 			send(handle, outstr.c_str(), outstr.length(), NULL);
-
-			return *this;
-		}
-
-		template<>
-		SocketStream &operator <<(const std::string &s)
-		{
-			str.clear();
-			send(handle, s.c_str(), s.length(), NULL);
-
+			
 			return *this;
 		}
 
 		template <typename T>
 		SocketStream &operator >>(T &obj)
 		{
-			str.clear();
+			std::stringstream str;
 
-			while(recv(handle, buffer, BUFF_SIZE, NULL) > 0)
+			memset(buffer, 0, BUFF_SIZE);
+
+			fd_set fds;
+			FD_ZERO(&fds);
+			FD_SET(handle, &fds);
+			struct timeval tv;
+			tv.tv_sec = 5;
+			tv.tv_usec = 0;
+
+			while(select(handle + 1, &fds, NULL, NULL, &tv) == 0) { }
+
+			int readbytes = 0;
+			do
 			{
+				buffer[0] = '\0';
+				readbytes = recv(handle, buffer, BUFF_SIZE, NULL);
 				str << buffer;
-			}
+			}while(readbytes == BUFF_SIZE);
 
-			FileNode *node = new FileNode();
-			fType.ReadFrom(str, node);
-			obj.LoadFrom(node->GetChild(T::NodeName));
-
-			return *this;
-		}
-
-		template <>
-		SocketStream &operator >>(std::string &s)
-		{
-			str.clear();
-
-			while(recv(handle, buffer, BUFF_SIZE, NULL) == BUFF_SIZE)
+			if(readbytes == 0)
 			{
-				str << buffer;
+				closed = true;
 			}
-
-			s = str.str();
+			
+			if(readbytes == -1)
+			{
+				closed = true;
+				Debug::Log("Error recieving data");
+			}
+			else
+			{
+				FileNode *node = new FileNode();
+				fType.ReadFrom(str, node);
+				obj.LoadFrom(node->GetChild(T::NodeName));
+			}
 			return *this;
 		}
 
 	protected:
 		SOCKETHANDLE handle;
-		std::stringstream str;
 		FileType::json fType;
 		char buffer[BUFF_SIZE];
+		bool closed;
 	};
 
 	template<typename SocketType>
@@ -112,7 +120,7 @@ namespace Monocle
 			{
 				Init();
 			}
-
+			
 			SocketHandle = sType.CreateSocket();
 			if(SocketHandle == -1)
 			{

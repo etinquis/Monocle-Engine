@@ -9,11 +9,6 @@ namespace Monocle
 	class ServerSocket : public Socket<SocketType>
 	{
 	public:
-		ServerSocket() : Socket()
-		{
-
-		}
-
 		void Bind(int port)
 		{
 			struct sockaddr_in addr;

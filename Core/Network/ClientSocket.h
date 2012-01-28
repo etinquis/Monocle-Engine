@@ -26,7 +26,6 @@ namespace Monocle
 			addr.sin_port = port;
 			addr.sin_addr.s_addr = *((unsigned long*)hostIp->h_addr);
 
-			Debug::Log(WSAGetLastError());
 			if(connect(SocketHandle, (struct sockaddr *)&addr, sizeof(addr)) == 0)
 			{
 				SocketStream *stream = new SocketStream(SocketHandle);
