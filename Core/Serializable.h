@@ -14,6 +14,6 @@ namespace Monocle
 		}
 
 		virtual void LoadFrom(FileNode *myNode) = 0;
-		virtual void SaveTo(FileNode *parentNode) = 0;
+		virtual void SaveTo(FileNode *parentNode) const = 0;
 	};
 }

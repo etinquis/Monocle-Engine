@@ -1,7 +1,7 @@
 #pragma once;
 
 #ifdef MONOCLE_WINDOWS
-#include <WinSock.h>
+#include <WinSock2.h>
 #else
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -17,27 +17,47 @@
 
 #include "../File/FileNode.h"
 #include "../File/Types/json.h"
+#include <vector>
 
 namespace Monocle
 {
+	class SocketTypeBase
+	{
+	public:
+		virtual SOCKETHANDLE CreateSocket() = 0;
+	};
+
 	class SocketStream
 	{
 	public:
-		const int BUFF_SIZE = 500;
-		SocketStream(SOCKETHANDLE handle);
+		static const int BUFF_SIZE = 500;
+
+		SocketStream(SOCKETHANDLE sHandle) : handle(sHandle)
+		{
+
+		}
 
 		template <typename T>
 		SocketStream &operator <<(const T &obj)
 		{
 			str.clear();
 
-			FileNode node;
-			obj->SaveTo(node);
+			FileNode *node = new FileNode();
+			obj.SaveTo(node);
 			
-			fType.WriteTo(str, &node);
+			fType.WriteTo(str, node);
 
 			std::string outstr = str.str();
-			send(SocketHandle, outstr.c_str(), outstr.length(), NULL);
+			send(handle, outstr.c_str(), outstr.length(), NULL);
+
+			return *this;
+		}
+
+		template<>
+		SocketStream &operator <<(const std::string &s)
+		{
+			str.clear();
+			send(handle, s.c_str(), s.length(), NULL);
 
 			return *this;
 		}
@@ -47,34 +67,89 @@ namespace Monocle
 		{
 			str.clear();
 
-			while(recv(SocketHandle, buffer, BUFF_SIZE, NULL) == BUFF_SIZE)
+			while(recv(handle, buffer, BUFF_SIZE, NULL) > 0)
 			{
 				str << buffer;
 			}
 
-			FileNode node;
-			fType.ReadFrom(str, &node);
-			obj->LoadFrom(node);
+			FileNode *node = new FileNode();
+			fType.ReadFrom(str, node);
+			obj.LoadFrom(node->GetChild(T::NodeName));
 
 			return *this;
 		}
 
-	private:
-		SOCKETHANDLE SocketHandle;
-		FileType::json fType;
+		template <>
+		SocketStream &operator >>(std::string &s)
+		{
+			str.clear();
+
+			while(recv(handle, buffer, BUFF_SIZE, NULL) == BUFF_SIZE)
+			{
+				str << buffer;
+			}
+
+			s = str.str();
+			return *this;
+		}
+
+	protected:
+		SOCKETHANDLE handle;
 		std::stringstream str;
+		FileType::json fType;
 		char buffer[BUFF_SIZE];
 	};
 
+	template<typename SocketType>
 	class Socket
 	{
 	public:
-		Socket();
-		~Socket();
+		static const int BUFF_SIZE = 500;
+		
+		Socket()
+		{
+			if(!initialized)
+			{
+				Init();
+			}
 
-		void Close();
+			SocketHandle = sType.CreateSocket();
+			if(SocketHandle == -1)
+			{
+				Debug::Log("Could not create socket");
+			}
+		}
+		~Socket()
+		{
+			Close();
+		}
 
+		static void Init()
+		{
+#ifdef MONOCLE_WINDOWS
+			WSADATA data;
+			WSAStartup(MAKEWORD(2,2), &data);
+#endif
+			initialized = true;
+		}
+
+		void Close()
+		{
+			for(std::vector<SocketStream*>::iterator it = streams.begin(); it != streams.end(); it++)
+			{
+				delete (*it);
+			}
+			closesocket(SocketHandle);
+		}
 	protected:
 		SOCKETHANDLE SocketHandle;
+		static bool initialized;
+
+		std::vector<SocketStream *> streams;
+
+		SocketType sType;
 	};
+	
+	template<typename T>
+	bool Socket<T>::initialized = false;
 }

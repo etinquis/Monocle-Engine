@@ -20,5 +20,7 @@ monocletest_do_project_test( "LevelEditor" )
 monocletest_do_project_test( "Ogmo" )
 monocletest_do_project_test( "PuppetTest" )
 monocletest_do_project_test( "Scripted" )
+monocletest_do_project_test( "NetworkClient" )
+monocletest_do_project_test( "NetworkServer" )
 monocletest_do_project_test( "TestSelector" )
 
