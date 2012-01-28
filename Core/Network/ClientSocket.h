@@ -2,6 +2,10 @@
 
 #include "Socket.h"
 #include "Debug.h"
+#ifdef MONOCLE_LINUX
+	#include <arpa/inet.h>
+	#include <netdb.h>
+#endif
 
 namespace Monocle
 {

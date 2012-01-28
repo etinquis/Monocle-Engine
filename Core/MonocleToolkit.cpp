@@ -8,6 +8,7 @@
 	#include <sys/types.h>
 	#include <dirent.h>
 #endif
+#include <cstring>
 
 namespace Monocle
 {

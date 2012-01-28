@@ -10,15 +10,18 @@
 #ifdef MONOCLE_WINDOWS
 #define SOCKETHANDLE SOCKET
 #define SOCKETIPv4 AF_INET
+#define SOCKETCLOSE closesocket
 #else
 #define SOCKETHANDLE int
 #define SOCKETIPv4 PF_INET
+#define SOCKETCLOSE close
 #endif
 
 #include "../File/FileNode.h"
 #include "../File/Types/json.h"
 #include <vector>
 #include "../Debug.h"
+#include <cstring>
 
 namespace Monocle
 {
@@ -148,7 +151,7 @@ namespace Monocle
 			{
 				delete (*it);
 			}
-			closesocket(SocketHandle);
+			SOCKETCLOSE(SocketHandle);
 		}
 	protected:
 		SOCKETHANDLE SocketHandle;

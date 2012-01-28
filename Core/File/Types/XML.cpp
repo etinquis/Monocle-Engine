@@ -1,6 +1,6 @@
 #include "XML.h"
 #include "../FileNode.h"
-#include <tinyxml/tinyxml.h>
+#include <TinyXML/tinyxml.h>
 
 namespace Monocle
 {
