@@ -15,6 +15,7 @@ project "MonocleCore"
 	files { _MONOCLE_EXTLIB_BASE.."/GL/glew.c" }
 	files { _MONOCLE_EXTLIB_BASE.."/ogg/*.c" }
 	files { _MONOCLE_EXTLIB_BASE.."/vorbis/*.c" }
+	files { _MONOCLE_EXTLIB_BASE.."/json/*.cpp" }
 	--files { _MONOCLE_EXTLIB_BASE.."/lua/**.c" }
 
 	configuration "macosx"
