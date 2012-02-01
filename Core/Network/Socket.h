@@ -25,6 +25,8 @@
 
 namespace Monocle
 {
+	class Serializable;
+
 	class SocketTypeBase
 	{
 	public:
@@ -36,74 +38,12 @@ namespace Monocle
 	public:
 		static const int BUFF_SIZE = 500;
 
-		bool isOpen()
-		{
-			return !closed;
-		}
+		SocketStream(SOCKETHANDLE sHandle);
 
-		SocketStream(SOCKETHANDLE sHandle) : handle(sHandle), closed(false)
-		{
+		bool isOpen();
 
-		}
-
-		template <typename T>
-		SocketStream &operator <<(const T &obj)
-		{
-			std::ostringstream str;
-
-			FileNode *node = new FileNode();
-			obj.SaveTo(node);
-			
-			fType.WriteTo(str, node);
-
-			std::string outstr = str.str();
-			send(handle, outstr.c_str(), outstr.length(), NULL);
-			
-			return *this;
-		}
-
-		template <typename T>
-		SocketStream &operator >>(T &obj)
-		{
-			std::stringstream str;
-
-			memset(buffer, 0, BUFF_SIZE);
-
-			fd_set fds;
-			FD_ZERO(&fds);
-			FD_SET(handle, &fds);
-			struct timeval tv;
-			tv.tv_sec = 5;
-			tv.tv_usec = 0;
-
-			while(select(handle + 1, &fds, NULL, NULL, &tv) == 0) { }
-
-			int readbytes = 0;
-			do
-			{
-				buffer[0] = '\0';
-				readbytes = recv(handle, buffer, BUFF_SIZE, NULL);
-				str << buffer;
-			}while(readbytes == BUFF_SIZE);
-
-			if(readbytes == 0)
-			{
-				closed = true;
-			}
-			
-			if(readbytes == -1)
-			{
-				closed = true;
-				Debug::Log("Error recieving data");
-			}
-			else
-			{
-				FileNode *node = new FileNode();
-				fType.ReadFrom(str, node);
-				obj.LoadFrom(node->GetChild(T::NodeName));
-			}
-			return *this;
-		}
+		SocketStream &operator <<(const Serializable &obj);
+		SocketStream &operator >>(Serializable &obj);
 
 	protected:
 		SOCKETHANDLE handle;
@@ -153,6 +93,7 @@ namespace Monocle
 			}
 			SOCKETCLOSE(SocketHandle);
 		}
+
 	protected:
 		SOCKETHANDLE SocketHandle;
 		static bool initialized;

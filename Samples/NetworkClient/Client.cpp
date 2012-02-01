@@ -20,10 +20,11 @@ namespace NetworkClient
 
 	void ClientScene::Begin()
 	{
+		held = false;
 		stream = socket.Connect(8080, "127.0.0.1");
 		Monocle::Input::AddHandler(this);
 	}
-
+	
 	void ClientScene::End()
 	{
 		socket.Close();
@@ -33,7 +34,6 @@ namespace NetworkClient
 	{
 		KeyStateChangeMessage msg;
 		msg.key = key;
-
 		*stream << msg;
 	}
 }

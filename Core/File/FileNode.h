@@ -77,6 +77,7 @@ namespace Monocle
 		//virtual void SaveChildNode(const std::string &name, Entity *entity)=0;
 		//virtual FileNode* NewNode(const std::string &name)=0;
 		virtual FileNode *InsertEndChildNode(const std::string &name);
+		virtual FileNode *GetChild(const int idx);
 		virtual FileNode *GetChild(const std::string &name);
 		virtual std::list<FileNode*> GetChildren(const std::string &name);
 		virtual void RemoveChildren(const std::string &name);

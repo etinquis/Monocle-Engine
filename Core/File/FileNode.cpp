@@ -30,6 +30,13 @@ namespace Monocle
 		return NULL;
 	}
 
+	FileNode *FileNode::GetChild(const int idx)
+	{
+		ChildList::iterator it = children.begin();
+		for(int i = 0; i < idx; i++, it++) { }
+		return &(*it);
+	}
+
 	std::list<FileNode*> FileNode::GetChildren(const std::string &name)
 	{
 		return lookup[name];

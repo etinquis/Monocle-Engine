@@ -39,6 +39,7 @@ namespace Monocle
 			else
 			{
 				Debug::Log("Connection failed");
+				Close();
 				return NULL;
 			}
 		}

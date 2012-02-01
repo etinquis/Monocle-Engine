@@ -29,5 +29,7 @@ namespace NetworkClient
 	private:
 		Monocle::ClientSocket<Monocle::NetworkType::TCP> socket;
 		Monocle::SocketStream *stream;
+
+		bool held;
 	};
 }
