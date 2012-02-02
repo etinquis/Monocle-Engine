@@ -1,6 +1,7 @@
 #include <Network/ServerSocket.h>
 #include <Network/Types/TCP.h>
 #include "Server.h"
+#include "Network/SocketStream.h"
 #include <iostream>
 
 int main()

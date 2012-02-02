@@ -47,15 +47,17 @@ namespace Monocle
 			Debug::Log("Waiting for connection...");
 			SOCKETHANDLE streamHandle = accept(this->SocketHandle, NULL, NULL);
 
-			if(streamHandle >= 0)
+			if(streamHandle > 0)
 			{
+				Debug::Log("Connection established");
 				SocketStream *stream = new SocketStream(streamHandle);
 				this->streams.push_back(stream);
 				return stream;
 			}
 			else
 			{
-				Debug::Log("Connection established");
+				Debug::Log("Error attempting a connection");
+				return NULL;
 			}
 		}
 	};

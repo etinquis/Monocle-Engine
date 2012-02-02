@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Socket.h"
+#include "SocketStream.h"
 #include "Debug.h"
 #ifdef MONOCLE_LINUX
 	#include <arpa/inet.h>
 	#include <netdb.h>
+#elif defined(MONOCLE_WINDOWS)
+	#include <ws2tcpip.h>
 #endif
 
 namespace Monocle
@@ -27,23 +30,24 @@ namespace Monocle
 				this->streams.pop_back();
 			}
 
-			unsigned long address = inet_addr(host.c_str());
+			struct addrinfo *info = NULL;
 
-			if(address == INADDR_NONE)
+			int error;
+
+			std::stringstream ss;
+			ss << port;
+			error = getaddrinfo(host.c_str(), ss.str().c_str(), NULL, &info);
+
+			sockaddr addr;
+			int addrLen = this->sType.FindAddr(info, addr);
+
+			if(addrLen == -1)
 			{
-				Debug::Log("Address could not be found");
+				Debug::Log("Could not find suitable address.");
 				return NULL;
 			}
 
-			hostent *hostIp = gethostbyaddr((char*) &address, sizeof(address), AF_INET);
-			port = htons(port);
-
-			struct sockaddr_in addr;
-			addr.sin_family = PF_INET;
-			addr.sin_port = port;
-			addr.sin_addr.s_addr = *((unsigned long*)hostIp->h_addr);
-
-			if(connect(this->SocketHandle, (struct sockaddr *)&addr, sizeof(addr)) == 0)
+			if(connect(this->SocketHandle, &addr, addrLen) == 0)
 			{
 				SocketStream *stream = new SocketStream(this->SocketHandle, true);
 				this->streams.push_back(stream);

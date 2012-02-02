@@ -1,6 +1,6 @@
 #include "Client.h"
 #include <Game.h>
-
+#include <Network/SocketStream.h>
 int main()
 {
 	Monocle::Game g;

@@ -16,9 +16,6 @@ namespace Monocle
 			return socket(AF_BLUETOOTH, SOCK_STREAM, BTHPROTO_RFCOMM);
 		}
 
-		void Bluetooth::Bind()
-		{
 
-		}
 	}
 }

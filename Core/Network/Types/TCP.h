@@ -10,6 +10,7 @@ namespace Monocle
 		{
 		public:
 			virtual SOCKETHANDLE CreateSocket();
+			int FindAddr(const addrinfo *addr, sockaddr &result);
 		};
 	}
 }
