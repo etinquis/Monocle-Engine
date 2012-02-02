@@ -19,11 +19,17 @@ namespace Monocle
 		public:
 			json();
 
-			virtual void WriteTo(std::ostream &os, FileNode *node);
-			virtual void ReadFrom(std::istream &is, FileNode *node);
-		private:
-			void WriteNode(Json::Value *, FileNode *);
-			void ReadNode(Json::Value *, FileNode *);
+			virtual void WriteTo(std::ostream &os, FileNode *node) const;
+			virtual void ReadFrom(std::istream &is, FileNode *node) const;
+		protected:
+			void WriteNode(Json::Value *, FileNode *) const;
+			void ReadNode(Json::Value *, FileNode *) const;
+		};
+
+		class minifiedjson : public json
+		{
+		public:
+			virtual void WriteTo(std::ostream &os, FileNode *node) const;
 		};
 	}
 }

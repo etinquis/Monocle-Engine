@@ -12,7 +12,7 @@ namespace Monocle
 
 		}
 
-		void json::WriteTo(std::ostream &os, FileNode *node)
+		void json::WriteTo(std::ostream &os, FileNode *node) const
 		{
 			Json::Value root(Json::objectValue);
 			WriteNode(&root, node);
@@ -22,7 +22,7 @@ namespace Monocle
 			os << writer.write(root);
 		}
 
-		void json::WriteNode(Json::Value *element, FileNode *node)
+		void json::WriteNode(Json::Value *element, FileNode *node) const
 		{
 			 for(FileNode::AttributeList::iterator it = node->attributes.begin(); it != node->attributes.end(); it++)
 			 {
@@ -41,7 +41,7 @@ namespace Monocle
 			 }
 		}
 
-		void json::ReadFrom(std::istream &is, FileNode *root)
+		void json::ReadFrom(std::istream &is, FileNode *root) const
 		{
 			 Json::Reader reader;
 			 Json::Value jroot;
@@ -67,7 +67,7 @@ namespace Monocle
 			 }
 		}
 
-		void json::ReadNode(Json::Value *element, FileNode *node)
+		void json::ReadNode(Json::Value *element, FileNode *node) const
 		{
 			 Json::Value::Members members = element->getMemberNames();
 			 for(Json::Value::Members::iterator it = members.begin(); it != members.end(); it++)
@@ -82,6 +82,16 @@ namespace Monocle
 			 		node->Write( *it, (*element)[*it].asString() );
 			 	}
 			 }
+		}
+
+		void minifiedjson::WriteTo(std::ostream &os, FileNode *node) const
+		{
+			Json::Value root(Json::objectValue);
+			WriteNode(&root, node);
+
+			Json::FastWriter writer;
+			
+			os << writer.write(root);
 		}
 	}
 }

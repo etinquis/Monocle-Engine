@@ -11,7 +11,7 @@ namespace Monocle
 
 		}
 
-		void XML::WriteTo(std::ostream &os, FileNode *node)
+		void XML::WriteTo(std::ostream &os, FileNode *node) const
 		{
 			TiXmlDocument doc = TiXmlDocument();
 			TiXmlElement *element = new TiXmlElement(node->GetName());
@@ -26,7 +26,7 @@ namespace Monocle
 			os << doc;
 		}
 
-		void XML::WriteNode(TiXmlElement *element, FileNode *node)
+		void XML::WriteNode(TiXmlElement *element, FileNode *node) const
 		{
 			for(FileNode::AttributeList::iterator it = node->attributes.begin(); it != node->attributes.end(); it++)
 			{
@@ -41,7 +41,7 @@ namespace Monocle
 			}
 		}
 
-		void XML::ReadFrom(std::istream &is, FileNode *root)
+		void XML::ReadFrom(std::istream &is, FileNode *root) const
 		{
 			TiXmlDocument doc;
 			is >> doc;
@@ -58,7 +58,7 @@ namespace Monocle
 			}
 		}
 
-		void XML::ReadNode(TiXmlElement *element, FileNode *node)
+		void XML::ReadNode(TiXmlElement *element, FileNode *node) const
 		{
 			TiXmlAttribute *attrib = element->FirstAttribute();
 			while(attrib)

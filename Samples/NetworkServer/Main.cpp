@@ -10,10 +10,9 @@ int main()
 	server.Listen();
 	Monocle::SocketStream *stream = server.Accept();
 
-	while(stream->isOpen())
+	NetworkServer::KeyStateChangeMessage msg;
+	while( (*stream >> msg).good() )
 	{
-		NetworkServer::KeyStateChangeMessage msg;
-		*stream >> msg;
 		std::cout << msg.key << std::endl;
 	}
 

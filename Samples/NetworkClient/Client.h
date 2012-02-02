@@ -22,14 +22,12 @@ namespace NetworkClient
 	class ClientScene : public Monocle::Scene, Monocle::Input::EventHandler
 	{
 	public:
+		virtual ~ClientScene();
 		void Begin();
-		void End();
 
 		void OnKeyPress(Monocle::KeyCode key);
 	private:
 		Monocle::ClientSocket<Monocle::NetworkType::TCP> socket;
 		Monocle::SocketStream *stream;
-
-		bool held;
 	};
 }

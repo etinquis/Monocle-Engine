@@ -4,7 +4,8 @@
 int main()
 {
 	Monocle::Game g;
-	g.SetScene(new NetworkClient::ClientScene());
+	NetworkClient::ClientScene scene;
+	g.SetScene(&scene);
 	g.Main();
 	return 0;
 }
