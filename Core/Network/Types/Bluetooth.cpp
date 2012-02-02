@@ -1,7 +1,11 @@
+#ifndef __MINGW32__
+
 #include "Bluetooth.h"
 
 #ifdef MONOCLE_WINDOWS
 #include <ws2bth.h>
+#include <ws2def.h>
+#include <BluetoothAPIs.h>
 #ifndef AF_BLUETOOTH
 #define AF_BLUETOOTH AF_BTH
 #endif
@@ -15,7 +19,7 @@ namespace Monocle
 		{
 			return socket(AF_BLUETOOTH, SOCK_STREAM, BTHPROTO_RFCOMM);
 		}
-
-
 	}
 }
+
+#endif

@@ -1,14 +1,9 @@
 #pragma once
 
+#include "Network.h"
 #include "Socket.h"
 #include "SocketStream.h"
 #include "Debug.h"
-#ifdef MONOCLE_LINUX
-	#include <arpa/inet.h>
-	#include <netdb.h>
-#elif defined(MONOCLE_WINDOWS)
-	#include <ws2tcpip.h>
-#endif
 
 namespace Monocle
 {
@@ -30,14 +25,14 @@ namespace Monocle
 				this->streams.pop_back();
 			}
 
-			struct addrinfo *info = NULL;
+			addrinfo *info = NULL;
 
 			int error;
 
 			std::stringstream ss;
 			ss << port;
-			error = getaddrinfo(host.c_str(), ss.str().c_str(), NULL, &info);
-
+			error = ::getaddrinfo(host.c_str(), ss.str().c_str(), NULL, &info);
+			
 			sockaddr addr;
 			int addrLen = this->sType.FindAddr(info, addr);
 
@@ -56,7 +51,7 @@ namespace Monocle
 			else
 			{
 				Debug::Log("Connection failed");
-				Close();
+				this->Close();
 				return NULL;
 			}
 		}

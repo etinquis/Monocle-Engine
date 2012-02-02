@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Network.h"
 #include "Socket.h"
+#include "SocketStream.h"
 #include "Debug.h"
 #include <cstring>
 #ifdef MONOCLE_LINUX

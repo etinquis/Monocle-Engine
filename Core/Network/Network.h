@@ -1,7 +1,12 @@
 #pragma once
 
 #ifdef MONOCLE_WINDOWS
+
+#ifdef __MINGW32__
+#define WINVER 0x0501
+#endif
 #include <WinSock2.h>
+#include <WS2tcpip.h>
 #else
 #include <sys/socket.h>
 #include <netinet/in.h>

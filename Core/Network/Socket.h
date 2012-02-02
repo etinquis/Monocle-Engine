@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include "Network.h"
+#include <vector>
 #include "../Debug.h"
 
 namespace Monocle
@@ -94,7 +94,7 @@ namespace Monocle
 		{
 			if(closed)
 			{
-				return null;
+				return NULL;
 			}
 			return this;
 		}
