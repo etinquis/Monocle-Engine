@@ -18,14 +18,18 @@ namespace NetworkClient
 		myNode->Write("key", k);
 	}
 
+	ClientScene::ClientScene(Monocle::SocketStream *ss) : stream(ss)
+	{
+
+	}
+
 	ClientScene::~ClientScene()
 	{
-		socket.Close();
+
 	}
 
 	void ClientScene::Begin()
 	{
-		stream = socket.Connect(8080, "127.0.0.1");
 		Monocle::Input::AddHandler(this);
 	}
 

@@ -2,8 +2,7 @@
 
 #include <Input.h>
 #include <Scene.h>
-#include <Network/ClientSocket.h>
-#include <Network/Types/TCP.h>
+#include <Network/SocketStream.h>
 #include <Serializable.h>
 
 namespace NetworkClient
@@ -22,12 +21,12 @@ namespace NetworkClient
 	class ClientScene : public Monocle::Scene, Monocle::Input::EventHandler
 	{
 	public:
+		ClientScene(Monocle::SocketStream *ss);
 		virtual ~ClientScene();
 		void Begin();
 
 		void OnKeyPress(Monocle::KeyCode key);
 	private:
-		Monocle::ClientSocket<Monocle::NetworkType::TCP> socket;
 		Monocle::SocketStream *stream;
 	};
 }

@@ -4,10 +4,19 @@
 #include "Network/SocketStream.h"
 #include <iostream>
 
-int main()
+int main(int argc, char **argv)
 {
+	int port = 8080;
+
+	if(argc > 1)
+	{
+		std::stringstream tmp;
+		tmp << argv[1];
+		tmp >> port;
+	}
+
 	Monocle::ServerSocket<Monocle::NetworkType::TCP> server;
-	server.Bind(8080);
+	server.Bind(port);
 	server.Listen();
 	Monocle::SocketStream *stream = server.Accept();
 
