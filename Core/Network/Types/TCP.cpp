@@ -1,4 +1,5 @@
 #include "TCP.h"
+#include <cstring>
 
 #ifdef MONOCLE_WINDOWS
 	#include <ws2tcpip.h>

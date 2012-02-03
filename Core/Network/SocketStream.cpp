@@ -1,5 +1,6 @@
 #include "SocketStream.h"
 #include "../Debug.h"
+#include <cstring>
 
 namespace Monocle
 {
@@ -14,7 +15,7 @@ namespace Monocle
 
 	};
 
-	SocketStream::SocketStream(SOCKETHANDLE sHandle, bool client) : handle(sHandle), state(std::ios_base::goodbit), isClient(client)
+	SocketStream::SocketStream(SOCKETHANDLE sHandle, bool client) : handle(sHandle), buffer(), state(std::ios_base::goodbit), isClient(client)
 	{
 
 	}
@@ -40,7 +41,7 @@ namespace Monocle
 			header.dataLength = str.str().length();
 			header.startOffset = sizeof(header);
 
-		send(handle, (char*)&header, header.startOffset, NULL);
+		send(handle, (char*)&header, header.startOffset, 0);
 
 		const char *buff = outstr.c_str();
 		int buffLen = outstr.length();
@@ -48,7 +49,7 @@ namespace Monocle
 		int sent = 0;
 		while(totalSent < buffLen)
 		{
-			sent = send(handle, buff + totalSent, buffLen - sent, NULL);
+			sent = send(handle, buff + totalSent, buffLen - sent, 0);
 			if(sent < 0)
 			{
 				Debug::Log("Error attempting to send data.");
@@ -72,13 +73,13 @@ namespace Monocle
 	SocketStream &SocketStream::operator>>(Serializable &obj)
 	{
 		//clear buffer
-		memset(buffer, 0, BUFF_SIZE);
+		//memset(&buffer, 0, BUFF_SIZE);
 
 		int headerReadResult = 0;
 		//read header
 		SocketStreamHeader header;
 		memset(&header, 0, sizeof(header));
-		headerReadResult = recv(handle, (char*)&header, sizeof(SocketStreamHeader),NULL);
+		headerReadResult = recv(handle, (char*)&header, sizeof(SocketStreamHeader),0);
 
 		if(headerReadResult < 0)
 		{
@@ -114,7 +115,7 @@ namespace Monocle
 			//SocketMessageHeader struct with more fields.
 
 			//we can discard the extra data since we don't know what to do with it.
-			recv(handle, (char*)buffer, header.startOffset - sizeof(SocketStreamHeader), NULL);
+			recv(handle, (char*)buffer, header.startOffset - sizeof(SocketStreamHeader), 0);
 		}
 
 		//read data
@@ -124,7 +125,7 @@ namespace Monocle
 		int readstep = 0;
 		while(readtotal + BUFF_SIZE < header.dataLength)
 		{
-			readstep = recv(handle, buffer, BUFF_SIZE, NULL);
+			readstep = recv(handle, buffer, BUFF_SIZE, 0);
 
 			if(readstep < 0)
 			{
@@ -144,7 +145,7 @@ namespace Monocle
 			readtotal += readstep;
 		}
 
-		readstep = recv(handle, buffer, header.dataLength - readtotal, NULL);
+		readstep = recv(handle, buffer, header.dataLength - readtotal, 0);
 		
 		if(readstep < 0)
 		{
@@ -212,12 +213,12 @@ namespace Monocle
 
 	std::streamsize SocketStream::sputn(const char *s, std::streamsize n)
 	{
-		return send(handle, s, n, NULL);
+		return send(handle, s, n, 0);
 	}
 
 	std::streamsize SocketStream::sgetn(char *s, std::streamsize n)
 	{
-		int res = recv(handle, s, n, NULL);
+		int res = recv(handle, s, n, 0);
 		
 		if(res == 0)
 		{

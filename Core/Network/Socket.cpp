@@ -18,6 +18,8 @@ namespace Monocle
 		default:
 			SocketsAvailable = false; break;
 		}
+	#else
+		SocketsAvailable = true;
 	#endif
 	}
 
