@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Samples">
+			<UniqueIdentifier>{EFC10774-8400-B54A-8204-335941A9220C}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Pong">
+			<UniqueIdentifier>{7F5ED187-3387-A14E-8C52-FC892716035F}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Samples\Pong\Pong.h">
+			<Filter>Samples\Pong</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Samples\Pong\Main.cpp">
+			<Filter>Samples\Pong</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Pong\Pong.cpp">
+			<Filter>Samples\Pong</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

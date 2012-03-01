@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Samples">
+			<UniqueIdentifier>{BB7F9CFA-55F4-1F4B-86EE-CB77414260F0}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Ogmo">
+			<UniqueIdentifier>{109D1DA5-220A-5343-8041-E1C0D0C2FA2B}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Samples\Ogmo\Ogmo.h">
+			<Filter>Samples\Ogmo</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Samples\Ogmo\Main.cpp">
+			<Filter>Samples\Ogmo</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Ogmo\Ogmo.cpp">
+			<Filter>Samples\Ogmo</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

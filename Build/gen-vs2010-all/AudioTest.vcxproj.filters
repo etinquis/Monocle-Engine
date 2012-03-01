@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Samples">
+			<UniqueIdentifier>{EDF7AE60-AE0D-1146-AE03-EA064109DCF4}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\AudioTest">
+			<UniqueIdentifier>{787E42B2-4E5A-AD46-AE85-A6F3A5CCCB78}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Samples\AudioTest\AudioTest.h">
+			<Filter>Samples\AudioTest</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Samples\AudioTest\AudioTest.cpp">
+			<Filter>Samples\AudioTest</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\AudioTest\Main.cpp">
+			<Filter>Samples\AudioTest</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

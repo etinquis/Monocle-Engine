@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Samples">
+			<UniqueIdentifier>{C62702A6-A830-234A-A4DA-B1C55A9B2B9D}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Jumper">
+			<UniqueIdentifier>{7EE69990-119B-FF44-A53C-DAD82132D811}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Samples\Jumper\Jumper.h">
+			<Filter>Samples\Jumper</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Samples\Jumper\Jumper.cpp">
+			<Filter>Samples\Jumper</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Jumper\Main.cpp">
+			<Filter>Samples\Jumper</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

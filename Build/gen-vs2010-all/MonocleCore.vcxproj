@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Debug|Win32">
+			<Configuration>Debug</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|Win32">
+			<Configuration>Release</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Label="Globals">
+		<ProjectGuid>{E3637003-99AD-F04B-A598-0B741945116A}</ProjectGuid>
+		<RootNamespace>MonocleCore</RootNamespace>
+		<Keyword>Win32Proj</Keyword>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+		<ConfigurationType>StaticLibrary</ConfigurationType>
+		<CharacterSet>MultiByte</CharacterSet>
+		<UseDebugLibraries>true</UseDebugLibraries>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+		<ConfigurationType>StaticLibrary</ConfigurationType>
+		<CharacterSet>MultiByte</CharacterSet>
+		<WholeProgramOptimization>true</WholeProgramOptimization>
+		<UseDebugLibraries>false</UseDebugLibraries>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+	<ImportGroup Label="ExtensionSettings">
+	</ImportGroup>
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<PropertyGroup Label="UserMacros" />
+	<PropertyGroup>
+		<_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+		<OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\</OutDir>
+		<IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\Debug\MonocleCore\</IntDir>
+		<TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MonocleCoreDebug</TargetName>
+		<OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\</OutDir>
+		<IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\Release\MonocleCore\</IntDir>
+		<TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MonocleCore</TargetName>
+	</PropertyGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+		<ClCompile>
+			<Optimization>Disabled</Optimization>
+			<AdditionalIncludeDirectories>..\..\Core;..\..\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>MONOCLE_OPENGL;MONOCLE_OPENAL;MONOCLE_AUDIO_OGG;MONOCLE_WINDOWS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<MinimalRebuild>true</MinimalRebuild>
+			<BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<FunctionLevelLinking>true</FunctionLevelLinking>
+			<PrecompiledHeader></PrecompiledHeader>
+			<WarningLevel>Level3</WarningLevel>
+			<DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+		</ClCompile>
+		<ResourceCompile>
+			<PreprocessorDefinitions>MONOCLE_OPENGL;MONOCLE_OPENAL;MONOCLE_AUDIO_OGG;MONOCLE_WINDOWS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>..\..\Core;..\..\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+		</ResourceCompile>
+	<Lib>
+		<OutputFile>$(OutDir)MonocleCoreDebug.lib</OutputFile>
+	</Lib>
+		<Link>
+			<SubSystem>Windows</SubSystem>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+			<ProgramDataBaseFileName>$(OutDir)MonocleCoreDebug.pdb</ProgramDataBaseFileName>
+		</Link>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+		<ClCompile>
+			<Optimization>Full</Optimization>
+			<AdditionalIncludeDirectories>..\..\Core;..\..\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>MONOCLE_OPENGL;MONOCLE_OPENAL;MONOCLE_AUDIO_OGG;MONOCLE_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<MinimalRebuild>false</MinimalRebuild>
+			<StringPooling>true</StringPooling>
+			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<FunctionLevelLinking>true</FunctionLevelLinking>
+			<PrecompiledHeader></PrecompiledHeader>
+			<WarningLevel>Level3</WarningLevel>
+			<DebugInformationFormat></DebugInformationFormat>
+		</ClCompile>
+		<ResourceCompile>
+			<PreprocessorDefinitions>MONOCLE_OPENGL;MONOCLE_OPENAL;MONOCLE_AUDIO_OGG;MONOCLE_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>..\..\Core;..\..\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+		</ResourceCompile>
+	<Lib>
+		<OutputFile>$(OutDir)MonocleCore.lib</OutputFile>
+	</Lib>
+		<Link>
+			<SubSystem>Windows</SubSystem>
+			<GenerateDebugInformation>false</GenerateDebugInformation>
+			<OptimizeReferences>true</OptimizeReferences>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+		</Link>
+	</ItemDefinitionGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Core\Asset.h" />
+		<ClInclude Include="..\..\Core\Assets.h" />
+		<ClInclude Include="..\..\Core\Camera.h" />
+		<ClInclude Include="..\..\Core\Collision.h" />
+		<ClInclude Include="..\..\Core\CollisionData.h" />
+		<ClInclude Include="..\..\Core\Color.h" />
+		<ClInclude Include="..\..\Core\ConfigValues.h" />
+		<ClInclude Include="..\..\Core\Debug.h" />
+		<ClInclude Include="..\..\Core\Editor.h" />
+		<ClInclude Include="..\..\Core\Entity.h" />
+		<ClInclude Include="..\..\Core\FileNode.h" />
+		<ClInclude Include="..\..\Core\FontAsset.h" />
+		<ClInclude Include="..\..\Core\Game.h" />
+		<ClInclude Include="..\..\Core\Graphics.h" />
+		<ClInclude Include="..\..\Core\GUI.h" />
+		<ClInclude Include="..\..\Core\Input.h" />
+		<ClInclude Include="..\..\Core\Level.h" />
+		<ClInclude Include="..\..\Core\Macros.h" />
+		<ClInclude Include="..\..\Core\Monocle.h" />
+		<ClInclude Include="..\..\Core\MonocleToolkit.h" />
+		<ClInclude Include="..\..\Core\Platform.h" />
+		<ClInclude Include="..\..\Core\Random.h" />
+		<ClInclude Include="..\..\Core\Rect.h" />
+		<ClInclude Include="..\..\Core\Scene.h" />
+		<ClInclude Include="..\..\Core\TextureAsset.h" />
+		<ClInclude Include="..\..\Core\TextureAtlas.h" />
+		<ClInclude Include="..\..\Core\Tileset.h" />
+		<ClInclude Include="..\..\Core\Transform.h" />
+		<ClInclude Include="..\..\Core\TTFFontAsset.h" />
+		<ClInclude Include="..\..\Core\Tween.h" />
+		<ClInclude Include="..\..\Core\Vector2.h" />
+		<ClInclude Include="..\..\Core\Vector3.h" />
+		<ClInclude Include="..\..\Core\Animation\Animation.h" />
+		<ClInclude Include="..\..\Core\Animation\Frame.h" />
+		<ClInclude Include="..\..\Core\Animation\Interpolator.h" />
+		<ClInclude Include="..\..\Core\Animation\LinearInterpolator.h" />
+		<ClInclude Include="..\..\Core\Animation\RoundingInterpolator.h" />
+		<ClInclude Include="..\..\Core\Audio\Audio.h" />
+		<ClInclude Include="..\..\Core\Audio\AudioAsset.h" />
+		<ClInclude Include="..\..\Core\Audio\AudioAssetReader.h" />
+		<ClInclude Include="..\..\Core\Audio\AudioCrypt.h" />
+		<ClInclude Include="..\..\Core\Audio\AudioDeck.h" />
+		<ClInclude Include="..\..\Core\Audio\AudioDecoder.h" />
+		<ClInclude Include="..\..\Core\Audio\AudioVis.h" />
+		<ClInclude Include="..\..\Core\Audio\ChannelStream.h" />
+		<ClInclude Include="..\..\Core\Audio\fft.h" />
+		<ClInclude Include="..\..\Core\Audio\VisCache2.h" />
+		<ClInclude Include="..\..\Core\Audio\Decoders\OggDecoder.h" />
+		<ClInclude Include="..\..\Core\Audio\Decoders\WaveDecoder.h" />
+		<ClInclude Include="..\..\Core\Cocoa\CocoaEvents.h" />
+		<ClInclude Include="..\..\Core\Cocoa\CocoaKeys.h" />
+		<ClInclude Include="..\..\Core\Cocoa\CocoaOpenGL.h" />
+		<ClInclude Include="..\..\Core\Cocoa\CocoaPlatform.h" />
+		<ClInclude Include="..\..\Core\Cocoa\CocoaWindowListener.h" />
+		<ClInclude Include="..\..\Core\Colliders\CircleCollider.h" />
+		<ClInclude Include="..\..\Core\Colliders\Collider.h" />
+		<ClInclude Include="..\..\Core\Colliders\PathCollider.h" />
+		<ClInclude Include="..\..\Core\Colliders\PolygonCollider.h" />
+		<ClInclude Include="..\..\Core\Colliders\RectangleCollider.h" />
+		<ClInclude Include="..\..\Core\Graphics\Sprite.h" />
+		<ClInclude Include="..\..\Core\Graphics\SpriteAnimation.h" />
+		<ClInclude Include="..\..\Core\Graphics\Tilemap.h" />
+		<ClInclude Include="..\..\Core\LevelEditor\FringeTile.h" />
+		<ClInclude Include="..\..\Core\LevelEditor\ImageBrowser.h" />
+		<ClInclude Include="..\..\Core\LevelEditor\LevelEditor.h" />
+		<ClInclude Include="..\..\Core\LevelEditor\Node.h" />
+		<ClInclude Include="..\..\Core\LevelEditor\PathMesh.h" />
+		<ClInclude Include="..\..\Core\Linux\LinuxPlatform.h" />
+		<ClInclude Include="..\..\Core\Puppet\Puppet.h" />
+		<ClInclude Include="..\..\Core\Puppet\PuppetEditor.h" />
+		<ClInclude Include="..\..\Core\Windows\WindowsPlatform.h" />
+		<ClInclude Include="..\..\Core\XML\XMLFileNode.h" />
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Core\Asset.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Assets.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Camera.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Collision.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\CollisionData.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Color.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\ConfigValues.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Debug.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Editor.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Entity.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\FileNode.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Game.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\GUI.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Input.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Level.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Monocle.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\MonocleToolkit.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Random.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Rect.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Scene.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\TextureAtlas.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Tileset.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Transform.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Tween.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Vector2.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Vector3.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Animation\Animation.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Animation\Frame.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\Audio.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioAsset.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioAssetReader.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioCrypt.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioDeck.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioDecoder.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioVis.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\ChannelStream.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\fft.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\VisCache2.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\Decoders\OggDecoder.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\Decoders\WaveDecoder.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\CircleCollider.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\Collider.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\PathCollider.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\PolygonCollider.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\RectangleCollider.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Graphics\Sprite.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Graphics\SpriteAnimation.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Graphics\Tilemap.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\FringeTile.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\ImageBrowser.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\LevelEditor.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\Node.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\PathMesh.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Linux\LinuxPlatform.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\OpenGL\OpenGLGraphics.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\OpenGL\OpenGLTextureAsset.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\OpenGL\OpenGLTTFFontAsset.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Puppet\Puppet.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Puppet\PuppetEditor.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Windows\WindowsPlatform.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Core\XML\XMLFileNode.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\stb\stb_image.c">
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\TinyXML\tinyxml.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\TinyXML\tinyxmlerror.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\TinyXML\tinyxmlparser.cpp">
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\GL\glew.c">
+		</ClCompile>
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+	<ImportGroup Label="ExtensionTargets">
+	</ImportGroup>
+</Project>

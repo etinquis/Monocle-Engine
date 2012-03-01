@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Samples">
+			<UniqueIdentifier>{9C8CA12D-D84B-D249-A31F-E19CEF4B20D4}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\LevelEditor">
+			<UniqueIdentifier>{104CBBFB-2C0F-844E-B94E-AF81422290F4}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Samples\LevelEditor\LevelEditorTest.h">
+			<Filter>Samples\LevelEditor</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Samples\LevelEditor\LevelEditorTest.cpp">
+			<Filter>Samples\LevelEditor</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\LevelEditor\Main.cpp">
+			<Filter>Samples\LevelEditor</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

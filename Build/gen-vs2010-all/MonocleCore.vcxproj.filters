@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Core">
+			<UniqueIdentifier>{464F3AEB-2B1F-CF44-A571-0A1940C51028}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Animation">
+			<UniqueIdentifier>{381E4B26-FC95-394F-B13E-D2E73FA114F6}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Audio">
+			<UniqueIdentifier>{B1D9CA7D-6C89-5A4C-94AA-E15423C417E1}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Audio\Decoders">
+			<UniqueIdentifier>{75D4920F-3FEE-B541-9719-AF86B63A60D9}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Cocoa">
+			<UniqueIdentifier>{20C42354-1E51-E94D-BC77-187A9769FE9E}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Colliders">
+			<UniqueIdentifier>{DE358C63-6D26-E04E-98E6-D98A0389AB8D}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Graphics">
+			<UniqueIdentifier>{10DD0182-F527-5E44-81F2-BEF2A8C309F7}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\LevelEditor">
+			<UniqueIdentifier>{1B06A836-F189-C741-92C1-DA31390144C8}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Linux">
+			<UniqueIdentifier>{8AE50A9D-A69B-BB40-92EF-E147BD55A717}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Puppet">
+			<UniqueIdentifier>{DD7BB834-A2BE-4C4C-A376-6D6534173FF4}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\Windows">
+			<UniqueIdentifier>{844EA335-C00B-4045-BDDC-946D05EFC810}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\XML">
+			<UniqueIdentifier>{ADF35E92-1329-AD48-BF29-DAD76858590E}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Core\OpenGL">
+			<UniqueIdentifier>{27DC4043-5CD8-CF40-90AE-5BD79A842B80}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Libraries">
+			<UniqueIdentifier>{FEBF274E-45D5-3341-904D-6B89183E3865}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Libraries\stb">
+			<UniqueIdentifier>{6A66A7A6-63B8-F94F-9296-022611C91997}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Libraries\TinyXML">
+			<UniqueIdentifier>{4C077530-2411-F54D-8607-80F9C025D4C9}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Libraries\GL">
+			<UniqueIdentifier>{13FB2C63-17F5-A14C-A7FC-752BBAF43459}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Core\Asset.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Assets.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Camera.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Collision.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\CollisionData.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Color.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\ConfigValues.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Debug.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Editor.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Entity.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\FileNode.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\FontAsset.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Game.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Graphics.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\GUI.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Input.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Level.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Macros.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Monocle.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\MonocleToolkit.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Platform.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Random.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Rect.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Scene.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\TextureAsset.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\TextureAtlas.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Tileset.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Transform.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\TTFFontAsset.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Tween.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Vector2.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Vector3.h">
+			<Filter>Core</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Animation\Animation.h">
+			<Filter>Core\Animation</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Animation\Frame.h">
+			<Filter>Core\Animation</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Animation\Interpolator.h">
+			<Filter>Core\Animation</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Animation\LinearInterpolator.h">
+			<Filter>Core\Animation</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Animation\RoundingInterpolator.h">
+			<Filter>Core\Animation</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\Audio.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\AudioAsset.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\AudioAssetReader.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\AudioCrypt.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\AudioDeck.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\AudioDecoder.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\AudioVis.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\ChannelStream.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\fft.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\VisCache2.h">
+			<Filter>Core\Audio</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\Decoders\OggDecoder.h">
+			<Filter>Core\Audio\Decoders</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Audio\Decoders\WaveDecoder.h">
+			<Filter>Core\Audio\Decoders</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Cocoa\CocoaEvents.h">
+			<Filter>Core\Cocoa</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Cocoa\CocoaKeys.h">
+			<Filter>Core\Cocoa</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Cocoa\CocoaOpenGL.h">
+			<Filter>Core\Cocoa</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Cocoa\CocoaPlatform.h">
+			<Filter>Core\Cocoa</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Cocoa\CocoaWindowListener.h">
+			<Filter>Core\Cocoa</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Colliders\CircleCollider.h">
+			<Filter>Core\Colliders</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Colliders\Collider.h">
+			<Filter>Core\Colliders</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Colliders\PathCollider.h">
+			<Filter>Core\Colliders</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Colliders\PolygonCollider.h">
+			<Filter>Core\Colliders</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Colliders\RectangleCollider.h">
+			<Filter>Core\Colliders</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Graphics\Sprite.h">
+			<Filter>Core\Graphics</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Graphics\SpriteAnimation.h">
+			<Filter>Core\Graphics</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Graphics\Tilemap.h">
+			<Filter>Core\Graphics</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\LevelEditor\FringeTile.h">
+			<Filter>Core\LevelEditor</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\LevelEditor\ImageBrowser.h">
+			<Filter>Core\LevelEditor</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\LevelEditor\LevelEditor.h">
+			<Filter>Core\LevelEditor</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\LevelEditor\Node.h">
+			<Filter>Core\LevelEditor</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\LevelEditor\PathMesh.h">
+			<Filter>Core\LevelEditor</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Linux\LinuxPlatform.h">
+			<Filter>Core\Linux</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Puppet\Puppet.h">
+			<Filter>Core\Puppet</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Puppet\PuppetEditor.h">
+			<Filter>Core\Puppet</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\Windows\WindowsPlatform.h">
+			<Filter>Core\Windows</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Core\XML\XMLFileNode.h">
+			<Filter>Core\XML</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Core\Asset.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Assets.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Camera.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Collision.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\CollisionData.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Color.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\ConfigValues.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Debug.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Editor.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Entity.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\FileNode.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Game.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\GUI.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Input.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Level.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Monocle.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\MonocleToolkit.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Random.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Rect.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Scene.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\TextureAtlas.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Tileset.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Transform.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Tween.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Vector2.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Vector3.cpp">
+			<Filter>Core</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Animation\Animation.cpp">
+			<Filter>Core\Animation</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Animation\Frame.cpp">
+			<Filter>Core\Animation</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\Audio.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioAsset.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioAssetReader.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioCrypt.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioDeck.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioDecoder.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\AudioVis.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\ChannelStream.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\fft.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\VisCache2.cpp">
+			<Filter>Core\Audio</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\Decoders\OggDecoder.cpp">
+			<Filter>Core\Audio\Decoders</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Audio\Decoders\WaveDecoder.cpp">
+			<Filter>Core\Audio\Decoders</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\CircleCollider.cpp">
+			<Filter>Core\Colliders</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\Collider.cpp">
+			<Filter>Core\Colliders</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\PathCollider.cpp">
+			<Filter>Core\Colliders</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\PolygonCollider.cpp">
+			<Filter>Core\Colliders</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Colliders\RectangleCollider.cpp">
+			<Filter>Core\Colliders</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Graphics\Sprite.cpp">
+			<Filter>Core\Graphics</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Graphics\SpriteAnimation.cpp">
+			<Filter>Core\Graphics</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Graphics\Tilemap.cpp">
+			<Filter>Core\Graphics</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\FringeTile.cpp">
+			<Filter>Core\LevelEditor</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\ImageBrowser.cpp">
+			<Filter>Core\LevelEditor</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\LevelEditor.cpp">
+			<Filter>Core\LevelEditor</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\Node.cpp">
+			<Filter>Core\LevelEditor</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\LevelEditor\PathMesh.cpp">
+			<Filter>Core\LevelEditor</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Linux\LinuxPlatform.cpp">
+			<Filter>Core\Linux</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\OpenGL\OpenGLGraphics.cpp">
+			<Filter>Core\OpenGL</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\OpenGL\OpenGLTextureAsset.cpp">
+			<Filter>Core\OpenGL</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\OpenGL\OpenGLTTFFontAsset.cpp">
+			<Filter>Core\OpenGL</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Puppet\Puppet.cpp">
+			<Filter>Core\Puppet</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Puppet\PuppetEditor.cpp">
+			<Filter>Core\Puppet</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\Windows\WindowsPlatform.cpp">
+			<Filter>Core\Windows</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Core\XML\XMLFileNode.cpp">
+			<Filter>Core\XML</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\stb\stb_image.c">
+			<Filter>Libraries\stb</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\TinyXML\tinyxml.cpp">
+			<Filter>Libraries\TinyXML</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\TinyXML\tinyxmlerror.cpp">
+			<Filter>Libraries\TinyXML</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\TinyXML\tinyxmlparser.cpp">
+			<Filter>Libraries\TinyXML</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Libraries\GL\glew.c">
+			<Filter>Libraries\GL</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

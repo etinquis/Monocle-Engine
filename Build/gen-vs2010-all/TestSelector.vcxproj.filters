@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Samples">
+			<UniqueIdentifier>{82AE7653-44A7-6847-949C-38A4EDB789FC}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\AudioTest">
+			<UniqueIdentifier>{5B0765A2-9FF0-324B-A8EC-74B3622FD2BC}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Flash">
+			<UniqueIdentifier>{356B5420-ECB0-7A4F-A898-3F77D253CF8E}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Jumper">
+			<UniqueIdentifier>{275CED10-77E0-C64C-A864-2B2B2AED5309}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\LevelEditor">
+			<UniqueIdentifier>{52BBB697-9BF5-0446-94C9-D9A62DF76EEB}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Ogmo">
+			<UniqueIdentifier>{D331DA3C-C9C2-A846-BA67-9CC6025590CE}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Pong">
+			<UniqueIdentifier>{FBF77DDD-5EEF-954C-8B6D-3ACEA6C128E9}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\PuppetTest">
+			<UniqueIdentifier>{124E6CCA-A2CE-574D-9E12-175E472AC1E7}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\TestSelector">
+			<UniqueIdentifier>{79070AA9-7450-614F-BC5C-63FFE5CCBA23}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Samples\AudioTest\AudioTest.h">
+			<Filter>Samples\AudioTest</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Samples\Flash\Flash.h">
+			<Filter>Samples\Flash</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Samples\Jumper\Jumper.h">
+			<Filter>Samples\Jumper</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Samples\LevelEditor\LevelEditorTest.h">
+			<Filter>Samples\LevelEditor</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Samples\Ogmo\Ogmo.h">
+			<Filter>Samples\Ogmo</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Samples\Pong\Pong.h">
+			<Filter>Samples\Pong</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\Samples\PuppetTest\PuppetTest.h">
+			<Filter>Samples\PuppetTest</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Samples\AudioTest\AudioTest.cpp">
+			<Filter>Samples\AudioTest</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Flash\Flash.cpp">
+			<Filter>Samples\Flash</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Jumper\Jumper.cpp">
+			<Filter>Samples\Jumper</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\LevelEditor\LevelEditorTest.cpp">
+			<Filter>Samples\LevelEditor</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Ogmo\Ogmo.cpp">
+			<Filter>Samples\Ogmo</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Pong\Pong.cpp">
+			<Filter>Samples\Pong</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\PuppetTest\PuppetTest.cpp">
+			<Filter>Samples\PuppetTest</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\TestSelector\Main.cpp">
+			<Filter>Samples\TestSelector</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

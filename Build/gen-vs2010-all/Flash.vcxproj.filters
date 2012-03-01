@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Samples">
+			<UniqueIdentifier>{BA37F8D1-9843-E141-8D59-7FD0DB5ECDB4}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Samples\Flash">
+			<UniqueIdentifier>{0F594E15-A269-A646-83DB-2E344A560732}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\Samples\Flash\Flash.h">
+			<Filter>Samples\Flash</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\Samples\Flash\Flash.cpp">
+			<Filter>Samples\Flash</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\Samples\Flash\Main.cpp">
+			<Filter>Samples\Flash</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>
